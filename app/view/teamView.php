@@ -24,7 +24,7 @@ if (!empty($publications)) {
         <div class="bg-white '. $borderColor .' rounded-xl shadow-lg p-6">
             <div class="flex justify-between items-center mb-3">
                 <span class="text-sm font-medium text-[var(--primary)]">
-                    ' . $pub['type'] . '
+                    ' . $pub['type'] .  '
                 </span>
                 <span class="text-sm text-gray-500">
                     ' . $pub['publication_date'] . '

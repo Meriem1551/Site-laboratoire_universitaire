@@ -39,9 +39,10 @@ class UserCard {
         
         $roleColors = [
             'admin' => ['bg' => 'bg-purple-100', 'text' => 'text-purple-800'],
-            'researcher' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-800'],
-            'member' => ['bg' => 'bg-green-100', 'text' => 'text-green-800'],
-            'guest' => ['bg' => 'bg-gray-100', 'text' => 'text-gray-800']
+            'enseignant' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-800'],
+            'doctorant' => ['bg' => 'bg-green-100', 'text' => 'text-green-800'],
+                'etudiant' => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-800'],
+            'invite' => ['bg' => 'bg-gray-100', 'text' => 'text-gray-800'],
         ];
         
         $roleConfig = $roleColors[strtolower($this->role)] ?? ['bg' => 'bg-blue-100', 'text' => 'text-blue-800'];

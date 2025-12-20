@@ -86,11 +86,9 @@ class ProjectView {
 
     private function getStatusColor($status) {
         $colors = [
-            'Actif' => '#10b981',
+            'soumis' => '#10b981',
             'termine' => '#6b7280', 
             'en-cours' => '#3b82f6',
-            'Planifié' => '#8b5cf6',
-            'Suspendu' => '#f59e0b',
         ];
         return $colors[$status] ?? '#6b7280';
     }
