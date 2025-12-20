@@ -40,7 +40,7 @@ class UserModel extends BaseModel{
     }
 
 
-    public function updateUser($user_id, $first_name, $last_name, $email, $profile_picture, $speciality, $post, $grade){
+    public function updateUser($user_id, $first_name, $last_name, $email, $profile_picture, $speciality, $post, $grade, $bio, $cv){
         $con = $this->connection();
         $user = $this->requet($con, 'users.updateUser', [
             'first_name' => $first_name, 
@@ -51,6 +51,8 @@ class UserModel extends BaseModel{
             'post' => $post, 
             'grade' => $grade,
             'user_id' => $user_id, 
+            'bio' => $bio,
+            'cv'=> $cv
         ]);
         if(!$user){
             echo "error";

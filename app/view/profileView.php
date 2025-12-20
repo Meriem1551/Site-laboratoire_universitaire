@@ -56,10 +56,14 @@ $statusColor = $user['status_user'] === 'active' ? 'green-500' : "gray-500";
                                 {$user['role']}
                             </span>
                         </div>
+                        <div class='space-y-1  my-4'>
+                                <div class='text-md text-gray-500 text-center'>Bio</div>
+                                <div class='text-center text-gray-900 border p-2 rounded-md'>{$user['bio']}</div>
+                        </div>
                     </div>
                     
                     <div class='md:col-span-2'>
-                        <div class='grid grid-cols-1 md:grid-cols-2 gap-6 mb-2'>
+                        <div class='grid grid-cols-1 md:grid-cols-2 gap-6'>
                             <div class='space-y-1'>
                                 <div class='text-sm text-gray-500'>Nom complet</div>
                                 <div class='font-medium text-gray-900'>{$user['first_name']} {$user['last_name']}</div>
@@ -100,7 +104,14 @@ $statusColor = $user['status_user'] === 'active' ? 'green-500' : "gray-500";
                                 <div class='font-medium text-gray-900'>{$user['grade']}</div>
                             </div>
                         </div>
-                        
+                        <div class='space-y-1  my-4'>
+                                <div class='text-sm text-gray-500'>CV</div>
+                                <div class=' text-gray-900 p-2 rounded-md'> 
+                                    <a href='{$user['cv']}' target='_blank' class='text-[var(--primary)] hover:underline'>
+                                        Voir 
+                                    </a>
+                                </div>
+                        </div>
                     </div>
                 </div>
             </div>"

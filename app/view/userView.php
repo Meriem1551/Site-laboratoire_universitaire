@@ -23,16 +23,20 @@ class UserView {
         true
     );
 
+    
+    $form->addField('profile_picture', 'Photo de profile', 'file', "", 'Choisir un fichier');   
+    $form->addField('cv','CV', 'file', 'CV', 'Choisir un fichier');//for the cv
+
+    $form->addField('first_name', 'Prénom', 'text', $user['first_name'] ?? '', 'Prénom');
+    $form->addField('last_name', 'Nom', 'text', $user['last_name'] ?? '', 'Nom de famille');
+    $form->addField('email', 'Adresse email', 'email', $user['email'] ?? '', 'exemple@domaine.com');
+    $form->addField('speciality', 'Spécialité', 'text', $user['speciality'] ?? '', 'Domaine de spécialisation');
+    $form->addField('post', 'Poste', 'text', $user['post'] ?? '', 'Poste actuel');
+    $form->addField('grade', 'Grade', 'text', $user['grade'] ?? '', 'Grade académique');
+    $form->addField('bio', 'Biographie', 'textarea', $user['bio'] ?? '', 'Biographie');
     $form->addField('current_profile_picture', '', 'hidden', $user['profile_picture'] ?? '', '');
     $form->addField('user_id', '', 'hidden', $user['id'], '');
-    $form->addField('profile_picture', '', 'file', $user['profile_picture'], 'Choisir un fichier');   
-    $form->addField('first_name', 'Prénom', 'text', $user['first_name'] ?? '', 'Votre prénom');
-    $form->addField('last_name', 'Nom', 'text', $user['last_name'] ?? '', 'Votre nom de famille');
-    $form->addField('email', 'Adresse email', 'email', $user['email'] ?? '', 'exemple@domaine.com');
-    $form->addField('speciality', 'Spécialité', 'text', $user['speciality'] ?? '', 'Votre domaine de spécialisation');
-    $form->addField('post', 'Poste', 'text', $user['post'] ?? '', 'Votre poste actuel');
-    $form->addField('grade', 'Grade', 'text', $user['grade'] ?? '', 'Votre grade académique');
-    
+    $form->addField('current_cv', '', 'hidden', $user['cv'] ?? '', '');
     $form->render();
     
     echo '</div>';

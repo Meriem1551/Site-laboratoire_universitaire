@@ -21,7 +21,15 @@ require_once "title.php";
     }
 
     public function addField(string $name, string $label, string $type, string $value='', string $placeholder= '') {
-        $this->fields[] = compact("name", "label", "type", "value", "placeholder");
+        $field = '';
+    if ($type === 'textarea') {
+        $field = "<label for='$name'>$label</label>
+                  <textarea name='$name' id='$name' placeholder='$placeholder' class='w-full px-4 py-2 border border-[var(--gray)] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition duration-200'>$value</textarea>";
+    } else {
+        $field = "<label for='$name'>$label</label>
+                  <input type='$type' name='$name' id='$name' value='$value' placeholder='$placeholder' class='w-full px-4 py-2 border border-[var(--gray)] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition duration-200'>";
+    }
+        $this->fields[] = $field;
     }
 
     public function render() {
@@ -29,16 +37,14 @@ require_once "title.php";
     $title = (new Title($this->formTitle, 'text-3xl font-bold text-center text-[var(--primary)] mb-6', 'h2'))->render();
     echo $title;
     echo $this->text;
-    echo "<form action='{$this->action}' method='{$this->method}' class='space-y-5'>";
+    echo "<form action='{$this->action}' method='{$this->method}' class='space-y-5' enctype='multipart/form-data'>";
     $gridClass = $this->twoColumn ? "grid grid-cols-2 gap-4" : "space-y-5";
     echo "<div class='{$gridClass}'>";
     foreach ($this->fields as $f) {
         $value = htmlspecialchars($f['value'] ?? '');
         echo "
             <div>
-                <label for='{$f['name']}' class='block text-[var(--gray-dark)] font-medium mb-1'>{$f['label']}</label>
-                <input type='{$f['type']}' name='{$f['name']}' id='{$f['name']}' value='{$value}' placeholder='{$f['placeholder']}' 
-                    class='w-full px-4 py-2 border border-[var(--gray)] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent transition duration-200'>
+                $f
             </div>
         ";
     }

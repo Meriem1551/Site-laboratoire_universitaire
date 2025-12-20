@@ -23,7 +23,7 @@
     'users.getAll' => 'select * from users',
     'user.login' => 'select * FROM users WHERE username = :username and password = :password',
     'users.getMembers' => 'select * from users where id_team = :id',
-    'users.updateUser' => 'update users set first_name = :first_name, last_name = :last_name, email = :email, profile_picture = :pp, speciality = :speciality, post = :post, grade = :grade where id = :user_id',
+    'users.updateUser' => 'update users set first_name = :first_name, last_name = :last_name, email = :email, profile_picture = :pp, speciality = :speciality, post = :post, grade = :grade, bio = :bio, cv = :cv where id = :user_id',
     'equip.getAll' => 'select * from equipment',
     'equip.getById' => 'select e.id, e.name from equipment e where id = :id',
     'equip.getEquipReserve' => 'select * from reservations r join equipment e on r.equipment_id = e.id where user_id = :id_user',
