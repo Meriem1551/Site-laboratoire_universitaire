@@ -60,10 +60,6 @@
         'controller' => 'AuthController',
         'action' => 'logout'
     ],
-    'admin' => [
-        'controller' => 'AdminController',
-        'action' => 'show'
-    ],
     'evenments' => [
         'controller' => 'EventController',
         'action' => 'list_events'
@@ -88,6 +84,10 @@
     'edit_profile'=> [
         'controller' => 'UserController',
         'action' => 'update_user'
+    ],
+    'dashboard' => [
+        'controller' => 'DashboardController',
+        'action' => 'show_dashboard'
     ]
  ];
 ?>

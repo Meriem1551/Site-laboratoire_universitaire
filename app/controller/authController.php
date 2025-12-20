@@ -37,7 +37,7 @@ class AuthController{
         if ($user[0]['password'] === $pw) {
             $_SESSION['user'] = $user;
             if($user[0]['role'] === "admin"){
-                header('Location: index.php?page=admin');
+                header('Location: index.php?page=dashboard&role=admin');
                 exit;
             }
             else{
