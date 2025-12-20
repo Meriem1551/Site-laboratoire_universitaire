@@ -46,7 +46,7 @@ class ProjectView {
                 $title,
                 "</div>",
                 "<div class='mb-4'>",
-                "<span class='inline-flex items-center text-sm text-blue-600 font-medium bg-blue-50 px-3 py-1 rounded-full'>",
+                "<span class='inline-flex items-center text-sm text-[var(--primary)] font-medium bg-blue-50 px-3 py-1 rounded-full'>",
                 "<svg class='w-4 h-4 mr-1.5' fill='currentColor' viewBox='0 0 20 20'>",
                 "<path fill-rule='evenodd' d='M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z' clip-rule='evenodd'/>",
                 "</svg>",
@@ -126,7 +126,8 @@ class ProjectView {
             $project['speciality'],
             $project['email'],
             $project['role'],
-            $project['status_user']
+            $project['status_user'],
+            $project['bio']
         );
         $supervisorHTML = ob_get_clean();
 
@@ -145,7 +146,7 @@ class ProjectView {
                     "<div class='space-y-4 flex-1'>",
                         $title,
                         "<div class='flex flex-wrap items-center gap-4'>",
-                            "<div class='inline-flex items-center text-blue-700 font-medium bg-blue-50 px-4 py-2 rounded-lg'>",
+                            "<div class='inline-flex items-center text-[var(--primary)] font-medium bg-blue-50 px-4 py-2 rounded-lg'>",
                                 "<svg class='w-5 h-5 mr-2' fill='currentColor' viewBox='0 0 20 20'>",
                                 "<path fill-rule='evenodd' d='M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z' clip-rule='evenodd'/>",
                                 "</svg>",
@@ -197,7 +198,7 @@ class ProjectView {
                         "<div class='bg-white p-8 rounded-xl border border-gray-200'>",
                             "<div class='flex items-center justify-between mb-6'>",
                                 "<div class='w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center'>",
-                                    "<svg class='w-6 h-6 text-blue-600' fill='currentColor' viewBox='0 0 20 20'>",
+                                    "<svg class='w-6 h-6 text-[var(--primary)]' fill='currentColor' viewBox='0 0 20 20'>",
                                     "<path fill-rule='evenodd' d='M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z' clip-rule='evenodd'/>",
                                     "</svg>",
                                 "</div>",
@@ -214,7 +215,7 @@ class ProjectView {
                                 "</div>",
                                 "<div class='flex items-center justify-between py-3'>",
                                     "<span class='text-gray-600'>Financement</span>",
-                                    "<span class='font-medium text-blue-700'>{$project['funding_type']}</span>",
+                                    "<span class='font-medium text-[var(--primary)]'>{$project['funding_type']}</span>",
                                 "</div>",
                             "</div>",
                         "</div>",
@@ -281,7 +282,7 @@ class ProjectView {
         </div>";
     }
 
-    private function render_supervisor($picture, $first_name, $last_name, $post, $grade, $speciality, $email, $role, $status) {
+    private function render_supervisor($picture, $first_name, $last_name, $post, $grade, $speciality, $email, $role, $status, $bio) {
         $userCard = new UserCard(
             $first_name, 
             $last_name, 
@@ -291,7 +292,7 @@ class ProjectView {
             $email, 
             $speciality,
             $post, 
-            $grade
+            $grade, $bio
         );
         echo "<div class='transform transition-all duration-300 hover:shadow-md'>";
         $userCard->render();
@@ -312,7 +313,8 @@ class ProjectView {
                     $member['email'], 
                     $member['speciality'],
                     $member['post'], 
-                    $member['grade']
+                    $member['grade'],
+                    $member['bio']
                 );
                 $userCard->render();
                 echo "</div>";
@@ -367,7 +369,7 @@ class ProjectView {
             echo "<div class='space-y-6'>";
             foreach($publications as $publication) {
                 $typeColors = [
-                    'Article' => 'bg-blue-100 text-blue-800',
+                    'Article' => 'bg-blue-100 text-[var(--primary)]',
                     'Conférence' => 'bg-purple-100 text-purple-800',
                     'Thèse' => 'bg-green-100 text-green-800',
                     'Rapport' => 'bg-orange-100 text-orange-800',
@@ -380,7 +382,7 @@ class ProjectView {
                 echo "<div class='lg:w-3/4'>";
                 echo "<div class='flex items-start gap-3'>";
                 echo "<div class='w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0'>";
-                echo "<svg class='w-5 h-5 text-blue-600' fill='currentColor' viewBox='0 0 20 20'>";
+                echo "<svg class='w-5 h-5 text-[var(--primary-light)]' fill='currentColor' viewBox='0 0 20 20'>";
                 echo "<path fill-rule='evenodd' d='M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z' clip-rule='evenodd'/>";
                 echo "</svg>";
                 echo "</div>";
@@ -409,11 +411,11 @@ class ProjectView {
                 if(isset($publication['doi'])) {
                     echo "<div class='text-sm'>";
                     echo "<span class='text-gray-500'>DOI: </span>";
-                    echo "<span class='font-mono text-blue-600'>{$publication['doi']}</span>";
+                    echo "<span class='font-mono text-[var(--primary)]'>{$publication['doi']}</span>";
                     echo "</div>";
                 }
                 echo "<div class='pt-4'>";
-                echo "<a href='index.php?page=publication&id={$publication['id']}' class='inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm'>";
+                echo "<a href='index.php?page=publication&id={$publication['id']}' class='inline-flex items-center text-[var(--primary)] hover:text-[var(--primary-light)] font-medium text-sm'>";
                 echo "Accéder à la publication";
                 echo "<svg class='w-4 h-4 ml-1' fill='none' stroke='currentColor' viewBox='0 0 24 24'>";
                 echo "<path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M14 5l7 7m0 0l-7 7m7-7H3'/>";

@@ -2,6 +2,8 @@
 require_once "components/title.php";
 require_once "components/card.php";
 require_once "components/badge.php";
+require_once "components/userCard.php";
+
 class TeamView{
 
     private function render_publications($publications){
@@ -82,83 +84,36 @@ if (!empty($publications)) {
 }              
     }
     private function render_members($members){
-        $membersCard = null;
-        if (!empty($members)) {
-            $membersHeader = [
-                "<div class='flex items-center justify-between mb-8 pb-6 border-b border-gray-200'>
-                    <div>
-                        <h2 class='text-2xl font-bold text-gray-900'>Membres de l'équipe</h2>
-                        <p class='text-gray-600 text-sm mt-2'>Collaborateurs et chercheurs</p>
-                    </div>
-                    <span class='px-4 py-2 bg-blue-100 text-[var(--primary-light)] text-sm font-medium rounded-full'>
-                        " . count($members) . " membres
-                    </span>
-                </div>"
-            ];
-            
-            $membersBody = [];
-            foreach($members as $index => $member) {
-                $emailSection = '';
-                if (!empty($member['email'])) {
-                    $emailSection = "
-                    <div class='mt-3 pt-3 border-t border-gray-100'>
-                        <a href='mailto:" . $member['email'] . "' class='inline-flex items-center text-sm text-[var(--primary)] hover:text-[var(--primary-light)] transition-colors'>
-                            <svg class='w-4 h-4 mr-2' fill='currentColor' viewBox='0 0 20 20'>
-                                <path d='M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z'/>
-                                <path d='M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z'/>
-                            </svg>
-                            " . $member['email'] . "
-                        </a>
-                    </div>";
-                }
-                
-               
-                
-                $membersBody[] = "
-                <div class='group bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-all duration-300 animate-fade-in'>
-                    <div class='flex items-start gap-5'>
-                        <div class='relative'>
-                            <img src='{$member['profile_picture']}' class='rounded-full w-12 h-12'>
-                        </div>
-                        <div class='grid gap-2'>
-                            <div class='flex items-start justify-between mb-2'>
-                                <div>
-                                    <h3 class='font-bold text-gray-900 text-lg transition-colors'>
-                                        " . $member['first_name'] . " " . $member['last_name'] . "
-                                    </h3>
-                                </div>
-                            </div>
-                            <div class='space-y-2'>
-                                <div class='flex items-centers gap-2'>
-                                    <div class='w-6 h-6 rounded-md bg-blue-50 flex items-center justify-center'>
-                                        <svg class='w-4 h-4 text-blue-600' fill='currentColor' viewBox='0 0 20 20'>
-                                            <path fill-rule='evenodd' d='M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z' clip-rule='evenodd'/>
-                                        </svg>
-                                    </div>
-                                    <span class='text-sm text-gray-700'>Poste: <span class='font-medium'>" . $member['post'] . "</span></span>
-                                </div>
-                    
-                                <div class='flex items-center gap-2'>
-                                    <span class='text-sm text-gray-700'>Grade: <span class='font-medium'>" . $member['grade'] . "</span></span>
-                                </div>
-                        </div>
-                        <span class='text-sm text-gray-700'>Specialite: <span class='font-medium'>" . $member['speciality'] . "</span></span>
-                            $emailSection
-                    </div>
-                </div>
-                </div>";
+    if(!empty($members)) {
+            echo "<div class='grid lg:grid-cols-3 gap-6'>";
+            foreach($members as $member) {
+                echo "<div class='transform transition-all duration-300 hover:-translate-y-1 hover:shadow-md'>";
+                $userCard = new UserCard(
+                    $member['first_name'], 
+                    $member['last_name'], 
+                    $member['role'], 
+                    $member['status_user'], 
+                    $member['profile_picture'], 
+                    $member['email'], 
+                    $member['speciality'],
+                    $member['post'], 
+                    $member['grade'],
+                    $member['bio']
+                );
+                $userCard->render();
+                echo "</div>";
             }
-            
-            $membersCard = new Card(
-                $membersHeader,
-                ["<div class='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>" . implode('', $membersBody) . "</div>"],
-                [],
-                'bg-white rounded-2xl shadow-lg border border-gray-200 p-8 hover:shadow-xl transition-shadow duration-300'
-            );
+            echo "</div>";
+        } else {
+            echo "<div class='text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200'>";
+            echo "<svg class='w-16 h-16 text-gray-300 mx-auto mb-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>";
+            echo "<path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/>";
+            echo "</svg>";
+            echo "<p class='text-gray-600 font-medium'>Aucun membre supplémentaire</p>";
+            echo "<p class='text-gray-500 text-sm mt-1'>Le responsable est actuellement le seul membre de ce projet</p>";
+            echo "</div>";
         }
-
-        echo $membersCard->render();
-    }
+}
     private function render_team($team){
         $teamInfoBody = [];
 

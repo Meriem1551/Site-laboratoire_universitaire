@@ -279,7 +279,8 @@ class PublicationView {
                     $member['email'], 
                     $member['speciality'],
                     $member['post'], 
-                    $member['grade']
+                    $member['grade'],
+                    $member['bio']
                 );
                 $userCard->render();
                 echo '</div>';

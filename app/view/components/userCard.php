@@ -1,65 +1,137 @@
 <?php
 require_once "card.php";
-class UserCard{
-private $firstName;
-private $lastName;
-private $role;
-private $speciality;
-private $status;
-private $email;
-private $post;
-private $grade;
-private $picture;
-public function __construct($firstName, $lastName, $role, $status, $picture, $email, $speciality, $post, $grade){
+class UserCard {
+    private $firstName;
+    private $lastName;
+    private $role;
+    private $speciality;
+    private $status;
+    private $email;
+    private $post;
+    private $grade;
+    private $picture;
+    private $bio;
+    private $id;
+    
+    public function __construct($firstName, $lastName, $role, $status, $picture, $email, $speciality, $post, $grade, $bio, $id = null) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->role = $role;
         $this->status = $status;
         $this->picture = $picture;
         $this->email = $email;
-        $this->speciality =$speciality;
+        $this->speciality = $speciality;
         $this->post = $post;
         $this->grade = $grade;
-}
-    public function render(){
-        $status = (new Badge($this->status, "#4ade80", "#bbf7d0"))->render();
-                $role = (new Badge($this->role, "var(--primary-light)", "var(--blue-blur)"))->render();
-                $header = [
-                    "<div class='grid border-b border-[var(--gray-light)] pb-4'>",
-                        "<div class='flex justify-start mb-2'>",
-                        $status,
-                        "</div>",
-                        "<div class='grid justify-center gap-4 items-center'>",
-                            "<img src='{$this->picture}' class='w-24 h-24 object-cover rounded-full'/>",
-                            $role,
-                        "</div>",
-                    "</div>",
-                    ];
-                $body = [
-                            "<div class='flex justify-center gap-4 font-bold items-center mb-2'>",
-                                    "<p class='text-[var(--gray-dark)]'>{$this->firstName}</p>",
-                                    "<p class='text-[var(--gray-dark)]'> {$this->lastName}</p>",
-                            "</div>",
-                            "<div class='flex justify-between items-center mb-2'>",
-                                    "<p class='text-[var(--gray)]'>Email:</p>",
-                                    "<p class='text-[var(--gray-dark)]'>{$this->email}</p>",
-                            "</div>",
-                            "<div class='flex justify-between items-center mb-2'>",
-                                    "<p class='text-[var(--gray)]'>Specialite:</p>",
-                                    "<p class='text-[var(--gray-dark)]'>{$this->speciality}</p>",
-                            "</div>",
-                            "<div class='flex justify-between items-center mb-2'>",
-                                    "<p class='text-[var(--gray)]'>Poste:</p>",
-                                    "<p class='text-[var(--gray-dark)]'>{$this->post}</p>",
-                            "</div>",
-                            "<div class='flex justify-between items-center'>",
-                                    "<p class='text-[var(--gray)]'>Grade:</p>",
-                                    "<p class='text-[var(--gray-dark)]'>{$this->grade}</p>",
-                            "</div>",
-                ];
-                    $footer = [];
-                    $card = new Card($header,$body,$footer, 'p-6 shadow-md rounded-xl w-full grid gap-2');
-                    $card->render();
+        $this->bio = $bio;
+        $this->id = $id;
+    }
+    
+    public function render() {
+        $statusColors = [
+            'active' => ['bg' => 'bg-green-100', 'text' => 'text-green-800', 'dot' => 'bg-green-500'],
+            'inactive' => ['bg' => 'bg-gray-100', 'text' => 'text-gray-800', 'dot' => 'bg-gray-500'],
+            'pending' => ['bg' => 'bg-yellow-100', 'text' => 'text-yellow-800', 'dot' => 'bg-yellow-500'],
+            'suspended' => ['bg' => 'bg-red-100', 'text' => 'text-red-800', 'dot' => 'bg-red-500']
+        ];
+        
+        $statusConfig = $statusColors[strtolower($this->status)] ?? $statusColors['inactive'];
+        
+        $roleColors = [
+            'admin' => ['bg' => 'bg-purple-100', 'text' => 'text-purple-800'],
+            'researcher' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-800'],
+            'member' => ['bg' => 'bg-green-100', 'text' => 'text-green-800'],
+            'guest' => ['bg' => 'bg-gray-100', 'text' => 'text-gray-800']
+        ];
+        
+        $roleConfig = $roleColors[strtolower($this->role)] ?? ['bg' => 'bg-blue-100', 'text' => 'text-blue-800'];
+        
+        $header = [
+            "<div class='flex items-start gap-4 mb-4'>
+                <!-- Profile Image -->
+                <div class='relative flex-shrink-0'>
+                    <div class='relative w-16 h-16'>
+                        <img src='{$this->picture}' 
+                             class='w-full h-full rounded-xl object-cover border-2 border-white shadow-sm'
+                             alt='{$this->firstName} {$this->lastName}'>
+                        
+                        <!-- Status Indicator -->
+                        <div class='absolute -bottom-1 -right-1 w-4 h-4 rounded-full {$statusConfig['dot']} border-2 border-white'
+                             title='{$this->status}'>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Name and Info -->
+                <div class='flex-1 min-w-0'>
+                    <div class='flex items-start justify-between mb-1'>
+                        <h3 class='font-bold text-gray-900 truncate'>
+                            {$this->firstName} {$this->lastName}
+                        </h3>
+                        <span class='px-2 py-1 rounded-full text-xs font-medium {$roleConfig['bg']} {$roleConfig['text']} ml-2 flex-shrink-0'>
+                            {$this->role}
+                        </span>
+                    </div>
+                    
+                    <p class='text-sm text-gray-600 mb-2 truncate'>
+                        {$this->post}
+                    </p>
+                    
+                    <div class='flex items-center text-xs text-gray-500'>
+                        <svg class='w-3 h-3 mr-1 flex-shrink-0' fill='currentColor' viewBox='0 0 20 20'>
+                            <path d='M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z'/>
+                            <path d='M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z'/>
+                        </svg>
+                        <span class='truncate'>{$this->email}</span>
+                    </div>
+                </div>
+            </div>"
+        ];
+        
+        $body = [
+            "<div class='space-y-4'>
+                <!-- Quick Stats -->
+                <div class='grid grid-cols-2 gap-2'>
+                    <div class='bg-gray-50 rounded-lg p-3 text-center'>
+                        <div class='text-xs text-gray-500 mb-1'>Spécialité</div>
+                        <div class='text-sm font-semibold text-gray-900 truncate' title='{$this->speciality}'>{$this->speciality}</div>
+                    </div>
+                    
+                    <div class='bg-gray-50 rounded-lg p-3 text-center'>
+                        <div class='text-xs text-gray-500 mb-1'>Grade</div>
+                        <div class='text-sm font-semibold text-gray-900 truncate' title='{$this->grade}'>{$this->grade}</div>
+                    </div>
+                </div>
+                
+                <!-- Status Badge -->
+                <div class='flex items-center justify-between bg-gray-50 rounded-lg p-3'>
+                    <div class='flex items-center'>
+                        <div class='w-2 h-2 rounded-full {$statusConfig['dot']} mr-2'></div>
+                        <span class='text-sm font-medium {$statusConfig['text']} capitalize'>{$this->status}</span>
+                    </div>
+                    <span class='text-xs text-gray-500'>Statut</span>
+                </div>
+                
+                <!-- Bio Preview -->
+                <div class='bg-gray-50 rounded-lg p-3'>
+                    <div class='text-xs text-gray-500 mb-2'>Bio</div>
+                    <p class='text-sm text-gray-700 line-clamp-2 leading-relaxed'>{$this->bio}</p>
+                </div>
+            </div>"
+        ];
+        
+        $footer = [
+            
+        ];
+        
+        $card = new Card(
+            $header, 
+            $body, 
+            $footer, 
+            'bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-all duration-200 h-full flex flex-col'
+        );
+        
+        return $card->render();
     }
 }
 ?>
