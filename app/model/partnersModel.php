@@ -1,4 +1,5 @@
 <?php
+require_once "baseModel.php";
 class PartnersModel extends BaseModel{
    
     public function getPartners(){

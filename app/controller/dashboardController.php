@@ -1,19 +1,34 @@
 <?php
-class DashboardController{
-    private function show_admin(){
-        echo "<div class='px-12 py-24'>admin</div>";
-    }
-    private function show_user(){
-        echo "<div class='px-12 py-24'>user</div>";
-    }
-    public function show_dashboard(){
-        $page = $_GET['role'];
-            if($page === 'admin'){
-                $this->show_admin();
+require_once "app/model/permissionModel.php";
+require_once "app/view/dashboardView.php";
+class DashboardController {
+
+    public function show_dashboard() {
+        $user_id = $_SESSION['user'][0]['id'];
+        $perm = new PermissionModel($user_id);
+
+        $features = require __DIR__ . '/../../config/features.php';
+        $cards = [];
+        foreach ($features as $key => $feature) {
+            if ($perm->can($feature['permissions']['read'])) {
+                $cards[$key] = [
+                    'title' => $feature['title'],
+                    'icon' => $feature['icon'],
+                    'url' => $feature['url'],
+                    'color' => $feature['color'],
+                    'actions' => []
+                ];
+
+                foreach ($feature['permissions'] as $action => $permName) {
+                    if ($action === 'read') continue;
+                    $cards[$key]['actions'][$action] = $perm->can($permName);
+                }
             }
-            else {
-                $this->show_user();
-            }
+        }
+        $dashV = new DashboardView();
+        $dashV->show_page($cards);
     }
 }
+
+
 ?>

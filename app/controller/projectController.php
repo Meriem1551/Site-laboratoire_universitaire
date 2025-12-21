@@ -1,4 +1,5 @@
 <?php
+require_once "app/model/permissionModel.php";
 require_once "app/view/projectView.php";
 require_once "app/model/projectModel.php";
 require_once "app/model/userModel.php";
@@ -43,6 +44,11 @@ require_once "app/model/publicationModel.php";
         $projectView = new ProjectView();
         $projectView->show_project($project, $members, $partners, $publications);
      }
+   //   public function create(){
+   //       $user_id = $_SESSION['user'][0]['id'];
+   //       $pModel = new PermissionModel($user_id);
+   //       return $pModel->can('create_project');
+   //   }
 
  }
 ?>

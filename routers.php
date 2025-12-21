@@ -88,6 +88,56 @@
     'dashboard' => [
         'controller' => 'DashboardController',
         'action' => 'show_dashboard'
-    ]
+    ],
+
+    'gestion_projet' => [
+        'controller' => 'ProjectController',
+        'action' => 'show_projects', 
+    ],
+
+    'gestion_users' => [
+        'controller' => 'UserController',
+        'action' => 'show_users', 
+    ],
+
+    'gestion_publications' => [
+        'controller' => 'PublicationController',
+        'action' => 'show_pubs',
+    ],
+
+    'gestion_equipes' => [
+        'controller' => 'TeamController',
+        'action' => 'show_teams',
+    ],
+
+    'gestion_equipements' => [
+        'controller' => 'EquipmentController',
+        'action' => 'show_equip',
+    ],
+
+    'gestion_evenements' => [
+        'controller' => 'EventController',
+        'action' => 'show_events',
+    ],
+
+    'gestion_settings' => [
+        'controller' => 'SettingsController',
+        'action' => 'show_settings',
+    ],
+
+    'gestion_actualites' => [
+        'controller' => 'ActualiteController',
+        'action' => 'show_news',
+    ],
+
+    'gestion_diaporama' => [
+        'controller' => 'DiapoController',
+        'action' => 'show_diapo',
+    ],
+
+    'gestion_reservations' => [
+        'controller' => 'ReservationController',
+        'action' => 'show_reservations',
+    ],
  ];
 ?>

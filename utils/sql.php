@@ -32,6 +32,7 @@
     'teams.getAll' => 'select * from teams t left join users u on u.id = t.team_leader_id',
     'teams.getById' => 'select * from teams t join users u on t.team_leader_id = u.id where t.id = :id',
     'reservation.addRes' => 'insert into reservations (equipment_id, user_id, start_datetime, end_datetime, purpose) values (:e_id, :u_id, :start, :end, :purpose)',
+    'permissions.getByUser' => 'select p.name from permissions p join permission_user pu on p.id = pu.permission_id where user_id = :user_id',
  ];
 
  return $sql;
