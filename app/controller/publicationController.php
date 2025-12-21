@@ -40,9 +40,7 @@ class PublicationController{
         $publicationView = new PublicationView();
         $publicationView->show_publication($publication, $authors);
      }
-
-
-   
+    
 }
 
 ?>

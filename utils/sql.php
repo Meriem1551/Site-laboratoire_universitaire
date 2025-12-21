@@ -20,11 +20,16 @@
     'users.getAuthorByPub' => 'select u.* from users u join publication_authors pa on u.id = pa.user_id where pa.publication_id = :publication_id',
     'users.getById'=> 'select * from users where id = :id',
     'users.getDir' => "select *from users where role = 'directeur'",
-    'users.getAll' => 'select * from users',
+    'users.getAll' => 'select * from users order by created_at',
     'user.login' => 'select * FROM users WHERE username = :username and password = :password',
     'users.getMembers' => 'select * from users where id_team = :id',
-    'users.updateUser' => 'update users set first_name = :first_name, last_name = :last_name, email = :email, profile_picture = :pp, speciality = :speciality, post = :post, grade = :grade, bio = :bio, cv = :cv where id = :user_id',
-    'equip.getAll' => 'select * from equipment',
+    'users.updateProfile' => 'update users set first_name = :first_name, last_name = :last_name, email = :email, profile_picture = :pp, speciality = :speciality, post = :post, grade = :grade, bio = :bio, cv = :cv where id = :user_id',
+    'users.updateUser' => 'update users set first_name = :first_name, last_name = :last_name, email = :email, profile_picture = :pp, speciality = :speciality, post = :post, grade = :grade, bio = :bio, cv = :cv, username = :username, password = :pw, status_user = :status, role = :role where id = :user_id',
+   'users.createUser' => 'insert into users (first_name, last_name, email, profile_picture,speciality, post, grade, bio, cv, username, password, status_user, role)  values (:first_name, :last_name, :email, :pp, :speciality, :post, :grade, :bio, :cv, :username, :pw, :status, :role)',
+   
+   'users.deleteUser' => 'delete from users where id = :id',
+
+   'equip.getAll' => 'select * from equipment',
     'equip.getById' => 'select e.id, e.name from equipment e where id = :id',
     'equip.getEquipReserve' => 'select * from reservations r join equipment e on r.equipment_id = e.id where user_id = :id_user',
     'reservation.getReservation' => 'select * from reservations r join users u join equipment e on r.user_id=u.id and r.equipment_id = e.id',
@@ -33,7 +38,8 @@
     'teams.getById' => 'select * from teams t join users u on t.team_leader_id = u.id where t.id = :id',
     'reservation.addRes' => 'insert into reservations (equipment_id, user_id, start_datetime, end_datetime, purpose) values (:e_id, :u_id, :start, :end, :purpose)',
     'permissions.getByUser' => 'select p.name from permissions p join permission_user pu on p.id = pu.permission_id where user_id = :user_id',
- ];
+      'roles.getAll' => 'select * from roles'
+   ];
 
  return $sql;
  ?>

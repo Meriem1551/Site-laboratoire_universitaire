@@ -11,15 +11,6 @@ class AuthController{
         }
     }
 
-
-    public function handle_register() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->register();
-        } else {
-            $this->display_register();
-        }
-    }
-
     public function login(){
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = trim($_POST['username'] ?? '');
@@ -50,9 +41,7 @@ class AuthController{
             $this->display_login();
         }
     }
-    public function register(){
-
-    }
+   
     public function logout(){
         session_start();
         $_SESSION = []; 
@@ -70,3 +59,36 @@ class AuthController{
     }
     }
 ?>
+
+<!-- public function login() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $username = trim($_POST['username'] ?? '');
+        $pw = $_POST['pw'] ?? '';
+    }
+
+    $authModel = new AuthModel();
+
+    // Fetch user by username only
+    $user = $authModel->login($username); 
+
+    if (!$user) {
+        echo "<p style='color:red;'>Utilisateur non trouvé</p>";
+        $this->display_login();
+        return;
+    }
+
+    // Verify hashed password
+    if (password_verify($pw, $user[0]['password'])) {
+        $_SESSION['user'] = $user;
+
+        if ($user[0]['role'] === "admin") {
+            header('Location: index.php?page=dashboard&role=admin');
+        } else {
+            header('Location: index.php?page=accueil');
+        }
+        exit;
+    } else {
+        echo "<p style='color:red;'>Mot de passe incorrect</p>";
+        $this->display_login();
+    }
+} -->

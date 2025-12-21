@@ -40,9 +40,9 @@ class UserModel extends BaseModel{
     }
 
 
-    public function updateUser($user_id, $first_name, $last_name, $email, $profile_picture, $speciality, $post, $grade, $bio, $cv){
+    public function updateProfile($user_id, $first_name, $last_name, $email, $profile_picture, $speciality, $post, $grade, $bio, $cv){
         $con = $this->connection();
-        $user = $this->requet($con, 'users.updateUser', [
+        $user = $this->requet($con, 'users.updateProfile', [
             'first_name' => $first_name, 
             'last_name' => $last_name, 
             'email' => $email, 
@@ -58,6 +58,65 @@ class UserModel extends BaseModel{
             echo "error";
         }
         $this->deconnexion($con);
+    }
+
+
+    public function updateUser($user_id, $first_name, $last_name, $email, $profile_picture, $speciality, $post, $grade, $bio, $cv, $username, $pw, $status, $role){
+        $con = $this->connection();
+        $user = $this->requet($con, 'users.updateUser', [
+            'first_name' => $first_name, 
+            'last_name' => $last_name, 
+            'email' => $email, 
+            'pp' => $profile_picture, 
+            'speciality' => $speciality, 
+            'post' => $post, 
+            'grade' => $grade,
+            'bio' => $bio,
+            'cv'=> $cv,
+            'user_id' => $user_id,
+            'username' => $username,
+            'pw' => $pw,
+            'status' => $status, 
+            'role' => $role
+        ]);
+        if(!$user){
+            echo "error";
+        }
+        $this->deconnexion($con);
+    }
+
+    public function createUser($first_name, $last_name, $email, $profile_picture, $speciality, $post, $grade, $bio, $cv, $username, $pw, $status, $role){
+        $con = $this->connection();
+        $user_id = $this->insert($con, 'users.createUser', [
+            'first_name' => $first_name, 
+            'last_name' => $last_name, 
+            'email' => $email, 
+            'pp' => $profile_picture, 
+            'speciality' => $speciality, 
+            'post' => $post, 
+            'grade' => $grade,
+            'bio' => $bio,
+            'cv'=> $cv,
+            'username' => $username,
+            'pw' => $pw,
+            'status' => $status, 
+            'role' => $role
+        ]);
+        $this->deconnexion($con);
+        return $user_id;
+    }
+
+    public function deleteUser($id){
+        $con = $this->connection();
+        $this->requet($con, 'users.deleteUser', ['id' => $id]);
+
+        $this->deconnexion($con);
+    }
+    public function getRoles(){
+        $con = $this->connection();
+        $roles = $this->requet($con, 'roles.getAll', []);
+        $this->deconnexion($con);
+        return $roles;
     }
 }
 

@@ -31,11 +31,29 @@ class BaseModel{
             }
         }
         $stmt->execute();
+            
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function insert($connectDB, $queryKey, $params = []) {
+    $stmt = $connectDB->prepare($this->sql[$queryKey]);
+
+    foreach ($params as $key => $value) {
+        if (in_array($key, ['limit', 'offset'])) {
+            $stmt->bindValue(':'.$key, (int)$value, PDO::PARAM_INT);
+        } else {
+            $stmt->bindValue(':'.$key, $value);
+        }
+    }
+
+    $stmt->execute();
+    return $connectDB->lastInsertId();
+}
     public function deconnexion($connectDB) {
         $this->con = null;
     }
     
 }
 ?>
+
+<!-- create insert, getone, getAll, insert, update delete -->

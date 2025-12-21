@@ -95,10 +95,33 @@
         'action' => 'show_projects', 
     ],
 
+
     'gestion_users' => [
         'controller' => 'UserController',
         'action' => 'show_users', 
     ],
+    'create_user' => [
+        'controller' => 'UserController',
+        'action' => 'user_form'
+    ],
+    'update_user' => [
+        'controller' => 'UserController',
+        'action' => 'user_form'
+    ],
+    'createUser' => [
+        'controller' => 'UserController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'updateUser' => [
+        'controller' => 'UserController',
+        'action' => 'handle_submit_create_update'
+    ],
+     'delete_user' => [
+        'controller' => 'UserController',
+        'action' => 'delete_user'
+    ],
+
+
 
     'gestion_publications' => [
         'controller' => 'PublicationController',
