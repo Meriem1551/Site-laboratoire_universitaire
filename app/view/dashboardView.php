@@ -54,8 +54,8 @@ class DashboardView {
         }
         
         echo '</div>'; 
-        echo '</div>'; // Close max-w-7xl
-        echo '</div>'; // Close min-h-screen
+        echo '</div>';
+        echo '</div>';
     }
 }
 ?>

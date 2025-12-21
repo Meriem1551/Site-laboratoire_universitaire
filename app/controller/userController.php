@@ -52,5 +52,9 @@
         $userV =  new UserView();
         $userV->userForm($user);
     }
+
+    public function show_users(){
+        
+    }
  }
 ?>
