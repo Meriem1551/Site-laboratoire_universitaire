@@ -121,6 +121,18 @@
         'action' => 'delete_user'
     ],
 
+    'roles' => [
+        'controller' => 'RoleController',
+        'action' => 'show_roles'
+    ],
+    'add_role' => [
+        'controller' => 'RoleController',
+        'action' => 'add_role'
+    ],
+    'delete_role' => [
+        'controller' => 'RoleController',
+        'action' => 'delete_role'
+    ],
 
 
     'gestion_publications' => [

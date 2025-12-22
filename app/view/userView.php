@@ -46,7 +46,7 @@ class UserView {
     echo '</section>';
     }
 
-    public function show_users($allowed, $users) {
+    public function show_users($allowed, $users, $allowedRoles) {
         $activeUsers = array_filter($users, fn($user) => $user['status_user'] === 'active');
         $adminUsers = array_filter($users, fn($user) => $user['role'] === 'admin');
         $totalPubs = array_sum(array_column($users, 'nb_pubs'));
@@ -80,15 +80,21 @@ class UserView {
     echo '<h2 class="text-xl font-bold text-gray-900">Liste des utilisateurs</h2>';
     
     
-    
-    if ($allowed['create']) {
-        echo '<a href="index.php?page=create_user" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
-        echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
-        echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
-        echo '</svg>';
-        echo 'Nouvel utilisateur';
+    echo "<div class='flex gap-6 ml-auto'>";
+        if ($allowed['create']) {
+            echo '<a href="index.php?page=create_user" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
+            echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+            echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
+            echo '</svg>';
+            echo 'Nouvel utilisateur';
+            echo '</a>';
+        }
+        if($allowedRoles['read']){
+        echo '<a href="index.php?page=roles" class="px-4 py-2 text-[var(--primary)] font-medium">';
+            echo 'Gestion des roles';
         echo '</a>';
-    }
+        }
+    echo "</div>";
     echo '</div>';
     echo '</div>';
     

@@ -112,12 +112,7 @@ class UserModel extends BaseModel{
 
         $this->deconnexion($con);
     }
-    public function getRoles(){
-        $con = $this->connection();
-        $roles = $this->requet($con, 'roles.getAll', []);
-        $this->deconnexion($con);
-        return $roles;
-    }
+    
 }
 
 ?>

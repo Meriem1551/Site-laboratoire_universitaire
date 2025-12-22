@@ -16,7 +16,7 @@ class BaseController {
 
         $actions = [];
         foreach ($this->features[$featureKey]['permissions'] as $action => $permName) {
-            if ($action === 'read') continue;
+            // if ($action === 'read') continue;
             $actions[$action] = $this->perm->can($permName);
         }
 

@@ -10,10 +10,10 @@ class DashboardController extends BaseController {
         foreach ($this->features as $key => $feature) {
             if ($this->perm->can($feature['permissions']['read'])) {
                 $cards[$key] = [
-                    'title' => $feature['title'],
-                    'icon'  => $feature['icon'],
-                    'url'   => $feature['url'],
-                    'color' => $feature['color'],
+                    'title' => $feature['title'] ?? '',
+                    'icon'  => $feature['icon'] ?? '',
+                    'url'   => $feature['url'] ?? '',
+                    'color' => $feature['color'] ?? '',
                     'actions' => $this->getAllowedActions($key),
                 ];
             }

@@ -1,5 +1,6 @@
 <?php
     require_once "app/model/userModel.php";
+    require_once "app/model/roleModel.php";
     require_once "app/model/publicationModel.php";
     require_once "app/view/userView.php";
     require_once "baseController.php";
@@ -62,19 +63,21 @@
     }
 
     public function show_users(){
-        $allowed = $this->getAllowedActions('users');
+        $allowed = $this->getAllowedActions('users');        
+        $allowedRoles = $this->getAllowedActions('roles');
+
         $userV = new UserView();
         $users = $this->getAll();
         foreach($users as &$user){
             $user['nb_pubs'] = $this->getNbPub($user['id']);
         }
-        $userV->show_users($allowed, $users);
+        $userV->show_users($allowed, $users, $allowedRoles);
     }
 
     
 private function getRoles(){
-    $userM = new UserModel();
-    return $userM->getRoles();
+    $roleM = new RoleModel();
+    return $roleM->getRoles();
 }
 
     public function user_form(){

@@ -38,7 +38,9 @@
     'teams.getById' => 'select * from teams t join users u on t.team_leader_id = u.id where t.id = :id',
     'reservation.addRes' => 'insert into reservations (equipment_id, user_id, start_datetime, end_datetime, purpose) values (:e_id, :u_id, :start, :end, :purpose)',
     'permissions.getByUser' => 'select p.name from permissions p join permission_user pu on p.id = pu.permission_id where user_id = :user_id',
-      'roles.getAll' => 'select * from roles'
+      'roles.getAll' => 'select * from roles',
+      'roles.delete' => 'delete from roles where id = :id',
+      'roles.add' => 'insert into roles (name) values (:name)'
    ];
 
  return $sql;
