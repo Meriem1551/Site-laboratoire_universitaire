@@ -22,7 +22,28 @@ class PermissionModel extends BaseModel{
     public function can($permissionName) {
         return in_array($permissionName, $this->permissions);
     }
-
+    public function getPermissions($id){
+        $con = $this->connection();
+        $permissions = $this->requet($con, 'permissions.getAll', ['user_id' => $this->userId]);
+        $this->deconnexion($con);
+        return $permissions;
+    }
+    public function getPermUsers($id){
+        $con = $this->connection();
+        $permissions = $this->requet($con, 'permissions.getByUser', ['user_id' => $this->userId]);
+        $this->deconnexion($con);
+        return $permissions;
+    }
+    public function add_permission($permission_id, $id_user){
+        $con = $this->connection();
+        $this->requet($con, 'permissions.add', ['user_id' => $id_user, 'perm_id' => $permission_id]);
+        $this->deconnexion($con);
+    }
+    public function remove_permission($permission_id, $id_user){
+        $con = $this->connection();
+        $this->requet($con, 'permissions.delete', ['user_id' => $id_user, 'perm_id' => $permission_id]);
+        $this->deconnexion($con);
+    }
 }
 
 ?>

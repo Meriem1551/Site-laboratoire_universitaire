@@ -4,14 +4,14 @@ require_once __DIR__ . "/../controller/authController.php";
 class AuthModel extends BaseModel{
     
 
-    public function login($username, $pw){//remove the password
+    public function login($username){
         $connection = $this->connection();
 
-        if ($username === '' || $pw === '') {
+        if ($username === '') {
             die('Username and password are required.');
         }
 
-        $user = $this->requet($connection, 'user.login', ['username'=> $username, 'password'=>$pw]);
+        $user = $this->requet($connection, 'user.login', ['username'=> $username]);
         $this->deconnexion($connection);
         return $user;
 }

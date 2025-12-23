@@ -378,41 +378,43 @@ private function getUser($user){
         
 
 
-    private function getForm($user_id, $equip_id){
-$formHeaderContent = [
+    private function getForm($user_id, $equip_id) {
+    $formHeaderContent = [
         "<div class='text-center mb-6'>",
             "<h3 class='text-2xl font-bold text-gray-900 mb-2'>Détails de la réservation</h3>",
             "<p class='text-gray-600'>Remplissez les informations requises pour votre réservation</p>",
         "</div>"
     ];
-    
+
     $formText = '<p class="text-gray-600 text-center mb-6">Veuillez remplir tous les champs obligatoires pour effectuer votre réservation.</p>';
-    
+
     $form = new Form(
-'index.php?page=reservation',
+        'index.php?page=reservation',
         'POST', 
         'Confirmer la réservation', 
         'Formulaire de réservation',
         $formText
     );
-    
-    $form->addField('equip_id', '', 'hidden', $equip_id, '');
-    $form->addField('user_id', '', 'hidden', $user_id, '');
-    $form->addField('start_datetime', 'Date et heure de début', 'datetime-local', '', 'JJ/MM/AAAA HH:MM');
-    $form->addField('end_datetime', 'Date et heure de fin', 'datetime-local', '', 'JJ/MM/AAAA HH:MM');
-    $form->addField('purpose', 'Motif de la réservation', 'textarea', '', 'Décrivez l\'utilisation prévue de l\'équipement');
-    
+
+    $form->addHidden('equip_id', $equip_id);
+    $form->addHidden('user_id', $user_id);
+    $form->addInput('start_datetime', 'Date et heure de début', '', 'JJ/MM/AAAA HH:MM', 'datetime-local');
+    $form->addInput('end_datetime', 'Date et heure de fin', '', 'JJ/MM/AAAA HH:MM', 'datetime-local');
+    $form->addTextarea('purpose', 'Motif de la réservation', '', 'Décrivez l\'utilisation prévue de l\'équipement');
+
     ob_start();
     $form->render();
     $formHTML = ob_get_clean();
-    
+
     $formBody = ["<div>" . $formHTML . "</div>"];
     ob_start();
     $formCard = new Card($formHeaderContent, $formBody, [], "bg-white p-6 rounded-xl border border-gray-200 mb-8");
     $formCard->render();
     $formCardHTML = ob_get_clean();
+
     return $formCardHTML;
 }
+
 
 
 public function show_res_form($equip) {

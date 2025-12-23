@@ -21,7 +21,7 @@
     'users.getById'=> 'select * from users where id = :id',
     'users.getDir' => "select *from users where role = 'directeur'",
     'users.getAll' => 'select * from users order by created_at',
-    'user.login' => 'select * FROM users WHERE username = :username and password = :password',
+    'user.login' => 'select * FROM users WHERE username = :username',
     'users.getMembers' => 'select * from users where id_team = :id',
     'users.updateProfile' => 'update users set first_name = :first_name, last_name = :last_name, email = :email, profile_picture = :pp, speciality = :speciality, post = :post, grade = :grade, bio = :bio, cv = :cv where id = :user_id',
     'users.updateUser' => 'update users set first_name = :first_name, last_name = :last_name, email = :email, profile_picture = :pp, speciality = :speciality, post = :post, grade = :grade, bio = :bio, cv = :cv, username = :username, password = :pw, status_user = :status, role = :role where id = :user_id',
@@ -37,10 +37,15 @@
     'teams.getAll' => 'select * from teams t left join users u on u.id = t.team_leader_id',
     'teams.getById' => 'select * from teams t join users u on t.team_leader_id = u.id where t.id = :id',
     'reservation.addRes' => 'insert into reservations (equipment_id, user_id, start_datetime, end_datetime, purpose) values (:e_id, :u_id, :start, :end, :purpose)',
-    'permissions.getByUser' => 'select p.name from permissions p join permission_user pu on p.id = pu.permission_id where user_id = :user_id',
-      'roles.getAll' => 'select * from roles',
+    'permissions.getByUser' => 'select * from permissions p join permission_user pu on p.id = pu.permission_id where user_id = :user_id',
+    'permissions.getAll' => 'select * from permissions p left join permission_user pu on p.id = pu.permission_id and user_id = :user_id',
+    'permissions.add' => 'insert into permission_user (user_id, permission_id) values (:user_id, :perm_id)',
+    'permissions.delete' => 'delete from permission_user where user_id= :user_id and permission_id = :perm_id',
+
+    'roles.getAll' => 'select * from roles',
       'roles.delete' => 'delete from roles where id = :id',
       'roles.add' => 'insert into roles (name) values (:name)'
+
    ];
 
  return $sql;

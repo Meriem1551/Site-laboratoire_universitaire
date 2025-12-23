@@ -134,6 +134,15 @@
         'action' => 'delete_role'
     ],
 
+    'gestion_perm' => [
+        'controller' => 'PermissionController',
+        'action' => 'show_form'
+    ],
+    'give_permission' => [
+         'controller' => 'PermissionController',
+        'action' => 'handle_submit'
+    ],
+
 
     'gestion_publications' => [
         'controller' => 'PublicationController',

@@ -7,44 +7,45 @@ require_once "components/card.php";
 class UserView {
 
     public function userForm($user = null, $actionUrl = '', $submitText = '') {
-        echo '<section class="min-h-screen lg:w-full py-24 px-12">';
+    echo '<section class="min-h-screen lg:w-full py-24 px-12">';
     echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
 
     echo "<div class='mb-6 flex flex-col items-center'>
         <img id='profilePreview' src='" . ($user['profile_picture'] ?? 'public/assets/placeholder.jpg') . "' 
-             alt='Photo de profil' 
              class='w-24 h-24 rounded-full mb-4 border border-gray-300'>
         <label class='text-gray-600 text-sm'>Changer la photo de profil</label>
-      </div>";
-    
+    </div>";
+
     $form = new Form(
-        'index.php?page=edit_profile', 
-        'POST', 
-        'Enregistrer', 
+        'index.php?page=edit_profile',
+        'POST',
+        'Enregistrer',
         '',
-        '', 
+        '',
         true
     );
 
-    
-    $form->addField('profile_picture', 'Photo de profile', 'file', "", 'Choisir un fichier');   
-    $form->addField('cv','CV', 'file', 'CV', 'Choisir un fichier');//for the cv
+    $form->addFile('profile_picture', 'Photo de profil');
+    $form->addFile('cv', 'CV');
 
-    $form->addField('first_name', 'Prénom', 'text', $user['first_name'] ?? '', 'Prénom');
-    $form->addField('last_name', 'Nom', 'text', $user['last_name'] ?? '', 'Nom de famille');
-    $form->addField('email', 'Adresse email', 'email', $user['email'] ?? '', 'exemple@domaine.com');
-    $form->addField('speciality', 'Spécialité', 'text', $user['speciality'] ?? '', 'Domaine de spécialisation');
-    $form->addField('post', 'Poste', 'text', $user['post'] ?? '', 'Poste actuel');
-    $form->addField('grade', 'Grade', 'text', $user['grade'] ?? '', 'Grade académique');
-    $form->addField('bio', 'Biographie', 'textarea', $user['bio'] ?? '', 'Biographie');
-    $form->addField('current_profile_picture', '', 'hidden', $user['profile_picture'] ?? '', '');
-    $form->addField('user_id', '', 'hidden', $user['id'], '');
-    $form->addField('current_cv', '', 'hidden', $user['cv'] ?? '', '');
+    $form->addInput('first_name', 'Prénom', $user['first_name'] ?? '', 'Prénom');
+    $form->addInput('last_name', 'Nom', $user['last_name'] ?? '', 'Nom de famille');
+    $form->addInput('email', 'Adresse email', $user['email'] ?? '', 'exemple@domaine.com', 'email');
+    $form->addInput('speciality', 'Spécialité', $user['speciality'] ?? '', 'Domaine de spécialisation');
+    $form->addInput('post', 'Poste', $user['post'] ?? '', 'Poste actuel');
+    $form->addInput('grade', 'Grade', $user['grade'] ?? '', 'Grade académique');
+    $form->addTextarea('bio', 'Biographie', $user['bio'] ?? '', 'Biographie');
+
+    $form->addHidden('current_profile_picture', $user['profile_picture'] ?? '');
+    $form->addHidden('current_cv', $user['cv'] ?? '');
+    $form->addHidden('user_id', $user['id'] ?? '');
+
     $form->render();
-    
+
     echo '</div>';
     echo '</section>';
-    }
+}
+
 
     public function show_users($allowed, $users, $allowedRoles) {
         $activeUsers = array_filter($users, fn($user) => $user['status_user'] === 'active');
@@ -143,6 +144,12 @@ class UserView {
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                     </svg>
                 </a>' : '') . '
+                <a href="index.php?page=gestion_perm&id=' . $user['id'] . '" 
+                    class="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors" title="Gérer les permissions">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </a>
             </div>'
         ];
     }
@@ -158,68 +165,64 @@ class UserView {
 
 
 
-public function create_update_form($user, $roles){
-    $link = '';
-    $action = '';
-    if($user === null){
-        //creating 
-        $link = "index.php?page=createUser";
-        $action = "Ajouter";
-    }
-    else {
-        //updating
-       $link = "index.php?page=updateUser";
-       $action = 'Modifier';
-    }
+public function create_update_form($user, $roles) {
+
+    $link = $user === null ? "index.php?page=createUser" : "index.php?page=updateUser";
+    $action = $user === null ? "Ajouter" : "Modifier";
+
     echo '<section class="min-h-screen lg:w-full py-24 px-12">';
-        echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
-        if($user != null){
-            echo "<div class='mb-6 flex flex-col items-center'>
-                <img id='profilePreview' src='" . ($user['profile_picture'] ?? '') . "' 
-                    alt='Photo de profil' 
-                    class='w-24 h-24 rounded-full mb-4 border border-gray-300'>
-                <label class='text-gray-600 text-sm'>Changer la photo de profil</label>
-            </div>";
-        }
-        
-        $rolesOptions = [];
-        foreach ($roles as $role) {
-            $rolesOptions[$role['name']] = ucfirst($role['name']);
-        }
-        $form = new Form($link, 'POST', $action, '', '', true);
-        $form->addField('first_name', 'Nom', 'text', $user['first_name'] ?? '', 'Nom');
-        $form->addField('last_name', 'Prenom', 'text', $user['last_name'] ?? '', 'Prenom');
-        $form->addField('email', 'Adresse email', 'email', $user['email'] ?? '', 'exemple@domaine.com');
-        $form->addField('username', 'Nom d\'utilisateur', 'text', $user['username'] ?? '', '');
-        $form->addField('role', 'role', 'select', $user['role'] ?? '', '', $rolesOptions);
+    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
 
-        $form->addField(
-            'status', 
-            "Etat de l'utilisateur (actif ou non-actif)", 
-            'checkbox', 
-            (isset($user['status_user']) && $user['status_user'] === 'active') ? 'checked' : '', 
-            ''
-        );
-        $form->addField('pw', 'Mot de pass', 'password', $user['password'] ?? '', '');
-        $form->addField('confirme', 'Confirme Le mot de pass', 'password', $user['password'] ?? '', '');
-        $form->addField('speciality', 'Spécialité', 'text', $user['speciality'] ?? '', 'Domaine de spécialisation');
-        $form->addField('post', 'Poste', 'text', $user['post'] ?? '', 'Poste actuel');
-        $form->addField('bio', 'Biographie', 'textarea', $user['bio'] ?? '', 'Biographie');
-        $form->addField('grade', 'Grade', 'text', $user['grade'] ?? '', 'Grade académique');
-        $form->addField('profile_picture', 'Photo de profile', 'file', "", 'Choisir un fichier');   
-        $form->addField('cv','CV', 'file', 'CV', 'Choisir un fichier');
-        if($user !== null){
-            $form->addField('current_profile_picture', '', 'hidden', $user['profile_picture'] ?? '', '');
-            $form->addField('user_id', '', 'hidden', $user['id'], '');
-            $form->addField('current_cv', '', 'hidden', $user['cv'] ?? '', '');
-        }
-        //add permissions
-        $form->render();
+    if ($user) {
+        echo "<div class='mb-6 flex flex-col items-center'>
+            <img id='profilePreview' src='{$user['profile_picture']}' 
+                 class='w-24 h-24 rounded-full mb-4 border border-gray-300'>
+            <label class='text-gray-600 text-sm'>Changer la photo de profil</label>
+        </div>";
+    }
 
-        //form of permissions
-        
-        echo '</div>';
+    $rolesOptions = [];
+    foreach ($roles as $role) {
+        $rolesOptions[$role['name']] = ucfirst($role['name']);
+    }
+
+    $form = new Form($link, 'POST', $action, '', '', true);
+
+    $form->addInput('first_name', 'Nom', $user['first_name'] ?? '', 'Nom');
+    $form->addInput('last_name', 'Prénom', $user['last_name'] ?? '', 'Prénom');
+    $form->addInput('email', 'Adresse email', $user['email'] ?? '', 'exemple@domaine.com', 'email');
+    $form->addInput('username', "Nom d'utilisateur", $user['username'] ?? '');
+
+    $form->addSelect('role', 'Rôle', $rolesOptions, $user['role'] ?? '');
+
+    $form->addCheckbox(
+        'status',
+        "Utilisateur actif",
+        isset($user['status_user']) && $user['status_user'] === 'active'
+    );
+
+    $form->addInput('pw', 'Mot de passe', '', '', 'password');
+    $form->addInput('confirme', 'Confirmer le mot de passe', '', '', 'password');
+
+    $form->addInput('speciality', 'Spécialité', $user['speciality'] ?? '');
+    $form->addInput('post', 'Poste', $user['post'] ?? '');
+    $form->addTextarea('bio', 'Biographie', $user['bio'] ?? '');
+    $form->addInput('grade', 'Grade', $user['grade'] ?? '');
+
+    $form->addFile('profile_picture', 'Photo de profil');
+    $form->addFile('cv', 'CV');
+
+    if ($user) {
+        $form->addHidden('current_profile_picture', $user['profile_picture']);
+        $form->addHidden('current_cv', $user['cv'] ?? '');
+        $form->addHidden('user_id', $user['id'] ?? '');
+    }
+
+    $form->render();
+
+    echo '</div>';
     echo '</section>';
 }
+
 }
 ?>

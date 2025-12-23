@@ -22,4 +22,7 @@ class BaseController {
 
         return $actions;
     }
+    // protected function insert($table, $data){
+
+    // }
 }

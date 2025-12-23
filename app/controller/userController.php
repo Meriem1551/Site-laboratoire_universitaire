@@ -97,67 +97,105 @@ private function getRoles(){
     }
 
 
-    public function handle_submit_create_update(){
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $first_name = $_POST['first_name'];
-            $last_name = $_POST['last_name'];
-            $email = $_POST['email'];
-            $username = $_POST['username'];
-            $role = $_POST['role'];
-            $status = isset($_POST['status']) ? 'active' : 'suspendu';
-            $pw = $_POST['pw'];
-            $confirmePw = $_POST['confirme'];
-            if($pw !== $confirmePw){
-                die("error");
-            }
-            // if (!empty($_POST['pw'])) {
-            //     if ($_POST['pw'] !== $_POST['confirme']) {
-            //         die("Les mots de passe ne correspondent pas");
-            //     }
-            //     $password = password_hash($_POST['pw'], PASSWORD_DEFAULT);
-            // }
-            $speciality  = $_POST['speciality'];
-            $post  = $_POST['post'];
-            $grade  = $_POST['grade'];            
-            $bio  = $_POST['bio'];
+    public function handle_submit_create_update() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
 
-            $profile_picture = $_POST['current_profile_picture'] ?? '';
-            if(isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK){
-                $uploadDir = 'public/assets/';
-                $filename = uniqid() . '_' . basename($_FILES['profile_picture']['name']);
-                $targetPath = $uploadDir . $filename;
-                if(move_uploaded_file($_FILES['profile_picture']['tmp_name'], $targetPath)){
-                    $profile_picture = $targetPath;
-                }
-            }
+    $first_name = $_POST['first_name'];
+    $last_name  = $_POST['last_name'];
+    $email      = $_POST['email'];
+    $username   = $_POST['username'];
+    $role       = $_POST['role'];
+    $status     = isset($_POST['status']) ? 'active' : 'suspendu';
 
-            $cv = $_POST['current_cv'] ?? '';
-            if(isset($_FILES['cv']) && $_FILES['cv']['error'] === UPLOAD_ERR_OK){
-                $uploadDir = 'public/cv/';
-                $filename = uniqid() . '_' . basename($_FILES['cv']['name']);
-                $targetPath = $uploadDir . $filename;
-                if(move_uploaded_file($_FILES['cv']['tmp_name'], $targetPath)){
-                    $cv = $targetPath;
-                }
-            }
+    $pw           = $_POST['pw'] ?? '';
+    $confirmePw   = $_POST['confirme'] ?? '';
+    $passwordHash = null;
 
-            //must add permission
-            $userModel = new UserModel();
-            $insert_user_id = 0;
-            if (isset($_POST['user_id'])){
-                $user_id = $_POST['user_id'];
-                //update
-                $userModel->updateUser($user_id, $first_name, $last_name, $email, $profile_picture, $speciality, $post, $grade, $bio, $cv, $username, $pw, $status, $role);
-            }
-            else {
-                //create
-                $insert_user_id = $userModel->createUser($first_name, $last_name, $email, $profile_picture, $speciality, $post, $grade, $bio, $cv, $username, $pw, $status, $role);
-            }
-            
-            header("Location: index.php?page=gestion_users"); 
-        }  
-        
+    if (!empty($pw)) {
+        if ($pw !== $confirmePw) {
+            die("Les mots de passe ne correspondent pas");
+        }
+        $passwordHash = password_hash($pw, PASSWORD_DEFAULT);
     }
+
+    $speciality = $_POST['speciality'] ?? '';
+    $post       = $_POST['post'] ?? '';
+    $grade      = $_POST['grade'] ?? '';
+    $bio        = $_POST['bio'] ?? '';
+
+    $profile_picture = $_POST['current_profile_picture'] ?? '';
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = 'public/assets/';
+        $filename  = uniqid() . '_' . basename($_FILES['profile_picture']['name']);
+        $targetPath = $uploadDir . $filename;
+        if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $targetPath)) {
+            $profile_picture = $targetPath;
+        }
+    }
+
+    $cv = $_POST['current_cv'] ?? '';
+    if (isset($_FILES['cv']) && $_FILES['cv']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = 'public/cv/';
+        $filename  = uniqid() . '_' . basename($_FILES['cv']['name']);
+        $targetPath = $uploadDir . $filename;
+        if (move_uploaded_file($_FILES['cv']['tmp_name'], $targetPath)) {
+            $cv = $targetPath;
+        }
+    }
+
+    $userModel = new UserModel();
+
+    if (isset($_POST['user_id'])) {
+        $user_id = $_POST['user_id'];
+
+        if ($passwordHash === null) {
+            $currentUser = $userModel->getUserById($user_id);
+            $passwordHash = $currentUser['password'];
+        }
+
+        $userModel->updateUser(
+            $user_id,
+            $first_name,
+            $last_name,
+            $email,
+            $profile_picture,
+            $speciality,
+            $post,
+            $grade,
+            $bio,
+            $cv,
+            $username,
+            $passwordHash,
+            $status,
+            $role
+        );
+
+    } else {
+        if ($passwordHash === null) {
+            die("Le mot de passe est requis pour créer un utilisateur.");
+        }
+
+        $userModel->createUser(
+            $first_name,
+            $last_name,
+            $email,
+            $profile_picture,
+            $speciality,
+            $post,
+            $grade,
+            $bio,
+            $cv,
+            $username,
+            $passwordHash,
+            $status,
+            $role
+        );
+    }
+
+    header("Location: index.php?page=gestion_users");
+    exit;
+}
+
 
     public function delete_user(){
         $id = $_GET['id'];
