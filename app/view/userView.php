@@ -198,6 +198,7 @@ public function create_update_form($user, $roles) {
     $form->addCheckbox(
         'status',
         "Utilisateur actif",
+        $user['status_user']??'',
         isset($user['status_user']) && $user['status_user'] === 'active'
     );
 

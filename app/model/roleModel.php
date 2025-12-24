@@ -14,7 +14,7 @@ class RoleModel extends BaseModel{
     }
     public function add_role($name){
         $con = $this->connection();
-        $this->requet($con, 'roles.delete', ['id' => $id]);
+        $this->requet($con, 'roles.add', ['name' => $name]);
         $this->deconnexion($con);
     }
 }

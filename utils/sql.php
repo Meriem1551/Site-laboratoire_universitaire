@@ -45,7 +45,6 @@
         t.research_themes,
         t.team_leader_id,
         t.created_at,
-
         u.id AS leader_id,
         u.username,
         u.email,
