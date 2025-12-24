@@ -63,6 +63,7 @@ class UserModel extends BaseModel{
 
    public function updateUser($user_id, $first_name, $last_name, $email, $profile_picture, $speciality, $post, $grade, $bio, $cv, $username, $pw, $status, $role){
     $con = $this->connection();
+
     $params = [
         'first_name' => $first_name, 
         'last_name' => $last_name, 

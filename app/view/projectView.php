@@ -114,24 +114,44 @@ class ProjectView {
             "rounded-full px-4 py-1.5 font-medium"
         ))->render();
 
+        $hasSupervisor = !empty($project['first_name']) && !empty($project['last_name']);
+        
         ob_start();
-        $this->render_supervisor(
-            $project['profile_picture'],
-            $project['first_name'],
-            $project['last_name'],
-            $project['post'],
-            $project['grade'],
-            $project['speciality'],
-            $project['email'],
-            $project['role'],
-            $project['status_user'],
-            $project['bio']
-        );
+        if ($hasSupervisor) {
+            $this->render_supervisor(
+                $project['profile_picture'],
+                $project['first_name'],
+                $project['last_name'],
+                $project['post'],
+                $project['grade'],
+                $project['speciality'],
+                $project['email'],
+                $project['role'],
+                $project['status_user'],
+                $project['bio']
+            );
+        } else {
+            echo '<div class="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">';
+            echo '<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+            echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>';
+            echo '</svg>';
+            echo '<p class="text-gray-600 font-medium">Aucun responsable assigné</p>';
+            echo '<p class="text-gray-500 text-sm mt-1">Le projet est en attente d\'un responsable</p>';
+            echo '</div>';
+        }
         $supervisorHTML = ob_get_clean();
 
-        ob_start(); $this->render_members($members);       $membersHTML = ob_get_clean();
-        ob_start(); $this->render_partners($partners);     $partnersHTML = ob_get_clean();
-        ob_start(); $this->render_publications($publications); $publicationsHTML = ob_get_clean();
+        ob_start(); 
+        $this->render_members($members);       
+        $membersHTML = ob_get_clean();
+        
+        ob_start(); 
+        $this->render_partners($partners);     
+        $partnersHTML = ob_get_clean();
+        
+        ob_start(); 
+        $this->render_publications($publications); 
+        $publicationsHTML = ob_get_clean();
 
         $respoTitle  = $this->createSectionTitle('Responsable du projet', 'user');
         $memberTitle = $this->createSectionTitle('Équipe de Recherche', 'users');
@@ -299,33 +319,102 @@ class ProjectView {
 
     private function render_members($members) {
         if(!empty($members)) {
-            echo "<div class='grid lg:grid-cols-2  gap-6'>";
+            echo "<div class='grid lg:grid-cols-2 gap-6'>";
             foreach($members as $member) {
-                echo "<div class='transform transition-all duration-300 hover:-translate-y-1 hover:shadow-md'>";
-                $userCard = new UserCard(
-                    $member['first_name'], 
-                    $member['last_name'], 
-                    $member['role'], 
-                    $member['status_user'], 
-                    $member['profile_picture'], 
-                    $member['email'], 
-                    $member['speciality'],
-                    $member['post'], 
-                    $member['grade'],
-                    $member['bio']
+                // Créer une carte pour chaque membre
+                $header = [
+                    "<div class='p-4 border-b border-gray-100 bg-gray-50 rounded-t-lg'>",
+                    "<div class='flex items-center gap-3'>",
+                    "<div class='w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm'>",
+                    "<img src='{$member['profile_picture']}' class='w-full h-full object-cover' alt='{$member['first_name']} {$member['last_name']}'>",
+                    "</div>",
+                    "<div>",
+                    "<h4 class='font-semibold text-gray-900'>{$member['first_name']} {$member['last_name']}</h4>",
+                    "<p class='text-sm text-gray-600'>{$member['role']}</p>",
+                    "</div>",
+                    "</div>",
+                    "</div>"
+                ];
+
+                $body = [
+                    "<div class='p-4'>",
+                    "<div class='space-y-3'>",
+                    "<div class='flex items-center text-sm'>",
+                    "<svg class='w-4 h-4 mr-2 text-gray-400' fill='currentColor' viewBox='0 0 20 20'>",
+                    "<path d='M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z'/>",
+                    "<path d='M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z'/>",
+                    "</svg>",
+                    "<span class='text-gray-700'>{$member['email']}</span>",
+                    "</div>",
+                    "<div class='flex items-center text-sm'>",
+                    "<svg class='w-4 h-4 mr-2 text-gray-400' fill='currentColor' viewBox='0 0 20 20'>",
+                    "<path fill-rule='evenodd' d='M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z' clip-rule='evenodd'/>",
+                    "</svg>",
+                    "<span class='text-gray-700'>Spécialité: {$member['speciality']}</span>",
+                    "</div>",
+                    "</div>",
+                    "</div>"
+                ];
+
+                $footer = [
+                    "<div class='p-4 border-t border-gray-100 bg-gray-50 rounded-b-lg'>",
+                    "<div class='flex justify-between items-center'>",
+                    "<span class='text-xs px-3 py-1 rounded-full bg-blue-100 text-blue-800'>{$member['grade']}</span>",
+                    "<span class='text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-800'>{$member['post']}</span>",
+                    "</div>",
+                    "</div>"
+                ];
+
+                $card = new Card(
+                    $header,
+                    $body,
+                    $footer,
+                    'bg-white rounded-lg shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300'
                 );
-                $userCard->render();
-                echo "</div>";
+                $card->render();
             }
             echo "</div>";
         } else {
-            echo "<div class='text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200'>";
-            echo "<svg class='w-16 h-16 text-gray-300 mx-auto mb-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>";
-            echo "<path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/>";
-            echo "</svg>";
-            echo "<p class='text-gray-600 font-medium'>Aucun membre supplémentaire</p>";
-            echo "<p class='text-gray-500 text-sm mt-1'>Le responsable est actuellement le seul membre de ce projet</p>";
-            echo "</div>";
+            // Carte pour "Aucun membre"
+            $header = [
+                "<div class='p-4 border-b border-gray-100 bg-gray-50 rounded-t-lg'>",
+                "<div class='flex items-center gap-3'>",
+                "<div class='w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center'>",
+                "<svg class='w-6 h-6 text-gray-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>",
+                "<path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z'/>",
+                "</svg>",
+                "</div>",
+                "<div>",
+                "<h4 class='font-semibold text-gray-900'>Aucun membre supplémentaire</h4>",
+                "<p class='text-sm text-gray-600'>L'équipe est actuellement réduite</p>",
+                "</div>",
+                "</div>",
+                "</div>"
+            ];
+
+            $body = [
+                "<div class='p-6 text-center'>",
+                "<svg class='w-16 h-16 text-gray-300 mx-auto mb-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>",
+                "<path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/>",
+                "</svg>",
+                "<p class='text-gray-600 font-medium mb-2'>Équipe en constitution</p>",
+                "<p class='text-gray-500 text-sm'>Les membres seront ajoutés au fur et à mesure de leur recrutement</p>",
+                "</div>"
+            ];
+
+            $footer = [
+                "<div class='p-4 border-t border-gray-100 bg-gray-50 rounded-b-lg text-center'>",
+                "<p class='text-xs text-gray-500'>Contactez l'administration pour rejoindre ce projet</p>",
+                "</div>"
+            ];
+
+            $card = new Card(
+                $header,
+                $body,
+                $footer,
+                'bg-white rounded-lg shadow-sm border-2 border-dashed border-gray-200'
+            );
+            $card->render();
         }
     }
 

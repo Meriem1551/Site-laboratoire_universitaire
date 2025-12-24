@@ -11,7 +11,7 @@ class AuthModel extends BaseModel{
             die('Username and password are required.');
         }
 
-        $user = $this->requet($connection, 'user.login', ['username'=> $username]);
+        $user = $this->getByCol($connection, 'users', 'username', $username);
         $this->deconnexion($connection);
         return $user;
 }

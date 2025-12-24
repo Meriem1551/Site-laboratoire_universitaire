@@ -105,11 +105,9 @@ class PresController{
         $teamModel  = new TeamModel();
         $teams= $teamModel->get_teams();
         $userM = new UserModel();
-
-    foreach ($teams as &$team) {
-        $team['members'] = $userM->getMembers($team['id']); 
-    }
-
+        foreach ($teams as &$team) {
+            $team['members'] = $userM->getMembers($team['team_id']); 
+        }
     return $teams;
     }
 

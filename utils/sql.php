@@ -1,5 +1,6 @@
  <?php
  $sql=[
+  //this must change
     'diapo.getAll' => 'select * from diaporama',
     'news.getByLimit' => 'select * from news order by created_at desc limit 4',
     'news.getAll' => 'select * from news',
@@ -17,6 +18,7 @@
     'pubs.getAll' => 'select p.*, u.id as user_id, u.first_name, u.last_name from publications p left join publication_authors pa on pa.publication_id = p.id left join users u on u.id = pa.user_id where p.status="valide";',
     'pubs.getPubsUser' => 'select * from publication_authors pa join publications p on pa.publication_id = p.id where user_id = :id_user',
     'members.getAll' => 'select * from users u join project_members pm on u.id = pm.member_id',
+    
     'users.getAuthorByPub' => 'select u.* from users u join publication_authors pa on u.id = pa.user_id where pa.publication_id = :publication_id',
     'users.getById'=> 'select * from users where id = :id',
     'users.getDir' => "select *from users where role = 'directeur'",
@@ -34,8 +36,34 @@
     'equip.getEquipReserve' => 'select * from reservations r join equipment e on r.equipment_id = e.id where user_id = :id_user',
     'reservation.getReservation' => 'select * from reservations r join users u join equipment e on r.user_id=u.id and r.equipment_id = e.id',
     'orga.getData' => 'select * from teams',
-    'teams.getAll' => 'select * from teams t left join users u on u.id = t.team_leader_id',
+
+'teams.getAll' => '
+    SELECT 
+        t.id AS team_id,
+        t.name,
+        t.description,
+        t.research_themes,
+        t.team_leader_id,
+        t.created_at,
+
+        u.id AS leader_id,
+        u.username,
+        u.email,
+        u.first_name,
+        u.last_name,
+        u.role,
+        u.profile_picture,
+        u.speciality,
+        u.bio,
+        u.post,
+        u.grade,
+        u.status_user,
+        u.cv
+    FROM teams t
+    LEFT JOIN users u ON u.id = t.team_leader_id
+',
     'teams.getById' => 'select * from teams t join users u on t.team_leader_id = u.id where t.id = :id',
+    
     'reservation.addRes' => 'insert into reservations (equipment_id, user_id, start_datetime, end_datetime, purpose) values (:e_id, :u_id, :start, :end, :purpose)',
     'permissions.getByUser' => 'select * from permissions p join permission_user pu on p.id = pu.permission_id where user_id = :user_id',
     'permissions.getAll' => 'select * from permissions p left join permission_user pu on p.id = pu.permission_id and user_id = :user_id',

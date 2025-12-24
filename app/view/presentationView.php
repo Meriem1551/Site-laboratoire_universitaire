@@ -100,7 +100,7 @@ class PresentationView {
                 $body[] = "</div></div></div>";
                 $footer = [
                     "<div class='px-6 pb-6 pt-0'>
-                        <a href='index.php?page=team&id={$team['id']}' class='inline-flex items-center text-[var(--primary)] hover:text-[var(--primary-light)] font-medium text-sm'>
+                        <a href='index.php?page=team&id={$team['team_id']}' class='inline-flex items-center text-[var(--primary)] hover:text-[var(--primary-light)] font-medium text-sm'>
                             Voir l'équipe
                             <svg class='w-4 h-4 ml-1' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                                 <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M14 5l7 7m0 0l-7 7m7-7H3'/>

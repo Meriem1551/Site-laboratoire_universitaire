@@ -35,11 +35,61 @@ class BaseModel{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+
+    public function get_all($connectDB, $table) {
+        $stmt = $connectDB->prepare("SELECT * FROM `$table`");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function getByCol($connectDB, $table, $col, $value) {
+        $stmt = $connectDB->prepare("SELECT * FROM `$table` WHERE `$col` = :val");
+        $stmt->bindValue(':val', $value);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function insert($connectDB, $table, $data) {
+        $columns = implode('`, `', array_keys($data));
+        $placeholders = ':' . implode(', :', array_keys($data));
+
+        $stmt = $connectDB->prepare("INSERT INTO `$table` (`$columns`) VALUES ($placeholders)");
+
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(':'.$key, $value);
+        }
+
+        return $stmt->execute();
+    }
+
+    public function update($connectDB, $table, $data, $col, $val) {
+        $fields = [];
+        foreach ($data as $key => $value) {
+            $fields[] = "`$key` = :$key";
+        }
+        $fieldsStr = implode(', ', $fields);
+
+        $stmt = $connectDB->prepare("UPDATE `$table` SET $fieldsStr WHERE `$col` = :val");
+        $stmt->bindValue(':val', $val);
+
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(':'.$key, $value);
+        }
+
+        return $stmt->execute();
+    }
+
+    public function delete($connectDB, $table, $col, $val) {
+        $stmt = $connectDB->prepare("DELETE FROM `$table` WHERE `$col` = :val");
+        $stmt->bindValue(':val', $val);
+        return $stmt->execute();
+    }
+
     public function deconnexion($connectDB) {
         $this->con = null;
     }
-    
 }
 ?>
 
-<!-- create insert, getone, getAll, insert, update delete -->

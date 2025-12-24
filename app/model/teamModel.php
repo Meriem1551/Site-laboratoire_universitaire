@@ -15,5 +15,4 @@ public function get_team_by_id($id){
     return $team[0];
 }
 }
-
 ?>
