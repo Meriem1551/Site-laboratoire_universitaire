@@ -203,5 +203,34 @@ private function getRoles(){
         $userM->deleteUser($id);
         header("Location: index.php?page=gestion_users"); 
     }
+
+    public function get_project_members($id_project){
+        $userModel =  new UserModel();
+        $members = $userModel->getMembersByProject($id_project);
+        return $members;
+    }
+
+    public function handle_member() {
+        $id_project = $_GET['id'];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
+            $project_id = $_GET['id_project'];
+            $member_id = $_POST['member_id'];
+            $userModel =  new UserModel();
+            $userModel->addMembersToProject($project_id, $member_id);
+            header("Location: index.php?page=gestion_projet"); 
+            exit;
+        }
+        $users  = $this->getAll();
+        $project_members = $this->get_project_members($id_project);
+        $userView = new UserView();
+        $userView->show_members($users, $project_members);
+     }
+    public function delete_member() {
+        $id_project = $_GET['id_project'];
+        $id_member = $_GET['id_member'];
+        $userM =  new UserModel();
+        $userM->deleteMemberFromProject($id_project, $id_member);
+        header("Location: index.php?page=gestion_projet");
+    }
  }
 ?>

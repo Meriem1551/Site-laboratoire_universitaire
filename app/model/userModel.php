@@ -18,7 +18,7 @@ class UserModel extends BaseModel{
     $con = $this->connection();
     $user = $this->requet($con, 'users.getById', ['id' => $id]);
     $this->deconnexion($con);
-    return $user[0];
+    return $user[0]??$user;
     }
     public function getMembers($id_team){
         $con = $this->connection();
@@ -119,7 +119,22 @@ class UserModel extends BaseModel{
 
         $this->deconnexion($con);
     }
-    
+    public function addMembersToProject($id_project, $member_id){
+        $con = $this->connection();
+        $this->insert($con, 'project_members', [
+            'project_id' => $id_project,
+            'member_id' => $member_id
+        ]);
+        $this->deconnexion($con);
+    }
+    public function deleteMemberFromProject($id_project, $id_member){
+        $con = $this->connection();
+        $this->requet($con, 'users.deleteFromProject', [
+            'project_id' => $id_project,
+            'member_id' => $id_member
+        ]);
+        $this->deconnexion($con);
+    }
 }
 
 ?>

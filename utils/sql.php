@@ -9,8 +9,26 @@
     'events.getTotal' => 'select COUNT(*) AS total FROM events',
     'events.getTotalPublic' => 'select COUNT(*) AS total FROM events WHERE isExtern = 1',
     'partners.getAll' => 'select * from partners',
+
     'projects.getAll' => 'select *, left(description, 50) as description from projects;',
-    'projects.getById' => 'select * from projects p join users u on p.supervisor_id = u.id where p.id = :id',
+'projects.getById' => '
+SELECT 
+    p.id           AS project_id,
+    p.title,
+    p.description,
+    p.theme,
+    p.start_date,
+    p.end_date,
+    p.funding_type,
+    p.image,
+    p.status,
+    p.supervisor_id,
+    u.*
+
+FROM projects p
+LEFT JOIN users u ON p.supervisor_id = u.id
+WHERE p.id = :id
+',    
     'members.getMembersByProjectId' => 'select * from project_members pm join users u on pm.member_id = u.id where pm.project_id = :project_id',
     'partners.getByProject' => 'select pa.* from project_partners pp join partners pa on pp.id_part = pa.id where pp.id_project = :project_id',
     'pubs.getByProjectId' => 'select * from publications where status="valide" and project_id = :project_id',
@@ -28,7 +46,6 @@
     'users.updateProfile' => 'update users set first_name = :first_name, last_name = :last_name, email = :email, profile_picture = :pp, speciality = :speciality, post = :post, grade = :grade, bio = :bio, cv = :cv where id = :user_id',
     'users.updateUser' => 'update users set first_name = :first_name, last_name = :last_name, email = :email, profile_picture = :pp, speciality = :speciality, post = :post, grade = :grade, bio = :bio, cv = :cv, username = :username, password = :pw, status_user = :status, role = :role where id = :user_id',
    'users.createUser' => 'insert into users (first_name, last_name, email, profile_picture,speciality, post, grade, bio, cv, username, password, status_user, role)  values (:first_name, :last_name, :email, :pp, :speciality, :post, :grade, :bio, :cv, :username, :pw, :status, :role)',
-   
    'users.deleteUser' => 'delete from users where id = :id',
 
    'equip.getAll' => 'select * from equipment',
@@ -71,8 +88,10 @@
 
     'roles.getAll' => 'select * from roles',
       'roles.delete' => 'delete from roles where id = :id',
-      'roles.add' => 'insert into roles (name) values (:name)'
+      'roles.add' => 'insert into roles (name) values (:name)',
 
+      'partners.deleteFromProject' => 'delete from project_partners where id_project = :project_id and id_part = :partner_id',
+      'users.deleteFromProject' => 'delete from project_members where project_id = :project_id and member_id = :member_id',
    ];
 
  return $sql;

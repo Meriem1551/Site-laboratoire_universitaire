@@ -15,31 +15,7 @@ class PublicationView {
         echo $title;
         echo '<p class="text-gray-600 max-w-3xl">Explorez notre catalogue de publications académiques et de recherches scientifiques.</p>';
         echo '</div>';
-        
-        // echo '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">';
-        // echo '<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">';
-        // echo '<div class="flex-1">';
-        // echo '<div class="relative">';
-        // echo '<input type="text" placeholder="Rechercher des publications..." class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">';
-        // echo '<svg class="absolute left-4 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>';
-        // echo '</div>';
-        // echo '</div>';
-        // echo '<div class="flex gap-3">';
-        // echo '<select class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">';
-        // echo '<option>Tous les domaines</option>';
-        // echo '<option>Informatique</option>';
-        // echo '<option>Biologie</option>';
-        // echo '<option>Ingénierie</option>';
-        // echo '</select>';
-        // echo '<select class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">';
-        // echo '<option>Toutes les années</option>';
-        // echo '<option>2024</option>';
-        // echo '<option>2023</option>';
-        // echo '<option>2022</option>';
-        // echo '</select>';
-        // echo '</div>';
-        // echo '</div>';
-        // echo '</div>';
+
         
         if(!empty($publications)) {
             $groupedPubs = [];
@@ -115,10 +91,6 @@ class PublicationView {
             echo '<div class="text-sm text-gray-600">';
             echo 'Affichage de <span class="font-semibold">1-' . count($groupedPubs) . '</span> sur <span class="font-semibold">' . count($groupedPubs) . '</span> publications';
             echo '</div>';
-            // echo '<div class="flex gap-2">';
-            // echo '<button class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-200">Précédent</button>';
-            // echo '<button class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-200">Suivant</button>';
-            // echo '</div>';
             echo '</div>';
         } else {
             echo '<div class="text-center py-16 bg-white rounded-xl border-2 border-dashed border-gray-300">';

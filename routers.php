@@ -90,11 +90,6 @@
         'action' => 'show_dashboard'
     ],
 
-    'gestion_projet' => [
-        'controller' => 'ProjectController',
-        'action' => 'show_projects', 
-    ],
-
 
     'gestion_users' => [
         'controller' => 'UserController',
@@ -144,6 +139,51 @@
     ],
 
 
+
+    'gestion_projet' => [
+        'controller' => 'ProjectController',
+        'action' => 'show_projects', 
+    ],
+    'create_project' => [
+        'controller' => 'ProjectController',
+        'action' => 'project_form'
+    ],
+    'update_project' => [
+        'controller' => 'ProjectController',
+        'action' => 'project_form'
+    ],
+    'createProject' => [
+        'controller' => 'ProjectController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'updateProject' => [
+        'controller' => 'ProjectController',
+        'action' => 'handle_submit_create_update'
+    ],
+     'delete_project' => [
+        'controller' => 'ProjectController',
+        'action' => 'delete_project'
+    ],
+
+    'add_partner' => [
+        'controller' => 'PartnerController',
+        'action' => 'handle_partner'
+    ],
+    'delete_partner_project' => [
+        'controller' => 'PartnerController',
+        'action' => 'delete_partner_project'
+    ],
+    'add_member' => [
+        'controller' => 'UserController',
+        'action' => 'handle_member'
+    ],
+    'delete_member' => [
+        'controller' => 'UserController',
+        'action' => 'delete_member'
+    ],
+
+
+
     'gestion_publications' => [
         'controller' => 'PublicationController',
         'action' => 'show_pubs',
@@ -183,6 +223,30 @@
         'controller' => 'ReservationController',
         'action' => 'show_reservations',
     ],
+    'gestion_partners' => [
+        'controller' => 'PartnerController',
+        'action' => 'show_partners',
+    ],
+    'create_partner' => [
+        'controller' => 'PartnerController',
+        'action' => 'partner_form'
+    ],
+    'update_partner' => [
+        'controller' => 'PartnerController',
+        'action' => 'partner_form'
+    ],
+    'createPartner' => [
+        'controller' => 'PartnerController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'updatePartner' => [
+        'controller' => 'PartnerController',
+        'action' => 'handle_submit_create_update'
+    ],
+        'delete_partner' => [
+            'controller' => 'PartnerController',
+            'action' => 'delete_partner'
+        ],
     
  ];
 ?>

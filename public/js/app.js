@@ -155,3 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Export for manual initialization
 window.PublicationsFilter = PublicationsFilter;
+
+
+
+

@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../model/permissionModel.php';
-
 class BaseController {
     protected $perm;
     protected $features;
@@ -22,6 +21,21 @@ class BaseController {
 
         return $actions;
     }
+
+
+    // public function getAll(){
+    //     $model = new BaseModel();
+    //     $db = $model->connection();
+    //     $data = $model->getAll($db, 'projects');
+    //     return $data;
+    // }
+
+    // public function index() {
+    //     $allowedActions = $this->getAllowedActions('projects');
+    //     $data = $this->getAll();
+    //     $view = new baseView();
+    //     $view->index($allowedActions, $data);
+    // }
     // protected function insert($table, $data){
 
     // }
