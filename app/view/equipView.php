@@ -191,47 +191,12 @@ class EquipmentView {
     $subCardClass = "bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 p-6";
     
 
-    $header1 = [
-            '<div class="flex items-center gap-3 mb-3">',
-                '<div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">',
-                    '<svg class="w-5 h-5 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">',
-                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>',
-                    '</svg>',
-                '</div>',
-                '<h3 class="text-xl font-bold text-gray-900">Nombre de reservation par mois</h3>',
-            '</div>',
-    ];
-    $body1 = [
-        $lineChartHTML,
-    ];
-
-    ob_start();
-    $card1 = new Card($header1,$body1, [], $subCardClass);
-    $card1->render();
-    $card1HTML = ob_get_clean();
 
     ob_start();
     $barChart = new BarChart();
     $barChart->render($equipReserv, $labels, 'rgba(3, 204, 93, 1)', 'rgba(110, 250, 166, 0.21)');
     $barChartHTML = ob_get_clean();
 
-$header2 = [
-            '<div class="flex items-center gap-3 mb-3">',
-                '<div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">',
-                    '<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">',
-                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>',
-                    '</svg>',
-                '</div>',
-                '<h3 class="text-xl font-bold text-gray-900">Nombre de reservation par equipment</h3>',
-            '</div>',
-];
-    $body2 = [
-        $barChartHTML,
-    ];
-    ob_start();
-    $card2 = new Card($header2,$body2, [], $subCardClass);
-    $card2->render();
-    $card2HTML = ob_get_clean();
 
     $header = [
         '<div class="mb-10">',
@@ -239,8 +204,16 @@ $header2 = [
             "<p class='text-gray-600'>Visualiser les statistiques des equipments</p>",
         '</div>'
     ];
-
-
+ob_start();
+ $lineChart->display($lineChartHTML, 'Nombre de projets par année', '<svg class="w-5 h-5 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>');
+$card1HTML = ob_get_clean();
+ob_start();
+        $barChart->display($barChartHTML, 'Nombre de projets par superviseur', '<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>');
+$card2HTML = ob_get_clean();
     
     $body = [
         '<div class="grid grid-cols-1 xl:grid-cols-2 gap-8">',
