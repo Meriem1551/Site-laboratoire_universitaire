@@ -227,7 +227,7 @@
     ],
     'delete_team_member' => [
         'controller' => 'UserController',
-        'action' => 'delete_team_member'
+        'action' => 'delete_team_.member'
     ],
 
 ///////////////////////////////////
@@ -252,10 +252,57 @@
         'action' => 'show_news',
     ],
 
+    'create_new' => [
+        'controller' => 'ActualiteController',
+        'action' => 'new_form'
+    ],
+    'update_new' => [
+        'controller' => 'ActualiteController',
+        'action' => 'new_form'
+    ],
+    'createNew' => [
+        'controller' => 'ActualiteController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'updateNew' => [
+        'controller' => 'ActualiteController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'delete_new' => [
+        'controller' => 'ActualiteController',
+        'action' => 'delete_new'
+    ],
+
+
+
+
     'gestion_diaporama' => [
         'controller' => 'DiapoController',
         'action' => 'show_diapo',
     ],
+
+    'create_diapo' => [
+        'controller' => 'DiapoController',
+        'action' => 'diapo_form'
+    ],
+    'update_new' => [
+        'controller' => 'DiapoController',
+        'action' => 'diapo_form'
+    ],
+    'createNew' => [
+        'controller' => 'DiapoController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'updateNew' => [
+        'controller' => 'DiapoController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'delete_new' => [
+        'controller' => 'DiapoController',
+        'action' => 'delete_diapo'
+    ],
+
+
 
     'gestion_reservations' => [
         'controller' => 'ReservationController',
