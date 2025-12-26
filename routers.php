@@ -247,6 +247,18 @@
             'controller' => 'PartnerController',
             'action' => 'delete_partner'
         ],
+        'report_project' => [
+            'controller' => 'ReportController',
+            'action' => 'generate_report'
+        ],
+        'report_project' => [
+            'controller' => 'ReportController',
+            'action' => 'generate_report'
+        ],
+        'report_project' => [
+            'controller' => 'ReportController',
+            'action' => 'generate_report'
+        ],
     
  ];
 ?>

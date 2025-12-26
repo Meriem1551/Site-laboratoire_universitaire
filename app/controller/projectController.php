@@ -69,8 +69,23 @@ require_once "baseController.php";
                         (!empty($proj['members']) && in_array($_SESSION['user'][0]['id'], array_column($proj['members'], 'id')));
                 });
        }
+       $stats = [
+        'by_theme' => [],
+        'by_supervisor' => [],
+        'by_year' => [],
+       ];
+         foreach($projects as $p){
+            $theme = $p['theme'] ?? 'Non spécifié';
+            $stats['by_theme'][$theme] = ($stats['by_theme'][$theme] ?? 0) + 1;
+
+            $supervisor = $p['supervisor']['first_name'] ?? 'Non défini';
+            $stats['by_supervisor'][$supervisor] = ($stats['by_supervisor'][$supervisor] ?? 0) + 1;
+
+            $year = substr($p['start_date'], 0, 4) ?? 'Non défini';
+            $stats['by_year'][$year] = ($stats['by_year'][$year] ?? 0) + 1;
+        }
        $projectView = new ProjectView();
-       $projectView->show_projects_admin($projects, $allowed);
+       $projectView->show_projects_admin($projects, $allowed, $stats);
    }
 
    public function  project_form(){

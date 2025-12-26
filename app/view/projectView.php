@@ -4,7 +4,9 @@ require_once "components/badge.php";
 require_once "components/title.php";
 require_once "components/table.php";
 require_once "components/form.php";
-
+require_once "components/lineChart.php";
+require_once "components/barChart.php";
+require_once "components/pieChart.php";
 require_once "components/userCard.php";
 
 class ProjectView {
@@ -324,7 +326,6 @@ class ProjectView {
         if(!empty($members)) {
             echo "<div class='grid lg:grid-cols-2 gap-6'>";
             foreach($members as $member) {
-                // Créer une carte pour chaque membre
                 $header = [
                     "<div class='p-4 border-b border-gray-100 bg-gray-50 rounded-t-lg'>",
                     "<div class='flex items-center gap-3'>",
@@ -378,7 +379,6 @@ class ProjectView {
             }
             echo "</div>";
         } else {
-            // Carte pour "Aucun membre"
             $header = [
                 "<div class='p-4 border-b border-gray-100 bg-gray-50 rounded-t-lg'>",
                 "<div class='flex items-center gap-3'>",
@@ -530,15 +530,15 @@ class ProjectView {
     }
 
     
-  public function show_projects_admin($projects, $allowed) {
+  public function show_projects_admin($projects, $allowed, $analytics=null) {
     $activeprojects = array_filter($projects, fn($project) => $project['status'] === 'soumis');
     $nb_pubs = array_map(fn($project) => count($project['publications']), $projects);
     $nb_partners = array_map(fn($project) => count($project['partners']), $projects);
     $stats = [
-        ['title' => 'Total projets', 'value' => count($projects)],
-        ['title' => 'Projets soumis', 'value' => count($activeprojects)],
-        ['title' => 'Nombre de publications pour tous les projets', 'value' => array_sum($nb_pubs)],
-        ['title' => 'Partenaires des projets', 'value' => array_sum($nb_partners)],
+        ['title' => 'Total projets', 'value' => count($projects), 'color' => 'blue-400'],
+        ['title' => 'Projets soumis', 'value' => count($activeprojects), 'color' => 'green-400'],
+        ['title' => 'Nombre de publications pour tous les projets', 'value' => array_sum($nb_pubs), 'color' => 'purple-400'],
+        ['title' => 'Partenaires des projets', 'value' => array_sum($nb_partners), 'color' => 'yellow-400'],
     ];
     
     echo '<section class="min-h-screen py-24 w-full px-12">';
@@ -554,8 +554,7 @@ class ProjectView {
         $body = [
             "<div class='text-2xl font-bold text-gray-900'>{$stat['value']}</div>"
         ];
-        $card = new Card($header, $body, [], "bg-white rounded-xl p-4 shadow-sm border border-gray-200 ");
-        $card->render();
+$card = new Card($header, $body, [], "border-t-4 bg-white border-" . $stat['color'] . " rounded-xl p-4 shadow-sm");        $card->render();
     }
     echo '</div>';
 
@@ -777,6 +776,20 @@ class ProjectView {
     $columns = ["Projet","Responsable", "Statut", "Date debut", "Date_fin", "Membres", "Partenaires", "Publications", "Actions"];
     $table = new Table($columns, $data, 'w-full');
     $table->render();
+$_SESSION['projects_for_report'] = $projects;
+    echo '<div class="mt-6 flex gap-4 justify-between md:justify-end">
+    <a href="index.php?page=report_project&action=by_year" target="_blank" class="px-4 py-2 bg-[var(--primary)] text-white rounded hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">
+        Générer un rapport par année
+    </a>
+    <a href="index.php?page=report_project&action=by_supervisor" target="_blank" class="px-4 py-2 bg-[var(--primary)] text-white rounded hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">
+        Générer un rapport par superviseur
+    </a>
+    <a href="index.php?page=report_project&action=by_theme" target="_blank" class="px-4 py-2 bg-[var(--primary)] text-white rounded hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">
+        Générer un rapport par thématique
+    </a>
+
+    </div>  
+    ';
 
 echo '
 <script>
@@ -820,9 +833,55 @@ document.addEventListener("DOMContentLoaded", function() {
     
 });
 </script>
-';
-    
+';  
     echo '</div>';
+
+    ob_start();
+    $lineChart = new LineChart();
+    $lineChart->render($analytics['by_year'] ,"", 'rgba(2, 43, 109, 1)', 'rgba(96, 154, 247, 0.2)', 'Nombre de projets par année', 'Annee', 'Nombre de projets');
+    $lineChartHTML = ob_get_clean();
+
+    ob_start();
+    $barChart = new BarChart();
+    $barChart->render("", $analytics['by_supervisor'], 'rgba(3, 204, 93, 1)', 'rgba(110, 250, 166, 0.21)', 'Nombre de projets par superviseur', 'Superviseur', 'Nombre de projets');
+    $barChartHTML = ob_get_clean();
+
+$data = array_values($analytics['by_theme']);
+$labels = array_keys($analytics['by_theme']); 
+$count = count($labels);
+$colors = [];
+
+for ($i = 1; $i <= $count; $i++) {
+    $hue = intval(($i * 260) / $count+40);
+    $colors[] = "hsl($hue, 65%, 65%)";
+}
+
+
+    ob_start();
+    $pieChart = new PieChart();
+    $pieChart->render($data, $labels, $colors, 'Répartition des projets par thématique');
+    $pieChartHTML = ob_get_clean();
+
+    echo '<section class="mt-32 grid grid-cols-1  gap-10">';
+        echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Statistiques des projets</h1>';
+            $lineChart->display($lineChartHTML, 'Nombre de projets par année', '<svg class="w-5 h-5 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>');
+        echo '<section class="grid grid-cols-1 md:grid-cols-3 items-center gap-10">';
+            echo '<div class="md:col-span-2">';
+            $barChart->display($barChartHTML, 'Nombre de projets par superviseur', '<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>');
+            echo "</div>";
+            echo "<div class='md:col-span-1'>";
+            $pieChart->display($pieChartHTML, 'Répartition des projets par thematique', '<svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
+                </svg>');
+            echo "</div>";
+        echo "</section>";
+            
+        echo '</section>';
     echo '</section>';
 }
 

@@ -184,45 +184,45 @@ if (!empty($publications)) {
     }
 
 
-private function render_equips($equips) {
-    $equipHeader = [
-        "<div class='flex items-center justify-between mb-8 pb-6 border-b border-gray-200'>
-                    <div>
-                        <h2 class='text-2xl font-bold text-gray-900'>Équipements</h2>
-                        <p class='text-gray-600 text-sm mt-2'>Tous les équipements réservés par nos membres</p>
-                    </div>
-                    <span class='px-4 py-2 bg-blue-100 text-[var(--primary-light)] text-sm font-medium rounded-full'>
-                        " . count($equips) . " equipments
-                    </span>
-                </div>"
-    ];
+// private function render_equips($equips) {
+//     $equipHeader = [
+//         "<div class='flex items-center justify-between mb-8 pb-6 border-b border-gray-200'>
+//                     <div>
+//                         <h2 class='text-2xl font-bold text-gray-900'>Équipements</h2>
+//                         <p class='text-gray-600 text-sm mt-2'>Tous les équipements réservés par nos membres</p>
+//                     </div>
+//                     <span class='px-4 py-2 bg-blue-100 text-[var(--primary-light)] text-sm font-medium rounded-full'>
+//                         " . count($equips) . " equipments
+//                     </span>
+//                 </div>"
+//     ];
     
-   $equipmentsHTML = '';
-    foreach($equips as $equip) {
-        $equipmentsHTML .= "
-        <div class='bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow'>
-            <span class='inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full mb-3'>
-                " . ($equip['category'] ?? 'Catégorie') . "
-            </span>
-            <h3 class='text-lg font-bold text-gray-900 mb-2'>
-                " . ($equip['name'] ?? 'Nom') . "
-            </h3>
-            <p class='text-gray-600 text-sm'>
-                " . (isset($equip['description']) ? substr(strip_tags($equip['description']), 0, 120) . '...' : 'Pas de description') . "
-            </p>
-        </div>
-        ";
-    }
+//    $equipmentsHTML = '';
+//     foreach($equips as $equip) {
+//         $equipmentsHTML .= "
+//         <div class='bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow'>
+//             <span class='inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full mb-3'>
+//                 " . ($equip['category'] ?? 'Catégorie') . "
+//             </span>
+//             <h3 class='text-lg font-bold text-gray-900 mb-2'>
+//                 " . ($equip['name'] ?? 'Nom') . "
+//             </h3>
+//             <p class='text-gray-600 text-sm'>
+//                 " . (isset($equip['description']) ? substr(strip_tags($equip['description']), 0, 120) . '...' : 'Pas de description') . "
+//             </p>
+//         </div>
+//         ";
+//     }
     
-    $card = new Card(
-        $equipHeader,
-        ["<div class='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>" . $equipmentsHTML . "</div>"],
-        [],
-        'bg-white rounded-2xl shadow-lg border border-gray-200 p-8 hover:shadow-xl transition-shadow duration-300'
-    );
+//     $card = new Card(
+//         $equipHeader,
+//         ["<div class='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>" . $equipmentsHTML . "</div>"],
+//         [],
+//         'bg-white rounded-2xl shadow-lg border border-gray-200 p-8 hover:shadow-xl transition-shadow duration-300'
+//     );
     
-    echo $card->render();
-}
+//     echo $card->render();
+// }
 
 
      public function show_team($team, $members, $publications, $equips){
@@ -243,7 +243,7 @@ private function render_equips($equips) {
                         $this->render_team($team);
                         $this->render_members($members);
                         $this->render_publications($publications);
-                        $this->render_equips($equips);
+                        // $this->render_equips($equips);
                         echo '<div class="pt-8">';
                             echo "<a href='index.php?page=membres' class='inline-flex items-center px-6 py-3 text-gray-700 font-medium rounded-lg hover:bg-gray-50'>
                                 <svg class='w-5 h-5 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
