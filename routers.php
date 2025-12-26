@@ -285,19 +285,19 @@
         'controller' => 'DiapoController',
         'action' => 'diapo_form'
     ],
-    'update_new' => [
+    'update_diapo' => [
         'controller' => 'DiapoController',
         'action' => 'diapo_form'
     ],
-    'createNew' => [
+    'createDiapo' => [
         'controller' => 'DiapoController',
         'action' => 'handle_submit_create_update'
     ],
-    'updateNew' => [
+    'updateDiapo' => [
         'controller' => 'DiapoController',
         'action' => 'handle_submit_create_update'
     ],
-    'delete_new' => [
+    'delete_diapo' => [
         'controller' => 'DiapoController',
         'action' => 'delete_diapo'
     ],

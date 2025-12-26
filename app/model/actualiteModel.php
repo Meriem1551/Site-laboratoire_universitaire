@@ -38,15 +38,12 @@ class ActualiteModel extends BaseModel{
             'description'=> $description,
             'image' => $image
         ]);
-        if(!$new){
-            echo "Erreur lors d'ajout d'une actualite";
-        }
          $this->deconnexion($con);
 
     }
     public function updateNew($new_id,$title,$description,$image){
         $con = $this->connection();
-        $new = $this->update($con, 'news',[
+        $this->update($con, 'news',[
             'title' => $title,
             'description' => $description,
             'image' => $image

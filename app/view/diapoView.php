@@ -1,5 +1,7 @@
 <?php
 require_once "components/table.php";
+require_once "components/form.php";
+
 class diapoView{
    public function show_diapo($diapo,$allowed){
         echo '<section class="min-h-screen py-24 w-full px-12">';
@@ -12,7 +14,7 @@ class diapoView{
                         
                         echo "<div class='flex gap-6 ml-auto'>";
                             if ($allowed['create']) {
-                                echo '<a href="index.php?page=create_new" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
+                                echo '<a href="index.php?page=create_diapo" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
                                 echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
                                 echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
                                 echo '</svg>';
@@ -30,7 +32,7 @@ class diapoView{
                         "Description" => $slide['description'],
                          'Actions' => '<div class="flex items-center gap-2 justify-center">
                 ' . ($allowed['update'] ? '
-                <a href="index.php?page=update_slide&id=' . $slide['id'] . '" class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Modifier">
+                <a href="index.php?page=update_diapo&id=' . $slide['id'] . '" class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Modifier">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                     </svg>
@@ -54,5 +56,36 @@ class diapoView{
          echo '</div>';
         echo '</section>';
     }
+    public function create_update_form($slide) {
+    $link = $slide === null ? "index.php?page=createDiapo" : "index.php?page=updateDiapo";
+    $action = $slide === null ? "Ajouter" : "Modifier";
+
+    echo '<section class="min-h-screen lg:w-full py-24 px-12">';
+    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+
+    if ($slide) {
+        echo "<div class='mb-6 flex flex-col items-center'>
+            <img id='profilePreview' src='{$slide['image']}' 
+                 class='w-24 h-24 rounded-full mb-4 border border-gray-300'>
+            <label class='text-gray-600 text-sm'>Changer la photo</label>
+        </div>";
+    }
+
+
+    $form = new Form($link, 'POST', $action, '', '', true);
+    $form->addInput('title', 'Titre', $slide['title'] ?? '', '');
+    $form->addTextarea('description', 'Description', $slide['description'] ?? '');
+   
+    $form->addFile('image', 'Image');
+
+    if ($slide) {
+        $form->addHidden('current_image', $slide['image']);
+        $form->addHidden('slide_id', $slide['id']);
+    }
+    $form->render();
+
+    echo '</div>';
+    echo '</section>';
+}
 }
 ?>
