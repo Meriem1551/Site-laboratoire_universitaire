@@ -189,10 +189,48 @@
         'action' => 'show_pubs',
     ],
 
+
+
+/////////teams///////////////
     'gestion_equipes' => [
         'controller' => 'TeamController',
         'action' => 'show_teams',
     ],
+
+    'create_team' => [
+        'controller' => 'TeamController',
+        'action' =>  'team_form'
+    ],
+    'update_team' => [
+        'controller' => 'TeamController',
+        'action' => 'team_form'
+    ],
+    'createTeam' => [
+        'controller' => 'TeamController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'updateTeam' => [
+        'controller' => 'TeamController',
+        'action' => 'handle_submit_create_update'
+    ],
+     'delete_team' => [
+        'controller' => 'TeamController',
+        'action' => 'delete_team'
+    ],
+    'team_member' => [
+        'controller' => 'UserController',
+        'action' => 'handle_team_member'
+    ],
+    'add_team_member' => [
+        'controller' => 'UserController',
+        'action' => 'handle_team_member'
+    ],
+    'delete_team_member' => [
+        'controller' => 'UserController',
+        'action' => 'delete_team_member'
+    ],
+
+///////////////////////////////////
 
     'gestion_equipements' => [
         'controller' => 'EquipmentController',

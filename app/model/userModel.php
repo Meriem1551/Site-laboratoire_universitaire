@@ -119,6 +119,7 @@ class UserModel extends BaseModel{
 
         $this->deconnexion($con);
     }
+
     public function addMembersToProject($id_project, $member_id){
         $con = $this->connection();
         $this->insert($con, 'project_members', [
@@ -127,12 +128,26 @@ class UserModel extends BaseModel{
         ]);
         $this->deconnexion($con);
     }
+    public function addMembersToTeam($id_team, $member_id){
+        $con = $this->connection();
+        $this->update($con, 'users', [
+            'id_team' => $id_team,
+        ],  'id', $member_id);
+        $this->deconnexion($con);
+    }
     public function deleteMemberFromProject($id_project, $id_member){
         $con = $this->connection();
         $this->requet($con, 'users.deleteFromProject', [
             'project_id' => $id_project,
             'member_id' => $id_member
         ]);
+        $this->deconnexion($con);
+    }
+    public function deleteMemberFromTeam($id_team, $id_member){
+        $con = $this->connection();
+        $this->update($con, 'users', [
+            'id_team' => null],
+            'id', $id_member);
         $this->deconnexion($con);
     }
 }

@@ -209,7 +209,11 @@ private function getRoles(){
         $members = $userModel->getMembersByProject($id_project);
         return $members;
     }
-
+public function get_team_members($id_team){
+    $userModel =  new UserModel();
+        $members = $userModel->getMembers($id_team);
+        return $members;
+}
     public function handle_member() {
         $id_project = $_GET['id'];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
@@ -225,12 +229,35 @@ private function getRoles(){
         $userView = new UserView();
         $userView->show_members($users, $project_members);
      }
+
+     public function handle_team_member() {
+        $id_team = $_GET['id'];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
+            $team_id = $_GET['id_team'];
+            $member_id = $_POST['member_id'];
+            $userModel =  new UserModel();
+            $userModel->addMembersToTeam($team_id, $member_id);
+            header("Location: index.php?page=gestion_equipes"); 
+            exit;
+        }
+        $users  = $this->getAll();
+        $team_members = $this->get_team_members($id_team);
+        $userView = new UserView();
+        $userView->show_team_members($users, $team_members);
+     }
     public function delete_member() {
         $id_project = $_GET['id_project'];
         $id_member = $_GET['id_member'];
         $userM =  new UserModel();
         $userM->deleteMemberFromProject($id_project, $id_member);
         header("Location: index.php?page=gestion_projet");
+    }
+    public function delete_team_member() {
+        $id_team = $_GET['id_team'];
+        $id_member = $_GET['id_member'];
+        $userM =  new UserModel();
+        $userM->deleteMemberFromTeam($id_team, $id_member);
+        header("Location: index.php?page=gestion_equipes");
     }
  }
 ?>

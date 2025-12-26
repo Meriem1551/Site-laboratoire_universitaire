@@ -242,11 +242,10 @@ public function show_members($users, $project_members){
         echo '<h2 class="text-xl font-bold text-gray-900">Membres de projet</h2>';
         echo '<p class="text-gray-600 text-sm mt-1">' . count($project_members) . ' membres disponibles</p>';
         echo '</div>';
-        
         $data = [];
         foreach($project_members as $member) { 
             $data[] = [
-                'Nom du partenaire' => '<div class="font-medium text-gray-900">' .'<img src="' . htmlspecialchars($member['profile_picture']) . '" alt="Logo du partenaire" class="ml-2 w-8 h-8 inline-block">'. htmlspecialchars($member['first_name']) ." " . htmlspecialchars($member['last_name']) . '</div>',
+                'Nom du membre' => '<div class="font-medium text-gray-900 flex justify-center gap-2">' .'<img src="' . htmlspecialchars($member['profile_picture']) . '" alt="Logo du partenaire" class="ml-2 rounded-lg w-8 h-8 inline-block">'. htmlspecialchars($member['first_name']) ." " . htmlspecialchars($member['last_name']) . '</div>',
                 'Actions' => '<div class="flex items-center gap-2 justify-end">
                 <a href="index.php?page=delete_member&id_project=' . $id_project . '&id_member=' . $member['id'] . '" 
                              class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer">
@@ -271,13 +270,13 @@ public function show_members($users, $project_members){
         $table->render();
 
         echo '</div>'; 
-
-        echo "<a href='index.php?page=gestion_projet'
+        $previous = $_SERVER['HTTP_REFERER'];
+        echo "<a href='$previous'
                 class='inline-flex items-center text-[var(--primary)] hover:text-blue-800 mt-4 font-medium hover:underline'>
                 <svg class='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                     <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'/>
                 </svg>
-                Revenir à la page projets
+                Revenir à la page
               </a>";
 
         echo '</div>'; 
@@ -314,5 +313,90 @@ public function show_members($users, $project_members){
         echo '</section>';
     }
 
+
+
+    public function show_team_members($users, $team_members){
+        $id_team = $_GET['id'];
+        echo '<section class="min-h-screen py-24 px-12 md:px-8 lg:px-12">';
+        echo '<div class="max-w-6xl mx-auto">';
+        echo '<div class="grid grid-cols-1 lg:grid-cols-4 gap-8">';
+        
+    
+        echo '<div class="lg:col-span-2">';
+        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">';
+        
+        echo '<div class="px-6 py-4 border-b border-gray-200">';
+        echo '<h2 class="text-xl font-bold text-gray-900">Membres de projet</h2>';
+        echo '<p class="text-gray-600 text-sm mt-1">' . count($team_members) . ' membres disponibles</p>';
+        echo '</div>';
+        $data = [];
+        foreach($team_members as $member) { 
+            $data[] = [
+                'Nom du membre' => '<div class="font-medium text-gray-900 flex justify-center gap-2">' .'<img src="' . htmlspecialchars($member['profile_picture']) . '" alt="Logo du partenaire" class="ml-2 rounded-lg w-8 h-8 inline-block">'. htmlspecialchars($member['first_name']) ." " . htmlspecialchars($member['last_name']) . '</div>',
+                'Actions' => '<div class="flex items-center gap-2 justify-end">
+                <a href="index.php?page=delete_team_member&id_team=' . $id_team . '&id_member=' . $member['id'] . '" 
+                             class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer">
+                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M4 7h16"/>
+                             </svg>
+                           </a>'
+                . '</div>'
+            ];
+        }
+        
+        if(empty($data)) {
+            $data[] = [
+                'Membre' => '<div class="text-center py-8 text-gray-500">Aucun membre disponible</div>',
+                'Actions' => ''
+            ];
+        }
+        
+        $columns = ["Membre", "Actions"];
+        $table = new Table($columns, $data, 'w-full');
+        $table->render();
+
+        echo '</div>'; 
+        echo "<a href='index.php?page=gestion_equipes'
+                class='inline-flex items-center text-[var(--primary)] hover:text-blue-800 mt-4 font-medium hover:underline'>
+                <svg class='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'/>
+                </svg>
+                Revenir à la page
+              </a>";
+
+        echo '</div>'; 
+
+        echo '<div class="col-span-2">';
+        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">';
+        echo '<h2 class="text-xl font-bold text-gray-900 mb-6">Ajouter un membre</h2>';
+        
+        $form = new Form(
+            'index.php?page=add_team_member&id_team=' . $id_team, 
+            'POST', 
+            'Ajouter le membre',
+            '', 
+            'Remplissez le formulaire ci-dessous pour ajouter un membre'
+        );
+
+        $members = array_reduce($users, function($acc, $user) {
+                $acc[$user['id']] = $user['first_name'].' '.$user['last_name'];
+                return $acc;
+        }, []);
+
+        $form->addSelect(
+            'member_id',
+            'Sélectionner un membre',
+            $members,
+            '',
+        );
+        $form->render();
+        echo '</div>';
+        echo '</div>'; 
+        
+        echo '</div>'; 
+        echo '</div>';
+        echo '</section>';
+    }
 }
 ?>

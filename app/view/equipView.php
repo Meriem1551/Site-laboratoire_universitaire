@@ -114,8 +114,8 @@ class EquipmentView {
         echo '<div class="text-xs text-gray-500">En attente</div>';
         echo '</div>';
         echo '<div class="text-center">';
-        echo '<div class="text-2xl font-bold text-gray-600">' . ($stats['termine'] ?? 0) . '</div>';
-        echo '<div class="text-xs text-gray-500">Terminées</div>';
+        echo '<div class="text-2xl font-bold text-red-600">' . ($stats['refuse'] ?? 0) . '</div>';
+        echo '<div class="text-xs text-gray-500">Refusées</div>';
         echo '</div>';
         echo '</div>';
         
@@ -127,11 +127,11 @@ class EquipmentView {
             foreach($reservations as $reservation) {
                 $statusConfigs = [
                     'confirme' => ['bg' => '#d1fae5', 'text' => '#065f46', 'label' => 'Confirmée'],
-                    'termine' => ['bg' => '#e5e7eb', 'text' => '#374151', 'label' => 'Terminée'],
+                    'refuse' => ['bg' => '#fde9ebff', 'text' => '#f24a52ff', 'label' => 'Terminée'],
                     'en-attente' => ['bg' => '#fef3c7', 'text' => '#92400e', 'label' => 'En attente']
                 ];
                 
-                $status = $reservation['status_res'] ?? 'attente';
+                $status = $reservation['status_res'] ?? 'en-attente';
                 $config = $statusConfigs[$status] ?? $statusConfigs['en-attente'];
                 
                 $badge = (new Badge(

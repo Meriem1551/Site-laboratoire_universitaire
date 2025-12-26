@@ -78,7 +78,30 @@ WHERE p.id = :id
     FROM teams t
     LEFT JOIN users u ON u.id = t.team_leader_id
 ',
-    'teams.getById' => 'select * from teams t join users u on t.team_leader_id = u.id where t.id = :id',
+'teams.getById' => '
+    SELECT 
+        t.id AS team_id,
+        t.name,
+        t.description,
+        t.research_themes,
+        t.team_leader_id,
+        t.created_at,
+        u.id AS leader_id,
+        u.username,
+        u.email,
+        u.first_name,
+        u.last_name,
+        u.role,
+        u.profile_picture,
+        u.speciality,
+        u.bio,
+        u.post,
+        u.grade,
+        u.status_user,
+        u.cv
+    FROM teams t
+    LEFT JOIN users u ON u.id = t.team_leader_id where t.id = :id
+',
     
     'reservation.addRes' => 'insert into reservations (equipment_id, user_id, start_datetime, end_datetime, purpose) values (:e_id, :u_id, :start, :end, :purpose)',
     'permissions.getByUser' => 'select * from permissions p join permission_user pu on p.id = pu.permission_id where user_id = :user_id',

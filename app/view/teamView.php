@@ -3,6 +3,8 @@ require_once "components/title.php";
 require_once "components/card.php";
 require_once "components/badge.php";
 require_once "components/userCard.php";
+require_once "components/table.php";
+require_once "components/form.php";
 
 class TeamView{
 
@@ -135,7 +137,7 @@ if (!empty($publications)) {
             </div>";
         }
 
-        if (!empty($team['research_theme'])) {
+        if (!empty($team['research_themes'])) {
             $teamInfoBody[] = "
             <div class='mb-8'>
                 <div class='flex items-center gap-3 mb-4'>
@@ -146,7 +148,7 @@ if (!empty($publications)) {
                     </div>
                     <h3 class='text-xl font-bold text-gray-900'>Thème de recherche</h3>
                 </div>
-                <p class='text-gray-700 text-lg leading-relaxed pl-14'>" . $team['research_theme'] . "</p>
+                <p class='text-gray-700 text-lg leading-relaxed pl-14'>" . $team['research_themes'] . "</p>
             </div>";
         }
 
@@ -184,45 +186,45 @@ if (!empty($publications)) {
     }
 
 
-// private function render_equips($equips) {
-//     $equipHeader = [
-//         "<div class='flex items-center justify-between mb-8 pb-6 border-b border-gray-200'>
-//                     <div>
-//                         <h2 class='text-2xl font-bold text-gray-900'>Équipements</h2>
-//                         <p class='text-gray-600 text-sm mt-2'>Tous les équipements réservés par nos membres</p>
-//                     </div>
-//                     <span class='px-4 py-2 bg-blue-100 text-[var(--primary-light)] text-sm font-medium rounded-full'>
-//                         " . count($equips) . " equipments
-//                     </span>
-//                 </div>"
-//     ];
+private function render_equips($equips) {
+    $equipHeader = [
+        "<div class='flex items-center justify-between mb-8 pb-6 border-b border-gray-200'>
+                    <div>
+                        <h2 class='text-2xl font-bold text-gray-900'>Équipements</h2>
+                        <p class='text-gray-600 text-sm mt-2'>Tous les équipements réservés par nos membres</p>
+                    </div>
+                    <span class='px-4 py-2 bg-blue-100 text-[var(--primary-light)] text-sm font-medium rounded-full'>
+                        " . count($equips) . " equipments
+                    </span>
+                </div>"
+    ];
     
-//    $equipmentsHTML = '';
-//     foreach($equips as $equip) {
-//         $equipmentsHTML .= "
-//         <div class='bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow'>
-//             <span class='inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full mb-3'>
-//                 " . ($equip['category'] ?? 'Catégorie') . "
-//             </span>
-//             <h3 class='text-lg font-bold text-gray-900 mb-2'>
-//                 " . ($equip['name'] ?? 'Nom') . "
-//             </h3>
-//             <p class='text-gray-600 text-sm'>
-//                 " . (isset($equip['description']) ? substr(strip_tags($equip['description']), 0, 120) . '...' : 'Pas de description') . "
-//             </p>
-//         </div>
-//         ";
-//     }
+   $equipmentsHTML = '';
+    foreach($equips as $equip) {
+        $equipmentsHTML .= "
+        <div class='bg-white rounded-xl border border-gray-200 p-6 hover:shadow-md transition-shadow'>
+            <span class='inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full mb-3'>
+                " . ($equip['category'] ?? 'Catégorie') . "
+            </span>
+            <h3 class='text-lg font-bold text-gray-900 mb-2'>
+                " . ($equip['name'] ?? 'Nom') . "
+            </h3>
+            <p class='text-gray-600 text-sm'>
+                " . (isset($equip['description']) ? substr(strip_tags($equip['description']), 0, 120) . '...' : 'Pas de description') . "
+            </p>
+        </div>
+        ";
+    }
     
-//     $card = new Card(
-//         $equipHeader,
-//         ["<div class='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>" . $equipmentsHTML . "</div>"],
-//         [],
-//         'bg-white rounded-2xl shadow-lg border border-gray-200 p-8 hover:shadow-xl transition-shadow duration-300'
-//     );
+    $card = new Card(
+        $equipHeader,
+        ["<div class='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>" . $equipmentsHTML . "</div>"],
+        [],
+        'bg-white rounded-2xl shadow-lg border border-gray-200 p-8 hover:shadow-xl transition-shadow duration-300'
+    );
     
-//     echo $card->render();
-// }
+    echo $card->render();
+}
 
 
      public function show_team($team, $members, $publications, $equips){
@@ -243,9 +245,10 @@ if (!empty($publications)) {
                         $this->render_team($team);
                         $this->render_members($members);
                         $this->render_publications($publications);
-                        // $this->render_equips($equips);
+                        $this->render_equips($equips);
+                        $previous = $_SERVER['HTTP_REFERER'];
                         echo '<div class="pt-8">';
-                            echo "<a href='index.php?page=membres' class='inline-flex items-center px-6 py-3 text-gray-700 font-medium rounded-lg hover:bg-gray-50'>
+                            echo "<a href='$previous' class='inline-flex items-center px-6 py-3 text-gray-700 font-medium rounded-lg hover:bg-gray-50'>
                                 <svg class='w-5 h-5 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                                     <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'/>
                                 </svg>
@@ -257,6 +260,174 @@ if (!empty($publications)) {
             echo '</div>';
         echo '</section>';
     }
+    public function show_teams($teams, $allowed){
+        $nb_teams = count($teams);
+        echo '<section class="min-h-screen py-24 w-full px-12">';
+            echo '<div class="mb-10">';
+                echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des equipes</h1>';
+                echo '<p class="text-gray-600 text-lg">Consultez et gérez tous les equipes du système</p>';
+                echo '<div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">';
+                     $header = [
+                                "<div class='text-sm text-gray-500 mb-1'>Nombre d'equipe</div>"
+                            ];
+                            $body = [
+                                "<div class='text-2xl font-bold text-gray-900'>{$nb_teams}</div>"
+                            ];
+                    $card = new Card($header, $body, [], "border-t-4 bg-white border-purple-600 rounded-xl p-4 shadow-sm");        $card->render();
+                echo '</div>';
+                echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+        
+                    echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
+                        echo '<h2 class="text-xl font-bold text-gray-900">Liste des equipes</h2>';
+                        
+                        echo "<div class='flex gap-6 ml-auto'>";
+                            if ($allowed['create']) {
+                                echo '<a href="index.php?page=create_team" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
+                                echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                                echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
+                                echo '</svg>';
+                                echo 'Nouvelle equipe';
+                                echo '</a>';
+                            }
+                        echo "</div>";
+                    echo '</div>';
+                echo '</div>';
+                $data = [];
+                foreach($teams as $team){
+                    $chef_equipe = "
+                        <div class='flex items-center justify-center gap-4'>
+                            <img src='{$team['profile_picture']}' class='rounded-full w-10 h-10'>
+                            <p>{$team['first_name']} {$team['last_name']}</p>
+                        </div>
+                    ";
+                    $data[] = [
+                        "Nom de l'equipe" => $team['name'],
+                        "Le chef d'equipe" => "{$chef_equipe}",
+                        "Theme de recherche" => $team['research_themes'],
+                         'Actions' => '<div class="relative inline-block text-left">
+                                            <button type="button" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors action-menu-btn" data-project-id="' . $team['team_id'] . '">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+                                                </svg>
+                                            </button>
+                                    ' . ($allowed['update'] ? '
+                                    <div class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-10 hidden action-menu" data-project-id="' . $team['team_id'] . '">'.'
+                                    
+                                        <div class="py-1">
+                                            
+                                            <a href="index.php?page=update_team&id=' . $team['team_id'] . '" 
+                                            class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                                </svg>
+                                                <span>Modifier l\'equipe</span>
+                                                <a href="index.php?page=team_member&id=' . $team['team_id'] . '" 
+                                            class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                                <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-2.5a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
+                                                </svg>
+                                                <span>Gérer les membres</span>
+                                            </a>
+
+                                    </a>' : '') . "
+                                <div class='border-t border-gray-200 my-1'></div>
+                                    <a href='index.php?page=team&id={$team['team_id']}' class='flex items-center gap-3 px-4 py-2.5 text-sm text-blue-600 hover:bg-blue-50 transition-colors'>
+                                    <svg class='w-4 h-4 ml-1' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                                        <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M14 5l7 7m0 0l-7 7m7-7H3'/>
+                                    </svg>
+                                    Voir plus
+                                    </a>
+                                </div>".'
+                                ' . ($allowed['delete'] ? '
+                                <div class="border-t border-gray-200 my-1"></div>
+                                <a href="index.php?page=delete_team&id=' . $team['team_id'] . '"
+                                class="flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                    <span>Supprimer l\'equipe</span>
+                                </a>' : '') . '
+                                </div>
+                            </div>
+                        </div>',
+                    ];
+                }
+                $columns = ["Nom de l'equipe", "Le chef d'equipe", "Theme de recherche"];
+                $table = new Table($columns, $data, "w-full");
+                $table->render();
+
+echo '
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("click", function(event) {
+        const actionMenus = document.querySelectorAll(".action-menu");
+        const actionBtns = document.querySelectorAll(".action-menu-btn");
+        
+        if (event.target.closest(".action-menu-btn")) {
+            const btn = event.target.closest(".action-menu-btn");
+            const menu = document.querySelector(\'.action-menu[data-project-id="\' + btn.dataset.projectId + \'"]\');
+            
+            actionMenus.forEach(function(otherMenu) {
+                if (otherMenu !== menu) {
+                    otherMenu.classList.add("hidden");
+                }
+            });
+            
+            if (menu) {
+                menu.classList.toggle("hidden");
+            }
+            
+            event.stopPropagation();
+        } 
+        else if (!event.target.closest(".action-menu")) {
+            actionMenus.forEach(function(menu) {
+                menu.classList.add("hidden");
+            });
+        }
+    });
+    
+    const menuLinks = document.querySelectorAll(".action-menu a");
+    menuLinks.forEach(function(link) {
+        link.addEventListener("click", function() {
+            const menu = this.closest(".action-menu");
+            if (menu) {
+                menu.classList.add("hidden");
+            }
+        });
+    });
+    
+});
+</script>
+';
+            echo '</div>';
+        echo '</section>';
+    }
+
+public function create_update_form($team, $users) {
+    $link = $team === null ? "index.php?page=createTeam" : "index.php?page=updateTeam";
+    $action = $team === null ? "Ajouter" : "Modifier";
+
+    echo '<section class="min-h-screen lg:w-full py-24 px-12">';
+    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+
+    $users = array_reduce($users, function($acc, $user) {
+        $acc[$user['id']] = $user['first_name'] . ' ' . $user['last_name'];
+        return $acc;
+    }, []);
+
+    $form = new Form($link, 'POST', $action, '', '', true);
+
+    $form->addInput('name', 'Nom de l\'equipe', $team['name'] ?? '', 'Nom de l\'equipe');
+    $form->addTextarea('description', 'Description', $team['description'] ?? '', 'Description');
+    $form->addInput('research_themes', 'Thème de recherche', $team['research_themes'] ?? '', 'Thème du recherche');
+    $form->addSelect('team_leader_id', 'Chef d\'equipe', $users, $team['team_leader_id'] ?? '');
+    if ($team) {
+        $form->addHidden('team_id', $team['team_id'] ?? '');
+    }    
+    $form->render();
+    echo '</div>';
+    echo '</section>';
+}
 }
 
 
