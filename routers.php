@@ -336,14 +336,9 @@
             'controller' => 'ReportController',
             'action' => 'generate_report'
         ],
-        'report_project' => [
+        'report' => [
             'controller' => 'ReportController',
-            'action' => 'generate_report'
-        ],
-        'report_project' => [
-            'controller' => 'ReportController',
-            'action' => 'generate_report'
-        ],
-    
+            'action' => 'show_report_form'
+        ]
  ];
 ?>

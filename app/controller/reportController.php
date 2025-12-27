@@ -1,20 +1,37 @@
 <?php
 require_once __DIR__ . '/../../utils/helpers/report_generator.php';
-
+require_once 'app/view/reportView.php';
 class ReportController {
 
+    public function show_report_form(){
+        $view = new ReportView();
+        $view->show_form();
+    }
     public function generate_report() {
-        $report_type = $_GET['action'];
+        $report_type = $_POST['type'];
+        $start = strtotime($_POST['start_date']);
+        $end   = strtotime($_POST['end_date']);
         $projects = $_SESSION['projects_for_report'];
+
+        $filteredProjects = [];
+        foreach ($projects as $project) {
+            if (empty($project['start_date'])) continue;
+
+            $projectDate = strtotime($project['start_date']);
+
+            if ($projectDate >= $start && $projectDate <= $end) {
+                $filteredProjects[] = $project;
+            }
+        }
         switch ($report_type) {
-            case 'by_year':
-                $this->generate_by_year($projects);
+            case 'year':
+                $this->generate_by_year($filteredProjects);
                 break;
-            case 'by_theme':
-                $this->generate_by_theme($projects);
+            case 'theme':
+                $this->generate_by_theme($filteredProjects);
                 break;
-            case 'by_supervisor':
-                $this->generate_by_supervisor($projects);
+            case 'supervisor':
+                $this->generate_by_supervisor($filteredProjects);
                 break;
             default:
                 echo "Type de rapport inconnu.";
@@ -23,7 +40,7 @@ class ReportController {
     }
 
 private function generate_by_year($projects) {
-    if (!empty($_SESSION['projects_for_report'])) {
+    if (!empty($projects)) {
         $groupedProjects = [];
         foreach ($projects as $project) {
             $year = !empty($project['start_date']) ? date('Y', strtotime($project['start_date'])) : 'N/A';
@@ -37,7 +54,7 @@ private function generate_by_year($projects) {
 }
 
 private function generate_by_theme($projects) {
-    if (!empty($_SESSION['projects_for_report'])) {
+    if (!empty($projects)) {
 
         $groupedProjects = [];
         foreach ($projects as $project) {
@@ -51,7 +68,7 @@ private function generate_by_theme($projects) {
 }
 
 private function generate_by_supervisor($projects) {
-    if (!empty($_SESSION['projects_for_report'])) {
+    if (!empty($projects)) {
         $groupedProjects = [];
         foreach ($projects as $project) {
             $supervisor = $project['supervisor']['first_name'] ?? 'N/A';

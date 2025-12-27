@@ -776,21 +776,12 @@ $card = new Card($header, $body, [], "border-t-4 bg-white border-" . $stat['colo
     $columns = ["Projet","Responsable", "Statut", "Date debut", "Date_fin", "Membres", "Partenaires", "Publications", "Actions"];
     $table = new Table($columns, $data, 'w-full');
     $table->render();
-$_SESSION['projects_for_report'] = $projects;
     echo '<div class="mt-6 flex gap-4 justify-between md:justify-end">
-    <a href="index.php?page=report_project&action=by_year" target="_blank" class="px-4 py-2 bg-[var(--primary)] text-white rounded hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">
-        Générer un rapport par année
-    </a>
-    <a href="index.php?page=report_project&action=by_supervisor" target="_blank" class="px-4 py-2 bg-[var(--primary)] text-white rounded hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">
-        Générer un rapport par superviseur
-    </a>
-    <a href="index.php?page=report_project&action=by_theme" target="_blank" class="px-4 py-2 bg-[var(--primary)] text-white rounded hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">
-        Générer un rapport par thématique
-    </a>
-
-    </div>  
+        <a href="index.php?page=report" class="px-4 py-2 bg-[var(--primary)] text-white rounded hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">
+        Générer un rapport
+    </div></a>
     ';
-
+$_SESSION['projects_for_report'] = $projects;
 echo '
 <script>
 document.addEventListener("DOMContentLoaded", function() {
