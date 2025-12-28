@@ -27,7 +27,7 @@ class EquipmentView {
             $data = [];
             foreach($equipments as $equipment) {
                 $statusColors = [
-                    'libre' => ['bg' => '#bbf7d0', 'text' => '#166534', 'label' => 'Disponible'],
+                    'libre' => ['bg' => '#bbf7d0', 'text' => '#166534', 'label' => 'Libre'],
                     'reserve' => ['bg' => '#fee2e2', 'text' => '#991b1b', 'label' => 'Réservé'],
                     'en-maintenance' => ['bg' => '#fef3c7', 'text' => '#92400e', 'label' => 'Maintenance']
                 ];
@@ -47,7 +47,7 @@ class EquipmentView {
                     $equipment['description'];
                     $button = null;
                 if(isset($_SESSION['user'])){
-                     if($status === 'libre') {
+                     if($status === 'libre' ||($status === 'reserve' && (int)$equipment['quantity'] !== 0)) {
                     $button = (new Button(
                         "<a href='index.php?page=equipment&id={$equipment['id']}' class='flex'><svg class='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'/></svg>Réserver</a>",
                         "",
@@ -66,11 +66,12 @@ class EquipmentView {
                     'Catégorie' => "<div class='text-gray-700'>{$equipment['category']}</div>",
                     'Description' => "<div class='text-gray-600 text-sm'>{$description}</div>",
                     'État' => "<div class='flex justify-center'>{$badge}</div>",
+                    'Quantite' => "<div class='flex justify-center'>{$equipment['quantity']}</div>",
                     'Action' => "<div class='flex justify-center'>{$button}</div>"
                 ];
             }
 
-            $columns = ["Nom", "Catégorie", "Description", "État"];
+            $columns = ["Nom", "Catégorie", "Description", "État", "Quantite"];
             $table = new Table($columns, $data, 'w-full');
             $table->render();
         } else {
@@ -96,7 +97,7 @@ class EquipmentView {
         
         $stats = [
             'confirme' => 0,
-            'termine' => 0,
+            'refuse' => 0,
             'en-attente' => 0
         ];
         
@@ -127,7 +128,7 @@ class EquipmentView {
             foreach($reservations as $reservation) {
                 $statusConfigs = [
                     'confirme' => ['bg' => '#d1fae5', 'text' => '#065f46', 'label' => 'Confirmée'],
-                    'refuse' => ['bg' => '#fde9ebff', 'text' => '#f24a52ff', 'label' => 'Terminée'],
+                    'refuse' => ['bg' => '#fde9ebff', 'text' => '#f24a52ff', 'label' => 'Refusée'],
                     'en-attente' => ['bg' => '#fef3c7', 'text' => '#92400e', 'label' => 'En attente']
                 ];
                 
@@ -448,8 +449,313 @@ $formCardHTML= $this->getForm($user['id'],$equip['id']);
     
     echo '</div>';
     echo '</section>';
-    
-   
 }
+private function list_equip($equips, $allowed){
+    $equipDispo = array_filter($equips, fn($equip) => $equip['status'] === 'libre');
+    $equipMaint = array_filter($equips, fn($equip) => $equip['status'] === 'en-maintenance');
+    $equipReserve = array_filter($equips, fn($equip) => $equip['status'] === 'reserve');
+    $stats = [
+        ['title' => 'Total equipments', 'value' => count($equips), 'color' => 'blue-400'],
+        ['title' => 'Equipments disponibles', 'value' => count($equipDispo), 'color' => 'green-400'],
+        ['title' => 'Equipments en maintenance', 'value' => count($equipMaint), 'color' => 'purple-400'],
+        ['title' => 'Equipments reserves', 'value' => count($equipReserve), 'color' => 'yellow-400'],
+    ];
+                echo '<div class="mb-10">';
+                 echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des equipments</h1>';
+                        echo '<div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">';
+                            foreach($stats as $stat){
+                                $header = [
+                                    "<div class='text-sm text-gray-500 mb-1'>{$stat['title']}</div>"
+                                ];
+                                $body = [
+                                    "<div class='text-2xl font-bold text-gray-900'>{$stat['value']}</div>"
+                                ];
+                                $card = new Card($header, $body, [], "border-t-4 bg-white border-" . $stat['color'] . " rounded-xl p-4 shadow-sm");        $card->render();
+                            }
+                        echo '</div>';
+
+                echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+        
+                    echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
+                        echo '<h2 class="text-xl font-bold text-gray-900">Liste des equipments</h2>';
+                        
+                        echo "<div class='flex gap-6 ml-auto'>";
+                            if ($allowed['create']) {
+                                echo '<a href="index.php?page=create_equip" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
+                                echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                                echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
+                                echo '</svg>';
+                                echo 'Nouvel equipment';
+                                echo '</a>';
+                            }
+                        echo "</div>";
+                    echo '</div>';
+                echo '</div>';
+                $data = [];
+                foreach($equips as $e){
+                    $statusColors = [
+                    'libre' => ['bg' => '#bbf7d0', 'text' => '#166534', 'label' => 'Libre'],
+                    'reserve' => ['bg' => '#fee2e2', 'text' => '#991b1b', 'label' => 'Réservé'],
+                    'en-maintenance' => ['bg' => '#fef3c7', 'text' => '#92400e', 'label' => 'Maintenance']
+                ];
+                
+                $status = $e['status'] ?? 'libre';
+                $colorConfig = $statusColors[$status] ?? $statusColors['libre'];
+                
+                $badge = (new Badge(
+                    $colorConfig['label'],
+                    $colorConfig['text'],
+                    $colorConfig['bg'],
+                    "rounded-full px-3 py-1 text-xs font-medium"
+                ))->render();
+                    $data[] = [
+                        "Nom" => $e['name'],
+                        "Description" => $e['description'],
+                        "Categorie" => $e['category'],
+                        "Etat" => $badge,
+                        "Quantite" => $e['quantity'],
+                         'Actions' => '<div class="flex items-center gap-2 justify-center">
+                ' . ($allowed['update'] ? '
+                <a href="index.php?page=update_equip&id=' . $e['id'] . '" class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Modifier">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                </a>
+                ' : '') . '
+                    
+                ' . ($allowed['delete'] ? '
+                <a href="index.php?page=delete_equip&id=' . $e['id'] . '" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"" title="Supprimer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                </a>' : '') . '
+                
+            </div>'
+                    ];
+                }
+                $columns = ["Nom", "Description","Categorie", "Etat","Quantite", "Actions"];
+                $table = new Table($columns, $data, "w-full");
+                $table->render();
+                echo '<div class="mt-6 flex gap-4 justify-between md:justify-end">
+        <a href="index.php?page=report_equips" target="_blank" class="px-4 py-2 bg-[var(--primary)] text-white rounded hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">
+        Générer un rapport
+    </div></a>';
+         echo '</div>';
+}
+private function list_historique($reservations){
+            echo '<div class="mb-10">';
+                echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des reservations</h1>';
+                echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+        
+                    echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
+                        echo '<h2 class="text-xl font-bold text-gray-900">Liste des reservations</h2>';
+                        
+                            echo '<a href="index.php?page=gestion_conflicts" class="px-4 py-2 bg-[var(--accent)] text-white font-medium rounded-lg transition-colors flex items-center gap-2">';
+                                echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                                echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.995-.833-2.732 0L4.234 16.5c-.77.833.192 2.5 1.732 2.5z"/>';
+                                echo '</svg>';
+                                echo 'Gerer les conflits';
+                            echo '</a>';
+                    echo '</div>';
+                echo '</div>';
+                $data = [];
+                foreach($reservations as $r){
+                    $statusColors = [
+                    'confirme' => ['bg' => '#bbf7d0', 'text' => '#166534', 'label' => 'Confirme'],
+                    'refuse' => ['bg' => '#fee2e2', 'text' => '#991b1b', 'label' => 'Refuse'],
+                    'en-attente' => ['bg' => '#fef3c7', 'text' => '#92400e', 'label' => 'En attante']
+                ];
+                
+                $status = $r['status_res'] ?? 'en-attente';
+                $colorConfig = $statusColors[$status] ?? $statusColors['en-attente'];
+                
+                $badge = (new Badge(
+                    $colorConfig['label'],
+                    $colorConfig['text'],
+                    $colorConfig['bg'],
+                    "rounded-full px-3 py-1 text-xs font-medium"  
+                ))->render();
+                $button = '';
+                if ($r['status_res'] === 'en-attente' && !$r['has_conflict']) {
+                    $button = '<a href="index.php?page=change_reservation_status&id=' . $r['r_id'] . '&status=confirme&equip_id=' . $r['equipment_id'] .'" class="p-2 bg-green-500 text-white rounded-lg">Confirmer</a>
+                            <a href="index.php?page=change_reservation_status&id=' . $r['r_id'] . '&status=refuse" class="p-2 bg-red-500 text-white rounded-lg">Refuser</a>';
+                }    
+                    $data[] = [
+                        "Equipment" => $r['name'],
+                        "Utilisateur" => $r['first_name'] .' ' . $r['last_name'],
+                        "Motif" => $r['purpose'],
+                        "Date debut" => $r['start_datetime'],
+                        "Date fin" => $r['end_datetime'],
+                        "Etat" => $badge,
+                         "Actions" => '
+                        <div>'.
+                            $button
+                            .'</div>
+                         '
+                    ];
+                }
+                $columns = ["Equipment", "Utilisateur","Motif", "Date debut","Date fin", "Etat", "Actions"];
+                $table = new Table($columns, $data, "w-full");
+                $table->render();
+                
+
+         echo '</div>';
+}
+public function show_equip($equips, $allowed, $reservations){
+    echo "<section  class='min-h-screen py-24 w-full px-12'>";
+    $this->list_equip($equips, $allowed);
+    $this->list_historique($reservations);
+    echo "</section>";
+}
+
+public function create_update_form($equip) {
+    $link = $equip === null ? "index.php?page=createEquip" : "index.php?page=updateEquip";
+    $action = $equip === null ? "Ajouter" : "Modifier";
+
+    echo '<section class="min-h-screen lg:w-full py-24 px-12">';
+    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+
+    $form = new Form($link, 'POST', $action, '', '', true);
+    $form->addInput('name', 'Labele', $equip['name'] ?? '', 'le lebele');
+    $form->addTextarea('description', 'Description', $equip['description'] ?? '', '');
+    $form->addInput('category', 'Categorie', $equip['category'] ?? '', 'ex: server');
+    $form->addInput('quantity', 'Quantite', $equip['quantity'] ?? '', '');
+    $form->addSelect('status', 'Etat d\'equipment', ['libre' => 'Libre', 'en-maintenance' => 'En maintenance', 'reserve' => 'Reserve'], $equip['status']??'');
+
+    if ($equip) {
+        $form->addHidden('equip_id', $equip['id']);
+    }
+    $form->render();
+
+    echo '</div>';
+    echo '</section>';
+}
+public function show_conflicts($conflicts){
+        echo "<section class='px-12 py-24'>";
+    echo '<div class="mb-10">';
+                echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-10">Gestion des conflits</h1>';
+                if (!$conflicts) {
+                    echo '<div class="border border-gray-200 rounded-lg bg-white p-6">';
+                    echo '<div class="flex items-start gap-4">';
+                    echo '<div class="flex-shrink-0 mt-1">';
+                    echo '<svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                    echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+                    echo '</svg>';
+                    echo '</div>';
+                    echo '<div>';
+                    echo '<h4 class="font-medium text-gray-900 mb-1">Aucun conflit détecté</h4>';
+                    echo '<p class="text-gray-600 text-sm mb-3">Vous pouvez gérer les réservations dans la page principale sans souci de chevauchement.</p>';
+                    echo '</div>';
+                    echo '</div>';
+                    echo '</div>';
+                }
+                $data = [];
+                if($conflicts){
+                foreach($conflicts as $c){
+                    $statusColors = [
+                    'confirme' => ['bg' => '#bbf7d0', 'text' => '#166534', 'label' => 'Confirme'],
+                    'refuse' => ['bg' => '#fee2e2', 'text' => '#991b1b', 'label' => 'Refuse'],
+                    'en-attente' => ['bg' => '#fef3c7', 'text' => '#92400e', 'label' => 'En attante']
+                ];
+                echo "<h2 class='text-3xl lg:text-4xl font-bold text-gray-700 mb-6'>{$c['equipment_name']}</h2>";
+                foreach($c['reservations'] as $r){
+                $status = $r['status_res'] ?? 'en-attente';
+                $colorConfig = $statusColors[$status] ?? $statusColors['en-attente'];
+                
+                $badge = (new Badge(
+                    $colorConfig['label'],
+                    $colorConfig['text'],
+                    $colorConfig['bg'],
+                    "rounded-full px-3 py-1 text-xs font-medium"  
+                ))->render();
+                $button = '';
+                    $button = '<a href="index.php?page=change_reservation_status&id=' . $r['r_id'] . '&status=confirme&equip_id=' . $r['equipment_id'] .'" class="p-2 bg-green-500 text-white rounded-lg">Confirmer</a>
+                            <a href="index.php?page=change_reservation_status&id=' . $r['r_id'] . '&status=refuse" class="p-2 bg-red-500 text-white rounded-lg">Refuser</a>
+                            <a href="index.php?page=change_period&id=' . $r['r_id'] . '" class="p-2 bg-blue-500 text-white rounded-lg">Changer la periode</a>
+                            ';
+                    $data[] = [
+                        "Utilisateur" => $r['first_name'] .' ' . $r['last_name'],
+                        "Motif" => $r['purpose'],
+                        "Date debut" => $r['start_datetime'],
+                        "Date fin" => $r['end_datetime'],
+                        "Etat" => $badge,
+                         "Actions" => '
+                        <div>'.
+                            $button
+                            .'</div>
+                         '
+                    ];
+                }
+            }
+                $columns = ["Utilisateur","Motif", "Date debut","Date fin", "Etat", "Actions"];
+                $table = new Table($columns, $data, "w-full");
+                $table->render();
+        }
+         echo '</div>';
+         echo "<a href='index.php?page=gestion_equipements'
+                class='inline-flex items-center text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200'>
+                    <svg class='w-5 h-5 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'/>
+                    </svg>
+                    Retour a la page
+                </a>";
+    echo "</section>";
+}
+public function show_form_conflicts($reservation){
+    echo '<section class="min-h-screen lg:w-full py-24 px-12">';
+    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+    $form = new Form('index.php?page=change_period', 'POST', 'Modifier', '', '', true);
+
+    $form->addInput('start', 'Date debut', $reservation['start_datetime'] ?? '','', 'datetime-local');
+    $form->addInput('end', 'Date fin', $reservation['end_datetime'] ?? '','', 'datetime-local');
+    $form->addHidden('r_id', $reservation['id'] ?? '');
+
+    $form->render();
+    echo '</div>';
+    echo '</section>';
+}
+
+public function show_equip_reserve($equip_reserve_user){
+        echo '<section class="min-h-screen lg:w-full py-24 px-12">';
+    echo '<div class="mb-10">';
+                echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Equipments Reserves</h1>';
+                echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+        
+                    echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
+                        echo '<h2 class="text-xl font-bold text-gray-900">Liste des equipments reserves</h2>';
+                    echo '</div>';
+                echo '</div>';
+                $data = [];
+                foreach($equip_reserve_user as $r){
+                    $statusColors = [
+                    'confirme' => ['bg' => '#bbf7d0', 'text' => '#166534', 'label' => 'Confirme'],
+                    'refuse' => ['bg' => '#fee2e2', 'text' => '#991b1b', 'label' => 'Refuse'],
+                    'en-attente' => ['bg' => '#fef3c7', 'text' => '#92400e', 'label' => 'En attante']
+                ];
+                
+                $status = $r['status_res'] ?? 'en-attente';
+                $colorConfig = $statusColors[$status] ?? $statusColors['en-attente'];
+                
+                $badge = (new Badge(
+                    $colorConfig['label'],
+                    $colorConfig['text'],
+                    $colorConfig['bg'],
+                    "rounded-full px-3 py-1 text-xs font-medium"  
+                ))->render();   
+                    $data[] = [
+                        "Equipment" => $r['name'],
+                        "Motif" => $r['purpose'],
+                        "Date debut" => $r['start_datetime'],
+                        "Date fin" => $r['end_datetime'],
+                        "Etat" => $badge,
+                    ];
+                }
+                $columns = ["Equipment","Motif", "Date debut","Date fin", "Etat"];
+                $table = new Table($columns, $data, "w-full");
+                $table->render();
+         echo '</div>';
+         echo '</section>';
+}
+
 }
 ?>

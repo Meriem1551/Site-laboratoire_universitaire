@@ -90,7 +90,7 @@
         'action' => 'show_dashboard'
     ],
 
-
+///////////////////////////////////////
     'gestion_users' => [
         'controller' => 'UserController',
         'action' => 'show_users', 
@@ -138,7 +138,7 @@
         'action' => 'handle_submit'
     ],
 
-
+/////////////////////////////////////////////
 
     'gestion_projet' => [
         'controller' => 'ProjectController',
@@ -182,7 +182,7 @@
         'action' => 'delete_member'
     ],
 
-
+///////////////////////////////////
 
     'gestion_publications' => [
         'controller' => 'PublicationController',
@@ -236,6 +236,41 @@
         'controller' => 'EquipmentController',
         'action' => 'show_equip',
     ],
+    'create_equip' => [
+        'controller' => 'EquipmentController',
+        'action' => 'equip_form',
+    ],
+    'update_equip' => [
+        'controller' => 'EquipmentController',
+        'action' => 'equip_form'
+    ],
+    'createEquip' => [
+        'controller' => 'EquipmentController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'updateEquip' => [
+        'controller' => 'EquipmentController',
+        'action' => 'handle_submit_create_update'
+    ],
+     'delete_equip' => [
+        'controller' => 'EquipmentController',
+        'action' => 'delete_equip'
+    ],
+    'change_reservation_status' => [
+        'controller' => 'ReservationController',
+        'action' => 'change_status'
+    ],
+
+    'gestion_conflicts' => [
+        'controller' => 'EquipmentController',
+        'action' => 'show_conflicts'
+    ],
+
+    'change_period' => [
+        'controller' => 'EquipmentController',
+        'action' => 'handle_res_period'
+    ],
+
 
     'gestion_evenements' => [
         'controller' => 'EventController',
@@ -339,6 +374,14 @@
         'report' => [
             'controller' => 'ReportController',
             'action' => 'show_report_form'
+        ],
+        'report_equips' => [
+            'controller' => 'ReportController',
+            'action' => 'show_report_form_equip'
+        ],
+        'reportEquip' => [
+            'controller' => 'ReportController',
+            'action' => 'generate_report_equip'
         ]
  ];
 ?>

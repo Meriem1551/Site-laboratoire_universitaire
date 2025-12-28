@@ -98,4 +98,31 @@ function generateProjectReportPDF($groupedProjects, $title = 'Rapport des projet
     $mpdf->Output($filename, \Mpdf\Output\Destination::INLINE);
 }
 
+function generateEquipReportPDF($data, $title, $file){
+        $mpdf = new \Mpdf\Mpdf();
+
+    $html = "<h1 style='text-align:center;'>$title</h1>";
+    $html .= "<table border='1' cellpadding='5' cellspacing='0' style='width:100%; border-collapse: collapse;'>";
+    $html .= "<thead>
+                <tr>";
+                    $html.= "<th>Nom d'equipment</th>
+                    <th>{$title}</th>
+                </tr>";
+    $html .= "</thead>"; 
+    $html .= "<tbody>";
+
+    foreach ($data as $row) {
+               $html .= "<tr>";
+                $html .= "<td>" . ($row['equipment'] ?? '') . "</td>";
+                $html .= "<td>" . ($row['value'] ?? '') . "</td>";
+                $html .= "</tr>";
+        } 
+
+    $html .= "</tbody></table>";
+
+    if (ob_get_length()) ob_end_clean();
+    $mpdf->WriteHTML($html);
+    $mpdf->Output($filename, \Mpdf\Output\Destination::INLINE);
+}
+
 ?>

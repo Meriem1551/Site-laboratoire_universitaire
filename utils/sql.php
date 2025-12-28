@@ -48,10 +48,13 @@ WHERE p.id = :id
    'users.createUser' => 'insert into users (first_name, last_name, email, profile_picture,speciality, post, grade, bio, cv, username, password, status_user, role)  values (:first_name, :last_name, :email, :pp, :speciality, :post, :grade, :bio, :cv, :username, :pw, :status, :role)',
    'users.deleteUser' => 'delete from users where id = :id',
 
+   'equipment.updateQ' => 'update equipment set quantity = quantity - 1 where id = :id',
    'equip.getAll' => 'select * from equipment',
-    'equip.getById' => 'select e.id, e.name from equipment e where id = :id',
+    'equip.getById' => 'select * from equipment e where id = :id',
     'equip.getEquipReserve' => 'select * from reservations r join equipment e on r.equipment_id = e.id where user_id = :id_user',
-    'reservation.getReservation' => 'select * from reservations r join users u join equipment e on r.user_id=u.id and r.equipment_id = e.id',
+    'reservation.getReservation' => '
+    SELECT r.id AS r_id, r.status_res, r.start_datetime, r.end_datetime, r.purpose, u.id AS user_id,u.first_name,u.last_name,e.id AS equipment_id, e.name FROM reservations r JOIN users u ON r.user_id = u.id JOIN equipment e ON r.equipment_id = e.id',
+    
     'orga.getData' => 'select * from teams',
 
 'teams.getAll' => '
@@ -104,6 +107,13 @@ WHERE p.id = :id
 ',
     
     'reservation.addRes' => 'insert into reservations (equipment_id, user_id, start_datetime, end_datetime, purpose) values (:e_id, :u_id, :start, :end, :purpose)',
+    'reservation.checkConflict' => '
+    SELECT COUNT(*) FROM reservations
+        WHERE equipment_id = :id
+          AND id != :id
+           AND start_datetime < :end
+            AND end_datetime > :start',
+
     'permissions.getByUser' => 'select * from permissions p join permission_user pu on p.id = pu.permission_id where user_id = :user_id',
     'permissions.getAll' => 'select * from permissions p left join permission_user pu on p.id = pu.permission_id and user_id = :user_id',
     'permissions.add' => 'insert into permission_user (user_id, permission_id) values (:user_id, :perm_id)',

@@ -1,11 +1,17 @@
 <?php
 require_once __DIR__ . '/../../utils/helpers/report_generator.php';
 require_once 'app/view/reportView.php';
+require_once 'app/model/reservationModel.php';
+
 class ReportController {
 
     public function show_report_form(){
         $view = new ReportView();
         $view->show_form();
+    }
+    public function show_report_form_equip(){
+        $view = new ReportView();
+        $view->show_form_equip();
     }
     public function generate_report() {
         $report_type = $_POST['type'];
@@ -38,6 +44,80 @@ class ReportController {
                 break;
         }
     }
+
+    public function generate_report_equip(){
+        $report_type = $_POST['type'];
+        $start = strtotime($_POST['start_date']);
+        $end   = strtotime($_POST['end_date']);
+         $model =  new ReservationModel();
+        $reservations = $model->getAllreservations();
+        $filtered = array_filter($reservations, function($res) use ($start, $end) {
+            $resStart = strtotime($res['start_datetime']);
+            $resEnd   = strtotime($res['end_datetime']);
+            return ($resStart <= $end && $resEnd >= $start);
+        });
+        switch ($report_type) {
+            case 'taux':
+                $this->generate_by_taux($filtered, $start, $end);
+                break;
+            case 'demande':
+                $this->generate_by_demande($filtered);
+                break;
+            default:
+                echo "Type de rapport inconnu.";
+                break;
+        }
+    }
+
+
+private function generate_by_taux($reservations, $start, $end){
+    $usage = [];
+    foreach ($reservations as $res) {
+        $equip = $res['name'];
+        $resStart = strtotime($res['start_datetime']);
+        $resEnd   = strtotime($res['end_datetime']);
+        $duration = $resEnd - $resStart;
+
+        if (!isset($usage[$equip])) {
+            $usage[$equip] = 0;
+        }
+        $usage[$equip] += $duration;
+    }
+
+    $periodSeconds = $end - $start;
+    $data = [];
+    foreach ($usage as $equip => $reservedSeconds) {
+        $taux = ($reservedSeconds / $periodSeconds) * 100;
+        $data[] = [
+            'equipment' => $equip,
+            'value' => round($taux, 2)
+        ];
+    }
+        generateEquipReportPDF($data, 'Taux d\'utilisation des equipemens', 'rapport_taux.pdf');
+}
+
+private function generate_by_demande($reservations){
+    $counts = [];
+    foreach ($reservations as $res) {
+        $equipName = $res['name'];
+        if (!isset($counts[$equipName])) $counts[$equipName] = 0;
+        $counts[$equipName]++;
+    }
+
+    $data = [];
+    foreach ($counts as $equip => $count) {
+        $data[] = [
+            'equipment' => $equip,
+            'value' => $count
+        ];
+    }
+    generateEquipReportPDF($data, 'Nombre de demande des equipemens', 'rapport_demande.pdf');
+}
+
+
+
+
+
 
 private function generate_by_year($projects) {
     if (!empty($projects)) {
