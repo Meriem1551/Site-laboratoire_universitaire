@@ -13,6 +13,10 @@ class ReportController {
         $view = new ReportView();
         $view->show_form_equip();
     }
+    public function show_report_form_pub(){
+        $view = new ReportView();
+        $view->show_form_pub();
+    }
     public function generate_report() {
         $report_type = $_POST['type'];
         $start = strtotime($_POST['start_date']);
@@ -68,7 +72,32 @@ class ReportController {
                 break;
         }
     }
+    public function generate_report_pub(){
+    $report_type = $_POST['type'];
+        $start = strtotime($_POST['start_date']);
+        $end   = strtotime($_POST['end_date']);
+        $publications = $_SESSION['pubs_for_report'];
+        $filteredPubs = [];
+        foreach ($publications as $pub) {
+            if (empty($pub['publication_date'])) continue;
+            $pubDate = strtotime($pub['publication_date']);
 
+            if ($pubDate >= $start && $pubDate <= $end) {
+                $filteredPubs[] = $pub;
+            }
+        }
+        switch ($report_type) {
+            case 'year':
+                $this->generate_by_year_pub($filteredPubs);
+                break;
+            case 'author':
+                $this->generate_by_author($filteredPubs);
+                break;
+            default:
+                echo "Type de rapport inconnu.";
+                break;
+        }
+}
 
 private function generate_by_taux($reservations, $start, $end){
     $usage = [];
@@ -115,10 +144,6 @@ private function generate_by_demande($reservations){
 }
 
 
-
-
-
-
 private function generate_by_year($projects) {
     if (!empty($projects)) {
         $groupedProjects = [];
@@ -154,12 +179,43 @@ private function generate_by_supervisor($projects) {
             $supervisor = $project['supervisor']['first_name'] ?? 'N/A';
             $groupedProjects[$supervisor][] = $project;
         }
-        print_r($groupedProjects);
         generateProjectReportPDF($groupedProjects, 'Rapport des projets par superviseur', 'rapport_projets_par_superviseur.pdf', 'Superviseur');
     } else {
         echo "Aucune donnée de projet reçue pour générer le rapport.";
     }
 }
+
+
+
+private function generate_by_year_pub($pubs) {
+    if (!empty($pubs)) {
+
+        $groupedPubs = [];
+        foreach ($pubs as $pub) {
+             $year = !empty($pub['publication_date']) ? date('Y', strtotime($pub['publication_date'])) : 'N/A';
+            $groupedPubs[$year][] = $pub;
+        }
+        generatePubReportPDF($groupedPubs, 'Rapport des publication par annee', 'rapport_pub_par_annee.pdf', 'Annee');
+    } else {
+        echo "Aucune donnée de publication reçue pour générer le rapport.";
+    }
+}
+
+private function generate_by_author($pubs) {
+    if (!empty($pubs)) {
+        $groupedPubs = [];
+        foreach ($pubs as $pub) {
+            $authors = $pub['authors'] ?? ['N/A'];
+            foreach ($authors as $author) {
+                $groupedPubs[$author][] = $pub;
+            }
+        }
+        generatePubReportPDF($groupedPubs, 'Rapport des publications par auteur', 'rapport_pub_par_auteur.pdf', 'Auteur');
+    } else {
+        echo "Aucune donnée de publication reçue pour générer le rapport.";
+    }
+}
+
 
 }
 ?>

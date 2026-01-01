@@ -34,9 +34,21 @@ WHERE p.id = :id
     'pubs.getByProjectId' => 'select * from publications where status="valide" and project_id = :project_id',
     'pubs.getById' => 'select * from publications where id = :id',
     'pubs.getAll' => 'select p.*, u.id as user_id, u.first_name, u.last_name from publications p left join publication_authors pa on pa.publication_id = p.id left join users u on u.id = pa.user_id where p.status="valide";',
+    'pubs.getPubs' => 'select p.*, u.id as user_id, u.first_name, u.last_name from publications p left join publication_authors pa on pa.publication_id = p.id left join users u on u.id = pa.user_id',
     'pubs.getPubsUser' => 'select * from publication_authors pa join publications p on pa.publication_id = p.id where user_id = :id_user',
     'members.getAll' => 'select * from users u join project_members pm on u.id = pm.member_id',
-    
+    'pubs.getByUser' => '
+        SELECT p.*,
+        u.id AS user_id, u.first_name, u.last_name
+    FROM publications p
+    JOIN publication_authors pa ON p.id = pa.publication_id
+    JOIN users u ON u.id = pa.user_id
+    WHERE p.id IN (
+        SELECT publication_id
+        FROM publication_authors
+        WHERE user_id = :id
+    )',
+    'pubs.deleteAuthor'=> 'delete from publication_authors where publication_id = :id_pub and user_id = :id_user',  
     'users.getAuthorByPub' => 'select u.* from users u join publication_authors pa on u.id = pa.user_id where pa.publication_id = :publication_id',
     'users.getById'=> 'select * from users where id = :id',
     'users.getDir' => "select *from users where role = 'directeur'",

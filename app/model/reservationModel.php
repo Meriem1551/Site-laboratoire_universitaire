@@ -21,6 +21,7 @@ public function update_status($status, $id, $equip_id){
     if($status === 'confirme'){
         $this->update($con, 'equipment', ['status' => 'reserve'], 'id', $equip_id);
     }
+    $this->deconnexion($con);
 }
 
 

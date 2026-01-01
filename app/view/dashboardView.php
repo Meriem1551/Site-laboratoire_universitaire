@@ -28,7 +28,7 @@ class DashboardView {
                         </div>
                     </div>
                     
-                    <h3 class='text-lg font-bold text-gray-900 mb-2'>" . $cardData['title'] . "</h3>
+                    <h3 class='text-lg text-center font-bold text-gray-900 mb-2'>" . $cardData['title'] . "</h3>
                     
                     <div class='absolute top-0 left-0 right-0 h-1 bg-" . $cardData['color'] . "-500 rounded-t-lg'></div>
                 </div>"

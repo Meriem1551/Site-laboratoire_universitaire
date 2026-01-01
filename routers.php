@@ -188,8 +188,38 @@
         'controller' => 'PublicationController',
         'action' => 'show_pubs',
     ],
-
-
+   'create_pub' => [
+        'controller' => 'PublicationController',
+        'action' => 'pub_form'
+    ],
+    'update_pub' => [
+        'controller' => 'PublicationController',
+        'action' => 'pub_form'
+    ],
+    'createPub' => [
+        'controller' => 'PublicationController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'updatePub' => [
+        'controller' => 'PublicationController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'manage_authors' =>[
+        'controller' => 'PublicationController',
+        'action' => 'handle_authors'
+    ],
+    'delete_author' => [
+        'controller' => 'PublicationController',
+        'action' => 'delete_author'
+    ],
+    'validate_pub' => [
+        'controller' => 'PublicationController',
+        'action' => 'validate'
+    ],
+    'reject_pub' => [
+        'controller' => 'PublicationController',
+        'action' => 'reject'
+    ],
 
 /////////teams///////////////
     'gestion_equipes' => [
@@ -271,11 +301,33 @@
         'action' => 'handle_res_period'
     ],
 
-
+////////////////////////////////////////////
     'gestion_evenements' => [
         'controller' => 'EventController',
         'action' => 'show_events',
     ],
+    'create_event' => [
+        'controller' => 'EventController',
+        'action' => 'event_form'
+    ],
+    'update_event' => [
+        'controller' => 'EventController',
+        'action' => 'event_form'
+    ],
+    'createEvent' => [
+        'controller' => 'EventController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'updateEvent' => [
+        'controller' => 'EventController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'delete_event' => [
+        'controller' => 'EventController',
+        'action' => 'delete_event'
+    ],
+
+    ////////////////////////
 
     'gestion_settings' => [
         'controller' => 'SettingsController',
@@ -375,6 +427,7 @@
             'controller' => 'ReportController',
             'action' => 'show_report_form'
         ],
+
         'report_equips' => [
             'controller' => 'ReportController',
             'action' => 'show_report_form_equip'
@@ -382,6 +435,15 @@
         'reportEquip' => [
             'controller' => 'ReportController',
             'action' => 'generate_report_equip'
+        ],
+
+        'report_pubs' => [
+            'controller' => 'ReportController',
+            'action' => 'show_report_form_pub'
+        ],
+        'reportPub' => [
+            'controller' => 'ReportController',
+            'action' => 'generate_report_pub'
         ]
  ];
 ?>

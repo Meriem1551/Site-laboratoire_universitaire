@@ -125,4 +125,128 @@ function generateEquipReportPDF($data, $title, $file){
     $mpdf->Output($filename, \Mpdf\Output\Destination::INLINE);
 }
 
+
+
+
+
+function generatePubReportPDF($groupedPubs, $title, $filename, $label)
+{
+    $mpdf = new \Mpdf\Mpdf();
+
+    $html = "<h1 style='text-align:center;'>$title</h1>";
+    $html .= "<table border='1' cellpadding='6' cellspacing='0' style='width:100%; border-collapse: collapse;'>";
+    $html .= "<thead><tr>";
+
+    if ($label) {
+        $html .= "<th>$label</th>";
+    }
+
+    if ($label === 'Annee') {
+        $html .= "
+            <th>Titre</th>
+            <th>Type</th>
+            <th>Domaine</th>
+            <th>Résumé</th>
+            <th>DOI</th>
+            <th>Auteurs</th>
+            <th>Lien</th>
+        ";
+    } elseif ($label === 'Auteur') {
+        $html .= "
+            <th>Titre</th>
+            <th>Type</th>
+            <th>Domaine</th>
+            <th>Résumé</th>
+x           <th>DOI</th>
+            <th>Date de publication</th>
+            <th>Lien</th>
+        ";
+    }
+
+    $html .= "</tr></thead>";
+    $html .= "<tbody>";
+
+
+    if ($label === 'Annee') {
+        foreach ($groupedPubs as $year => $pubs) {
+            $totalRowsForType = 0;
+            foreach ($pubs as $pub) {
+                $authors = is_array($pub['authors']) ? $pub['authors'] : [];
+                $totalRowsForType += max(count($authors), 1);
+            }
+
+            $typeRowspanUsed = false;
+            $typeRowsProcessed = 0;
+
+            foreach ($pubs as $pubIndex => $pub) {
+                $authors = !empty($pub['authors']) && is_array($pub['authors'])
+                    ? $pub['authors']
+                    : ['N/A'];
+
+                $rowsForThisPub = max(count($authors), 1);
+                
+               
+
+                for ($authorIndex = 0; $authorIndex < $rowsForThisPub; $authorIndex++) {
+                    $html .= "<tr>";
+
+                    if (!$typeRowspanUsed) {
+                        $html .= "<td rowspan='$totalRowsForType'>$year</td>";
+                        $typeRowspanUsed = true;
+                    }
+
+                    if ($authorIndex === 0) {
+                        $html .= "<td rowspan='$rowsForThisPub'>{$pub['title']}</td>";
+                        $html .= "<td rowspan='$rowsForThisPub'>{$pub['type']}</td>";
+                        $html .= "<td rowspan='$rowsForThisPub'>{$pub['domain']}</td>";
+                        $html .= "<td rowspan='$rowsForThisPub'>{$pub['abstract']}</td>";
+                        $html .= "<td rowspan='$rowsForThisPub'>{$pub['doi']}</td>";
+                        $html .= "<td>{$authors[$authorIndex]}</td>";  
+                        $html .= "<td rowspan='$rowsForThisPub'>{$pub['file_path']}</td>";
+                    } else {
+                        $html .= "<td>{$authors[$authorIndex]}</td>";
+                    }
+
+                    $html .= "</tr>";
+                    $typeRowsProcessed++;
+                }
+            }
+        }
+
+    } else if ($label === 'Auteur') {
+
+        foreach ($groupedPubs as $author => $pubs) {
+            $rowCount = count($pubs);
+            $authorPrinted = false;
+
+            foreach ($pubs as $pub) {
+                $html .= "<tr>";
+
+                if (!$authorPrinted) {
+                    $html .= "<td rowspan='$rowCount'>$author</td>";
+                    $authorPrinted = true;
+                }
+
+                $html .= "<td>{$pub['title']}</td>";
+                $html .= "<td>{$pub['type']}</td>";
+                $html .= "<td>{$pub['domain']}</td>";
+                $html .= "<td>{$pub['abstract']}</td>";
+                $html .= "<td>{$pub['doi']}</td>";
+                $html .= "<td>{$pub['publication_date']}</td>
+                <td>{$pub['file_path']}</td>";
+
+                $html .= "</tr>";
+            }
+        }
+    }
+
+    $html .= "</tbody></table>";
+
+    if (ob_get_length()) ob_end_clean();
+    $mpdf->WriteHTML($html);
+    $mpdf->Output($filename, \Mpdf\Output\Destination::INLINE);
+}
+
+
+
 ?>

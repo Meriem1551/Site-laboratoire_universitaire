@@ -61,7 +61,8 @@ class BaseModel{
             $stmt->bindValue(':'.$key, $value);
         }
 
-        return $stmt->execute();
+        $stmt->execute();
+        return $connectDB->lastInsertId();
     }
 
     public function update($connectDB, $table, $data, $col, $val) {
