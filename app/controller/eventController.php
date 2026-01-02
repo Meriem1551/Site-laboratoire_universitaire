@@ -1,7 +1,9 @@
 <?php
 require_once "app/model/eventModel.php";
+require_once "app/model/UserModel.php";
 require_once "app/view/eventView.php";
 require_once "baseController.php";
+require_once __DIR__ . '/../../utils/helpers/events_reminder.php';
 class EventController extends BaseController{
 
     public function get_events($eventPage = 1){
@@ -111,9 +113,11 @@ class EventController extends BaseController{
         );
 
     }
-    $eventM = new EventModel();
-    $event = $eventM->getEventById($id);
-    setCalendarReminder($event);
+    // $eventM = new EventModel();
+    // $userM = new UserModel();
+    // $event = $eventM->getEventById($event_id);
+    // $users = $userM ->getAll();
+    // createGoogleCalendarEventWithUsers($event, $users);
     header("Location: index.php?page=gestion_evenements");
     exit;
 }

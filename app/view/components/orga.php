@@ -15,7 +15,7 @@ const orgData = $data;
 
 OrgChart.templates.smallNode = Object.assign({}, OrgChart.templates.ana);
 
-OrgChart.templates.smallNode.size = [120, 60]; // width 120px, height 60px
+OrgChart.templates.smallNode.size = [120, 60]; 
 
 OrgChart.templates.smallNode.node = '<rect x="0" y="0" width="{w}" height="{h}" fill="white" stroke="var(--primary-light)" rx="5" ry="5" stroke-width="1"></rect>';
 
