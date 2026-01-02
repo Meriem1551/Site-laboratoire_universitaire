@@ -9,25 +9,25 @@ class RoleView{
         echo '<div class="max-w-6xl mx-auto">';
         
         echo '<div class="mb-8">';
-        echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des rôles</h1>';
-        echo '<p class="text-gray-600 text-lg">Consultez, ajoutez et gérez les rôles du système</p>';
+        echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Gestion des rôles</h1>';
+        echo '<p class="text-[var(--gray)] text-lg">Consultez, ajoutez et gérez les rôles du système</p>';
         echo '</div>';
         
         echo '<div class="grid grid-cols-1 lg:grid-cols-4 gap-8">';
         
     
         echo '<div class="lg:col-span-2">';
-        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">';
+        echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden">';
         
         echo '<div class="px-6 py-4 border-b border-gray-200">';
-        echo '<h2 class="text-xl font-bold text-gray-900">Rôles existants</h2>';
-        echo '<p class="text-gray-600 text-sm mt-1">' . count($roles) . ' rôles disponibles</p>';
+        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Rôles existants</h2>';
+        echo '<p class="text-[var(--gray)] text-sm mt-1">' . count($roles) . ' rôles disponibles</p>';
         echo '</div>';
         
         $data = [];
         foreach($roles as $role) {
             $data[] = [
-                'Nom du rôle' => '<div class="font-medium text-gray-900">' . htmlspecialchars($role['name']) . '</div>',
+                'Nom du rôle' => '<div class="font-medium text-[var(--gray-dark)]">' . htmlspecialchars($role['name']) . '</div>',
                 'Actions' => '<div class="flex items-center gap-2 justify-end">'
                     . ($allowed['delete']
                         ? '<a href="index.php?page=delete_role&id=' . $role['id'] . '" 
@@ -44,7 +44,7 @@ class RoleView{
         
         if(empty($data)) {
             $data[] = [
-                'Nom du rôle' => '<div class="text-center py-8 text-gray-500">Aucun rôle disponible</div>',
+                'Nom du rôle' => '<div class="text-center py-8 text-[var(--gray)]">Aucun rôle disponible</div>',
                 'Actions' => ''
             ];
         }
@@ -67,8 +67,8 @@ class RoleView{
         echo '</div>'; 
 
         echo '<div class="col-span-2">';
-        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">';
-        echo '<h2 class="text-xl font-bold text-gray-900 mb-6">Ajouter un nouveau rôle</h2>';
+        echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 p-6">';
+        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)] mb-6">Ajouter un nouveau rôle</h2>';
         
         $form = new Form(
             'index.php?page=add_role', 

@@ -9,12 +9,12 @@ require_once "components/form.php";
 
 class PublicationView {
     public function show_publications($publications) {
-        echo '<section class="py-24 bg-gray-50 min-h-screen">';
+        echo '<section class="py-24 min-h-screen">';
         echo '<div class="container mx-auto px-4 max-w-7xl">';
-        $title = (new Title("Publications Scientifiques", "text-4xl font-bold text-gray-900 mb-4", "h1"))->render();
+        $title = (new Title("Publications Scientifiques", "text-4xl font-bold text-[var(--gray-dark)] mb-4", "h1"))->render();
         echo '<div class="mb-12">';
         echo $title;
-        echo '<p class="text-gray-600 max-w-3xl">Explorez notre catalogue de publications académiques et de recherches scientifiques.</p>';
+        echo '<p class="text-[var(--gray)] max-w-3xl">Explorez notre catalogue de publications académiques et de recherches scientifiques.</p>';
         echo '</div>';
         if(!empty($publications)) {
             $groupedPubs = [];
@@ -40,26 +40,26 @@ class PublicationView {
                     'Rapport' => 'bg-orange-100 text-orange-800',
                 ];
                 
-                $typeClass = $typeColors[$publication['type']] ?? 'bg-gray-100 text-gray-800';
+                $typeClass = $typeColors[$publication['type']] ?? 'bg-gray-100 text-[var(--gray-dark)]';
                 $typeBadge = "<span class='inline-flex px-3 py-1 text-xs font-medium rounded-full {$typeClass}'>{$publication['type']}</span>";
                 
                 $authors = !empty($publication['authors']) ? 
                     implode(', ', $publication['authors']) : 
-                    "<span class='text-gray-400 text-sm'>Auteurs non spécifiés</span>";
+                    "<span class='text-[var(--gray)] text-sm'>Auteurs non spécifiés</span>";
 
                 $year = date('Y', strtotime($publication['publication_date']));
                 
                 $downloadButton = (new Button(
                     '<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Télécharger',
                     $publication['file_path'],
-                    'inline-flex items-center text-white bg-[var(--primary)] hover:bg-[var(--primary-light)] px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
+                    'inline-flex items-center text-[var(--white)] bg-[var(--primary)] hover:bg-[var(--primary-light)] px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
                     true
                 ))->render();
 
                 $downloadButton = "<a download href='{$publication['file_path']}' target='_blank'>" . (new Button(
                     '<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Télécharger',
                     $publication['file_path'],
-                    'inline-flex items-center text-white bg-[var(--primary)] hover:bg-[var(--primary-light)] px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
+                    'inline-flex items-center text-[var(--white)] bg-[var(--primary)] hover:bg-[var(--primary-light)] px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
                     true
                 ))->render();
                 
@@ -75,15 +75,15 @@ class PublicationView {
                         {$publication['title']}
                         {$typeBadge}
                     ",
-                    'Domaine' => "<div class='font-medium text-gray-700'>{$publication['domain']}</div>",
+                    'Domaine' => "<div class='font-medium text-[var(--gray-dark)]'>{$publication['domain']}</div>",
                     'Auteurs' => $authors,
                     'Date' => "<div class='text-center'>
-                        <div class='font-medium text-gray-900'>{$year}</div>
-                        <div class='text-xs text-gray-500'>" . date('d M', strtotime($publication['publication_date'])) . "</div>
+                        <div class='font-medium text-[var(--gray-dark)]'>{$year}</div>
+                        <div class='text-xs text-[var(--gray)]'>" . date('d M', strtotime($publication['publication_date'])) . "</div>
                     </div>",
                     'DOI' => $publication['doi'] ? 
                         "<span class='font-mono text-sm text-[var(--primary)] bg-blue-50 px-2 py-1 rounded'>" . substr($publication['doi'], 0, 20) . "...</span>" : 
-                        "<span class='text-gray-400 text-sm'>Non disponible</span>",
+                        "<span class='text-[var(--gray)] text-sm'>Non disponible</span>",
                     'Actions' => "<div class='flex gap-2'>
                         {$detailsButton}
                         {$downloadButton}
@@ -92,19 +92,19 @@ class PublicationView {
             }
 
             $columns = ["Titre", "Domaine", "Auteurs", "Date", "DOI", "Actions"];
-            $table = new Table($columns, $data, 'w-full bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden');
+            $table = new Table($columns, $data, 'w-full bg-[var(--white)] rounded-xl shadow-sm border border-gray-200 overflow-hidden');
             $table->render();
             
             echo '<div class="mt-8 flex items-center justify-between">';
-            echo '<div class="text-sm text-gray-600">';
+            echo '<div class="text-sm text-[var(--gray)]">';
             echo 'Affichage de <span class="font-semibold">1-' . count($groupedPubs) . '</span> sur <span class="font-semibold">' . count($groupedPubs) . '</span> publications';
             echo '</div>';
             echo '</div>';
         } else {
-            echo '<div class="text-center py-16 bg-white rounded-xl border-2 border-dashed border-gray-300">';
+            echo '<div class="text-center py-16 bg-[var(--white)] rounded-xl border-2 border-dashed border-gray-300">';
             echo '<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>';
-            echo '<h3 class="text-xl font-bold text-gray-600 mb-2">Aucune publication disponible</h3>';
-            echo '<p class="text-gray-500 max-w-md mx-auto">Les publications seront ajoutées au fur et à mesure de leur acceptation.</p>';
+            echo '<h3 class="text-xl font-bold text-[var(--gray-dark)] mb-2">Aucune publication disponible</h3>';
+            echo '<p class="text-[var(--gray)] max-w-md mx-auto">Les publications seront ajoutées au fur et à mesure de leur acceptation.</p>';
             echo '</div>';
         }
         
@@ -113,7 +113,7 @@ class PublicationView {
     }
 
     public function show_publication($publication, $authors) {
-        echo '<section class="py-24 bg-gray-50 min-h-screen">';
+        echo '<section class="py-24  min-h-screen">';
         echo '<div class="container mx-auto px-4 max-w-7xl">';        
         $typeColors = [
             'Article' => 'bg-blue-100 text-blue-800',
@@ -122,14 +122,14 @@ class PublicationView {
             'Rapport' => 'bg-orange-100 text-orange-800',
         ];
         
-        $typeClass = $typeColors[$publication['type']] ?? 'bg-gray-100 text-gray-800';
+        $typeClass = $typeColors[$publication['type']] ?? 'bg-gray-100 text-[var(--gray-dark)]';
         $typeBadge = "<span class='inline-flex px-4 py-2 text-sm font-medium rounded-full {$typeClass}'>{$publication['type']}</span>";
         
         $date = date('d M Y', strtotime($publication['publication_date']));
         
         $title = (new Title(
             $publication['title'],
-            'text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-6',
+            'text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] leading-tight mb-6',
             'h1'
         ))->render();
         
@@ -137,7 +137,7 @@ class PublicationView {
         
         $authorsTitle = (new Title(
             "Auteurs",
-            'text-2xl font-bold text-gray-900 mb-6',
+            'text-2xl font-bold text-[var(--gray-dark)] mb-6',
             'h2'
         ))->render();
         
@@ -150,7 +150,7 @@ class PublicationView {
                 "<div class='space-y-4 flex-1'>",
                     "<div class='flex flex-wrap items-center gap-4'>",
                         $typeBadge,
-                        "<span class='inline-flex items-center text-gray-600'>",
+                        "<span class='inline-flex items-center text-[var(--gray)]'>",
                             "<svg class='w-5 h-5 mr-2' fill='currentColor' viewBox='0 0 20 20'>",
                             "<path fill-rule='evenodd' d='M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z' clip-rule='evenodd'/>",
                             "</svg>",
@@ -166,41 +166,41 @@ class PublicationView {
             "<div class='space-y-8'>",
                 "<div class='grid gap-8'>",
                     "<div class='lg:col-span-2 space-y-8'>",
-                        "<div class='bg-white p-8 rounded-xl border border-gray-200'>",
-                            "<h3 class='text-xl font-bold text-gray-900 mb-4'>Résumé</h3>",
+                        "<div class='bg-[var(--white)] p-8 rounded-xl border border-gray-200'>",
+                            "<h3 class='text-xl font-bold text-[var(--gray-dark)] mb-4'>Résumé</h3>",
                             "<div class='prose prose-lg max-w-none text-gray-700 leading-relaxed'>",
                                 "<p>{$publication['abstract']}</p>",
                             "</div>",
                         "</div>",
                         
-                        "<div class='bg-white p-8 rounded-xl border border-gray-200'>",
-                            "<h3 class='text-xl font-bold text-gray-900 mb-6'>Métadonnées</h3>",
+                        "<div class='bg-[var(--white)] p-8 rounded-xl border border-gray-200'>",
+                            "<h3 class='text-xl font-bold text-[var(--gray-dark)] mb-6'>Métadonnées</h3>",
                             "<div class='grid md:grid-cols-2 gap-6'>",
                                 "<div class='space-y-4'>",
                                     "<div>",
-                                        "<h4 class='text-sm font-medium text-gray-500 mb-1'>Domaine</h4>",
-                                        "<p class='font-medium text-gray-900'>{$publication['domain']}</p>",
+                                        "<h4 class='text-sm font-medium text-[var(--gray)] mb-1'>Domaine</h4>",
+                                        "<p class='font-medium text-[var(--gray-dark)]'>{$publication['domain']}</p>",
                                     "</div>",
                                     "<div>",
-                                        "<h4 class='text-sm font-medium text-gray-500 mb-1'>Journal/Conférence</h4>",
-                                        "<p class='font-medium text-gray-900'>" . ($publication['type'] ?? 'Non spécifié') . "</p>",
+                                        "<h4 class='text-sm font-medium text-[var(--gray)] mb-1'>Journal/Conférence</h4>",
+                                        "<p class='font-medium text-[var(--gray-dark)]'>" . ($publication['type'] ?? 'Non spécifié') . "</p>",
                                     "</div>",
                                 "</div>",
                                 "<div class='space-y-4'>",
                                     "<div>",
-                                        "<h4 class='text-sm font-medium text-gray-500 mb-1'>DOI</h4>",
+                                        "<h4 class='text-sm font-medium text-[var(--gray)] mb-1'>DOI</h4>",
                                         "<p class='font-mono text-[var(--primary)] bg-blue-50 px-3 py-2 rounded'>",
-                                        $publication['doi'] ? $publication['doi'] : '<span class="text-gray-400">Non disponible</span>',
+                                        $publication['doi'] ? $publication['doi'] : '<span class="text-[var(--gray)]">Non disponible</span>',
                                         "</p>",
                                     "</div>",
                 
                                 "</div>",
                             "</div>",
                         "</div>",
-                        "<div class='bg-white p-8 rounded-xl border border-gray-200'>",
+                        "<div class='bg-[var(--white)] p-8 rounded-xl border border-gray-200'>",
                             "<div class='flex items-center justify-between mb-8'>",
                                 $authorsTitle,
-                                "<div class='text-sm text-gray-500'>" . count($authors) . " auteurs</div>",
+                                "<div class='text-sm text-[var(--gray)]'>" . count($authors) . " auteurs</div>",
                             "</div>",
                             "<div class='grid md:grid-cols-2 lg:grid-cols-2 gap-6'>",
                                 $authorsHTML,
@@ -224,7 +224,7 @@ class PublicationView {
             $header,
             $body,
             $footer,
-            'bg-white rounded-xl shadow-sm border border-gray-200 p-8 space-y-8'
+            'bg-[var(--white)] rounded-xl shadow-sm border border-gray-200 p-8 space-y-8'
         );
         
         $card->render();
@@ -255,8 +255,8 @@ class PublicationView {
         } else {
             echo '<div class="col-span-full text-center py-12 border-2 border-dashed border-gray-200 rounded-xl">';
             echo '<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>';
-            echo '<p class="text-gray-600 font-medium">Aucun auteur associé</p>';
-            echo '<p class="text-gray-500 text-sm mt-1">Les informations sur les auteurs seront ajoutées prochainement</p>';
+            echo '<p class="text-[var(--gray)] font-medium">Aucun auteur associé</p>';
+            echo '<p class="text-[var(--gray)] text-sm mt-1">Les informations sur les auteurs seront ajoutées prochainement</p>';
             echo '</div>';
         }
     }
@@ -287,33 +287,33 @@ class PublicationView {
     
     echo '<section class="min-h-screen py-24 w-full px-12">';
     echo '<div class="mb-10">';
-    echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des publications</h1>';
-    echo '<p class="text-gray-600 text-lg">Consultez et gérez tous les publications du système</p>';
+    echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Gestion des publications</h1>';
+    echo '<p class="text-[var(--gray)] text-lg">Consultez et gérez tous les publications du système</p>';
 
     echo '<div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">';
     foreach($stats as $stat){
         $header = [
-            "<div class='text-sm text-gray-500 mb-1'>{$stat['title']}</div>"
+            "<div class='text-sm text-[var(--gray)] mb-1'>{$stat['title']}</div>"
         ];
         $body = [
-            "<div class='text-2xl font-bold text-gray-900'>{$stat['value']}</div>"
+            "<div class='text-2xl font-bold text-[var(--gray-dark)]'>{$stat['value']}</div>"
         ];
-        $card = new Card($header, $body, [], "border-t-4 bg-white border-" . $stat['color'] . " rounded-xl p-4 shadow-sm");
+        $card = new Card($header, $body, [], "border-t-4 bg-[var(--white)] border-" . $stat['color'] . " rounded-xl p-4 shadow-sm");
         $card->render();
     }
     echo '</div>';
 
-    echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+    echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
     
     echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
-    echo '<h2 class="text-xl font-bold text-gray-900">Liste des projets</h2>';
+    echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Liste des projets</h2>';
     $role = $_SESSION['user'][0]['role'];
     $isAdmin = ($role === 'admin');
     $isAuthor = in_array($role, ['enseignant', 'doctorant']);
     $canUpdate = $allowed['update'] ?? false;
     echo "<div class='flex gap-6 ml-auto'>";
     if ($allowed['create'] && $isAuthor) {
-        echo '<a href="index.php?page=create_pub" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2 shadow-sm hover:shadow">';
+        echo '<a href="index.php?page=create_pub" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2 shadow-sm hover:shadow">';
         echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
         echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
         echo '</svg>';
@@ -326,7 +326,7 @@ class PublicationView {
      $_SESSION['pubs_for_report'] = $pubs;
     $data = [];
     foreach ($pubs as $pub) {
-        $statusColor = $pub['status'] === 'valide' ? 'bg-green-100 text-green-800' : ($pub['status'] === 'rejete' ? 'bg-red-100 text-red-800':'bg-gray-100 text-gray-800');
+        $statusColor = $pub['status'] === 'valide' ? 'bg-green-100 text-green-800' : ($pub['status'] === 'rejete' ? 'bg-red-100 text-red-800':'bg-gray-100 text-[var(--gray-dark)]');
         $statusIcon = $pub['status'] === 'valide' ? 
             '<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>' :
             '<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>';
@@ -336,8 +336,8 @@ class PublicationView {
 
         $pubInfo = 
         "<div class='grid justify-center items-center gap-3'> 
-                <div class='font-semibold text-gray-900'>{$pub['title']}</div>
-                <div class='text-gray-500 text-sm flex items-center gap-1'>
+                <div class='font-semibold text-[var(--gray-dark)]'>{$pub['title']}</div>
+                <div class='text-[var(--gray)] text-sm flex items-center gap-1'>
                     <svg class='w-4 h-4' fill='currentColor' viewBox='0 0 20 20'>
                         <path fill-rule='evenodd' d='M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z' clip-rule='evenodd'/>
                     </svg>
@@ -354,12 +354,12 @@ class PublicationView {
             if ($isAdmin) {
                 if($pub['status'] ==='non-valide'){
                     $actions .= '
-                <a href="index.php?page=validate_pub&id=' . $pub['id'] . '" class="px-3 py-1.5 bg-green-600 text-white hover:bg-green-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 shadow-sm hover:shadow">
+                <a href="index.php?page=validate_pub&id=' . $pub['id'] . '" class="px-3 py-1.5 bg-[var(--success)] text-[var(--white)] hover:bg-green-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 shadow-sm hover:shadow">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
                 </a>
-                <a href="index.php?page=reject_pub&id=' . $pub['id'] . '" class="px-3 py-1.5 bg-red-600 text-white hover:bg-red-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 shadow-sm hover:shadow">
+                <a href="index.php?page=reject_pub&id=' . $pub['id'] . '" class="px-3 py-1.5 bg-[var(--error)] text-[var(--white)] hover:bg-red-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 shadow-sm hover:shadow">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
@@ -383,7 +383,7 @@ class PublicationView {
             }
          $authors = !empty($pub['authors']) ? 
                     implode(', ', $pub['authors']) : 
-                    "<span class='text-gray-400 text-sm'>Auteurs non spécifiés</span>";
+                    "<span class='text-[var(--gray)] text-sm'>Auteurs non spécifiés</span>";
 
         $data[] = [
             'Publication' => $pubInfo,
@@ -402,7 +402,7 @@ class PublicationView {
     $table->render();
     if($isAdmin){
         echo '<div class="mt-6 flex gap-4 justify-between md:justify-end">
-        <a href="index.php?page=report_pubs" class="px-4 py-2 bg-[var(--primary)] text-white rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2 shadow-sm hover:shadow font-medium" target="_blank">
+        <a href="index.php?page=report_pubs" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2 shadow-sm hover:shadow font-medium" target="_blank">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
@@ -421,7 +421,7 @@ public function create_update_form($pub, $projects) {
     $action = $pub === null ? "Ajouter" : "Modifier";
 
     echo '<section class="min-h-screen lg:w-full py-24 px-12">';
-    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+    echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 max-w-4xl">';
 
     $projects = array_reduce($projects, function($acc, $project) {
         $acc[$project['id']] = $project['title'];
@@ -456,16 +456,16 @@ public function show_authors($pub_authors, $users){
         
     
         echo '<div class="lg:col-span-2">';
-        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">';
+        echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden">';
         
         echo '<div class="px-6 py-4 border-b border-gray-200">';
-        echo '<h2 class="text-xl font-bold text-gray-900">Les auteurs de la publication</h2>';
-        echo '<p class="text-gray-600 text-sm mt-1">' . count($pub_authors) . ' auteurs disponibles</p>';
+        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Les auteurs de la publication</h2>';
+        echo '<p class="text-[var(--gray)] text-sm mt-1">' . count($pub_authors) . ' auteurs disponibles</p>';
         echo '</div>';
         $data = [];
         foreach($pub_authors as $author) { 
             $data[] = [
-                'Nom de l\'auteur' => '<div class="font-medium text-gray-900 flex justify-center gap-2">' .'<img src="' . htmlspecialchars($author['profile_picture']) . '" alt="Logo du partenaire" class="ml-2 rounded-lg w-8 h-8 inline-block">'. htmlspecialchars($author['first_name']) ." " . htmlspecialchars($author['last_name']) . '</div>',
+                'Nom de l\'auteur' => '<div class="font-medium text-[var(--gray-dark)] flex justify-center gap-2">' .'<img src="' . htmlspecialchars($author['profile_picture']) . '" alt="Logo du partenaire" class="ml-2 rounded-lg w-8 h-8 inline-block">'. htmlspecialchars($author['first_name']) ." " . htmlspecialchars($author['last_name']) . '</div>',
                 'Actions' => '<div class="flex items-center gap-2 justify-end">
                 <a href="index.php?page=delete_author&id_pub=' . $pub_id . '&id_author=' . $author['id'] . '" 
                              class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer">
@@ -480,7 +480,7 @@ public function show_authors($pub_authors, $users){
         
         if(empty($data)) {
             $data[] = [
-                'Auteur' => '<div class="text-center py-8 text-gray-500">Aucun membre disponible</div>',
+                'Auteur' => '<div class="text-center py-8 text-[var(--gray)]">Aucun membre disponible</div>',
                 'Actions' => ''
             ];
         }
@@ -502,8 +502,8 @@ public function show_authors($pub_authors, $users){
         echo '</div>'; 
 
         echo '<div class="col-span-2">';
-        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">';
-        echo '<h2 class="text-xl font-bold text-gray-900 mb-6">Ajouter un membre</h2>';
+        echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 p-6">';
+        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)] mb-6">Ajouter un membre</h2>';
         
         $form = new Form(
             'index.php?page=manage_authors&id=' . $pub_id, 

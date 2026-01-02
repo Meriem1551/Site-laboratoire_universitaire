@@ -12,13 +12,13 @@ class EventView{
     $total = $eventsData['total'];
     $currentPage = $eventsData['currentPage'];
 
-    echo '<section id="events" class="p-6">';
+    echo '<section id="events" class="px-12 py-24">';
     echo '<div class="container mx-auto px-4 max-w-7xl">';
     echo '<div class="text-center mb-12">';
     echo '<span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-4">Événements</span>';
-    $title = (new Title("Événements à Venir", "text-4xl font-bold text-gray-900 mb-4", 'h2'))->render();
+    $title = (new Title("Événements à Venir", "text-4xl font-bold text-[var(--gray-dark)] mb-4", 'h2'))->render();
     echo $title;
-    echo '<p class="text-gray-600 max-w-2xl mx-auto">Participez à nos conférences, ateliers et séminaires pour découvrir les dernières avancées de la recherche.</p>';
+    echo '<p class="text-[var(--gray)] max-w-2xl mx-auto">Participez à nos conférences, ateliers et séminaires pour découvrir les dernières avancées de la recherche.</p>';
     echo '</div>';
     
     if(!empty($events)) {
@@ -42,18 +42,18 @@ class EventView{
                     </svg>
                 </div>
                 <div>
-                    <div class='font-medium text-gray-900'>{$eventDate}</div>
+                    <div class='font-medium text-[var(--gray-dark)]'>{$eventDate}</div>
                 </div>
             </div>";
             
             $cardTitle = (new Title(
                 $event['title'],
-                'text-xl font-bold text-gray-900 mb-3 leading-tight',
+                'text-xl font-bold text-[var(--gray-dark)] mb-3 leading-tight',
                 'h3'
             ))->render();
             
             if($isOpen) {
-                $buttonHTML = "<a href='{$event['register_link']}' class='inline-flex items-center gap-2 bg-[var(--primary)] text-white font-semibold px-5 py-2.5 rounded-lg hover:bg-[var(--primary-light)] transition-colors duration-300 text-sm'>
+                $buttonHTML = "<a href='{$event['register_link']}' class='inline-flex items-center gap-2 bg-[var(--primary)] text-[var(--white)] font-semibold px-5 py-2.5 rounded-lg hover:bg-[var(--primary-light)] transition-colors duration-300 text-sm'>
                     <svg class='w-4 h-4' fill='currentColor' viewBox='0 0 20 20'>
                         <path fill-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z' clip-rule='evenodd'/>
                     </svg>
@@ -79,7 +79,7 @@ class EventView{
                 "<div class='p-6'>
                     {$dateInfo}
                     {$cardTitle}
-                    <p class='text-gray-600 leading-relaxed mb-4 line-clamp-3'>{$event['description']}</p>
+                    <p class='text-[var(--gray)] leading-relaxed mb-4 line-clamp-3'>{$event['description']}</p>
                 </div>"
             ];
             
@@ -93,7 +93,7 @@ class EventView{
                 $header,
                 $body,
                 $footer,
-                'bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2'
+                'bg-[var(--white)] rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2'
             );
 
             $card->render();
@@ -106,10 +106,10 @@ class EventView{
             $pagination->render();
             echo '</div>';
     } else {
-        echo '<div class="text-center py-12 bg-white rounded-xl border-2 border-dashed border-gray-300">';
+        echo '<div class="text-center py-12 bg-[var(--white)] rounded-xl border-2 border-dashed border-gray-300">';
         echo '<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>';
-        echo '<h3 class="text-xl font-bold text-gray-600 mb-2">Aucun événement à venir</h3>';
-        echo '<p class="text-gray-500 max-w-md mx-auto">Les prochains événements seront annoncés prochainement. Restez à l\'écoute !</p>';
+        echo '<h3 class="text-xl font-bold text-[var(--gray-dark)] mb-2">Aucun événement à venir</h3>';
+        echo '<p class="text-[var(--gray)] max-w-md mx-auto">Les prochains événements seront annoncés prochainement. Restez à l\'écoute !</p>';
         echo '</div>';
     }
     
@@ -119,15 +119,15 @@ class EventView{
     public function show_events_admin($events, $allowed){
         echo '<section class="min-h-screen py-24 w-full px-12">';
             echo '<div class="mb-10">';
-                echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des evenements</h1>';
-                echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+                echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Gestion des evenements</h1>';
+                echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
         
                     echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
-                        echo '<h2 class="text-xl font-bold text-gray-900">Liste des evenements</h2>';
+                        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Liste des evenements</h2>';
                         
                         echo "<div class='flex gap-6 ml-auto'>";
                             if ($allowed['create']) {
-                                echo '<a href="index.php?page=create_event" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
+                                echo '<a href="index.php?page=create_event" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
                                 echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
                                 echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
                                 echo '</svg>';
@@ -195,7 +195,7 @@ class EventView{
     $action = $event === null ? "Ajouter" : "Modifier";
 
     echo '<section class="min-h-screen lg:w-full py-24 px-12">';
-    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+    echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 max-w-4xl">';
 
     if ($event) {
         echo "<div class='mb-6 flex flex-col items-center'>

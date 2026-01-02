@@ -12,17 +12,17 @@ class PartnerView{
         
     
         echo '<div class="lg:col-span-2">';
-        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">';
+        echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden">';
         
         echo '<div class="px-6 py-4 border-b border-gray-200">';
-        echo '<h2 class="text-xl font-bold text-gray-900">Partenaires de projet</h2>';
-        echo '<p class="text-gray-600 text-sm mt-1">' . count($projects_partners) . ' partenaires disponibles</p>';
+        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Partenaires de projet</h2>';
+        echo '<p class="text-[var(--gray)] text-sm mt-1">' . count($projects_partners) . ' partenaires disponibles</p>';
         echo '</div>';
         
         $data = [];
         foreach($projects_partners as $partner) {  
             $data[] = [
-                'Nom du partenaire' => '<div class="font-medium text-gray-900">' .'<img src="' . htmlspecialchars($partner['logo_path']) . '" alt="Logo du partenaire" class="ml-2 w-8 h-8 inline-block">'. htmlspecialchars($partner['name']) . '</div>',
+                'Nom du partenaire' => '<div class="font-medium text-[var(--gray-dark)]">' .'<img src="' . htmlspecialchars($partner['logo_path']) . '" alt="Logo du partenaire" class="ml-2 w-8 h-8 inline-block">'. htmlspecialchars($partner['name']) . '</div>',
                 'Actions' => '<div class="flex items-center gap-2 justify-end">
                 <a href="index.php?page=delete_partner_project&id_project=' . $id_project . '&id_partner=' . $partner['id'] . '" 
                              class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer">
@@ -59,8 +59,8 @@ class PartnerView{
         echo '</div>'; 
 
         echo '<div class="col-span-2">';
-        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">';
-        echo '<h2 class="text-xl font-bold text-gray-900 mb-6">Ajouter un partenaire</h2>';
+        echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 p-6">';
+        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)] mb-6">Ajouter un partenaire</h2>';
         
         $form = new Form(
             'index.php?page=add_partner&id_project=' . $id_project, 
@@ -92,15 +92,15 @@ class PartnerView{
     public function show_all_partners($partners, $allowed){
         echo '<section class="min-h-screen py-24 px-12 w-full md:px-8 lg:px-12">';
         echo '<div class="mb-10">';
-        echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des partenaires</h1>';
-        echo '<p class="text-gray-600 text-lg">Consultez et gérez tous les partenaires du système</p>';
-        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+        echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Gestion des partenaires</h1>';
+        echo '<p class="text-[var(--gray)] text-lg">Consultez et gérez tous les partenaires du système</p>';
+        echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
             
             echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
-            echo '<h2 class="text-xl font-bold text-gray-900">Liste des partenaires</h2>';
+            echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Liste des partenaires</h2>';
     echo "<div class='flex gap-6 ml-auto'>";
         if ($allowed['create']) {
-            echo '<a href="index.php?page=create_partner" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
+            echo '<a href="index.php?page=create_partner" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
             echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
             echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
             echo '</svg>';
@@ -116,13 +116,13 @@ class PartnerView{
         "<div class='flex items-center gap-3'>
                 <img src='{$partner['logo_path']}' class='w-10 h-10 rounded-full'>  
             <div>
-                <div class='font-semibold text-gray-900'>{$partner['name']}</div>
+                <div class='font-semibold text-[var(--gray-dark)]'>{$partner['name']}</div>
             </div>
         </div>"; 
             $data[] = [
                 'Partenaire' => $partInto,
-                'Description' => '<div class="font-medium text-gray-900">' . htmlspecialchars($partner['description']) . '</div>',                
-                'Type' => '<div class="font-medium text-gray-900">' . htmlspecialchars($partner['type']) . '</div>',                
+                'Description' => '<div class="font-medium text-[var(--gray-dark)]">' . htmlspecialchars($partner['description']) . '</div>',                
+                'Type' => '<div class="font-medium text-[var(--gray-dark)]">' . htmlspecialchars($partner['type']) . '</div>',                
                 'Actions' => '<div class="flex items-center gap-2 justify-center">
                 ' . ($allowed['update'] ? '
                 <a href="index.php?page=update_partner&id=' . $partner['id'] . '" class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Modifier">
@@ -156,7 +156,7 @@ class PartnerView{
     $action = $partner === null ? "Ajouter" : "Modifier";
 
     echo '<section class="min-h-screen lg:w-full py-24 px-12">';
-    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+    echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 max-w-4xl">';
     if ($partner) {
         echo "<div class='mb-6 flex flex-col items-center'>
             <img id='profilePreview' src='{$partner['logo_path']}' 

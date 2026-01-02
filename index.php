@@ -5,6 +5,17 @@ require_once 'vendor/autoload.php';
 require_once "app/controller/headerController.php";
 require_once "app/controller/footerController.php";
 require_once "app/controller/adminController.php";
+require_once "app/model/settingModel.php";
+
+$settingModel = new SettingModel();
+$settings = $settingModel->getAll();
+
+$appSettings = [];
+foreach ($settings as $s) {
+    $appSettings[$s['key_name']] = $s['value'];
+}
+$GLOBALS['appSettings'] = $appSettings;
+
 $headerController = new HeaderController();
 $footerController = new FooterController();
 $adminController = new AdminController();
@@ -26,14 +37,41 @@ $controller = new $controllerName();
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="<?= $appSettings['theme'] ?? 'light' ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="public/css/global.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Laboratoire Website</title>
+    <style>
+    :root {
+        --primary: <?= $appSettings['primary-color']?>;
+        --primary-light: <?= $appSettings['primary-light'] ?>;
+        --primary-dark: <?= $appSettings['primary-dark']  ?>;
+        --gray-light: <?= $appSettings['gray-light']  ?>;
+        --gray: <?= $appSettings['gray'] ?>;
+        --gray-dark: <?= $appSettings['gray-dark']  ?>;
+        --white: <?= $appSettings['white']?>;
+        --accent: <?= $appSettings['accent']  ?>;
+        --success: <?= $appSettings['success']  ?>;
+        --error: <?= $appSettings['error'] ?>;
+    }
+    [data-theme="dark"] {
+    --primary: <?= $appSettings['white']?>;     
+    --primary-light: <?= $appSettings['gray-dark']?>; 
+    --primary-dark: <?= $appSettings['white']?>;
+    --gray-light: <?= $appSettings['gray-dark']?>;
+    --gray: <?= $appSettings['gray']?>;
+    --gray-dark: <?= $appSettings['gray-light']?>;
+    --white: <?= $appSettings['primary-dark']?>;
+    --accent: <?= $appSettings['accent']?>;
+    --success: <?= $appSettings['success']?>;
+    --error: <?= $appSettings['error']?>;
+}
+    </style>
 </head>
+
 <body class="bg-[var(--gray-light)]">
       <?php 
           echo "<header>";

@@ -21,7 +21,7 @@ class Form {
 
     public function addInput(string $name, string $label, string $value = '', string $placeholder = '', string $type = 'text') {
         $field = "<div class='space-y-2'>
-                    <label for='$name' class='block text-sm font-medium text-gray-800'>$label</label>
+                    <label for='$name' class='block text-sm font-medium text-[var(--gray-dark)]'>$label</label>
                     <input type='$type' name='$name' id='$name' value='$value' placeholder='$placeholder' 
                            class='w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm 
                                   focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] focus:border-[var(--primary-light)]
@@ -32,7 +32,7 @@ class Form {
 
     public function addTextarea(string $name, string $label, string $value = '', string $placeholder = '', int $rows = 4) {
         $field = "<div class='space-y-2'>
-                    <label for='$name' class='block text-sm font-medium text-gray-800'>$label</label>
+                    <label for='$name' class='block text-sm font-medium text-[var(--gray-dark)]'>$label</label>
                     <textarea name='$name' id='$name' placeholder='$placeholder' rows='$rows'
                               class='w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm 
                                      focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] focus:border-[var(--primary-light)]
@@ -43,7 +43,7 @@ class Form {
 
     public function addSelect(string $name, string $label, array $options = [], string $selectedValue = '') {
         $field = "<div class='space-y-2'>
-                    <label for='$name' class='block text-sm font-medium text-gray-800'>$label</label>
+                    <label for='$name' class='block text-sm font-medium text-[var(--gray-dark)]'>$label</label>
                     <select name='$name' id='$name' 
                             class='w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm 
                                    focus:outline-none focus:ring-2 focus:ring-[var(--primary-light)] focus:border-[var(--primary-light)]
@@ -75,10 +75,10 @@ class Form {
 
     public function addFile(string $name, string $label) {
         $field = "<div class='space-y-2'>
-                    <label for='$name' class='block text-sm font-medium text-gray-800'>$label</label>
+                    <label for='$name' class='block text-sm font-medium text-[var(--gray-dark)]'>$label</label>
                     <div class='border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-blue-400 transition-colors'>
                         <input type='file' name='$name' id='$name' 
-                               class='block w-full text-sm text-gray-500 
+                               class='block w-full text-sm text-[var(--gray-dark)]
                                       file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 
                                       file:text-sm file:font-semibold file:bg-blue-50 file:text-[var(--primary)] 
                                       hover:file:bg-blue-100'>
@@ -89,7 +89,7 @@ class Form {
     }
 
     public function render() {
-        echo "<div class='w-full bg-white rounded-xl shadow-lg border border-gray-200 p-6 md:p-8'>";
+        echo "<div class='w-full bg-[var(--white)] rounded-xl shadow-lg border border-gray-200 p-6 md:p-8'>";
         if (!empty($this->formTitle)) {
             $title = (new Title($this->formTitle, 'text-2xl md:text-3xl font-bold text-gray-900 mb-4', 'h2'))->render();
             echo $title;
@@ -110,13 +110,13 @@ class Form {
         $button = (new Button(
             $this->submitText, 
             'submit', 
-            'px-6 py-3 bg-[var(--primary)] text-white font-semibold
+            'px-6 py-3 bg-[var(--primary)] text-[var(--white)] font-semibold
              rounded-lg hover:bg-[var(--primary-light)] active:scale-[0.98] 
              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
              transition-all duration-200 shadow-sm hover:shadow-md'
         ))->render();
         echo $button;
-        echo "<div class='text-sm text-gray-500 ml-auto'>Remplissez tous les champs obligatoires</div>";
+        echo "<div class='text-sm text-[var(--gray)] ml-auto'>Remplissez tous les champs obligatoires</div>";
         echo "</div></form></div>";
     }
 }

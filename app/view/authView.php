@@ -4,14 +4,14 @@ require_once "components/form.php";
 class AuthView {
     private function create_login() {
         echo '<section class="min-h-screen w-full bg-blue-50 py-24 px-12">';
-        echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 w-1/2">';
+        echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 w-1/2">';
         
         $form = new Form(
             "", 
             "POST", 
             "Se connecter", 
             "Se connecter", 
-            "<p class='text-gray-600 text-sm my-8 text-center'>Entrez vos identifiants pour accéder à votre compte</p>", 
+            "<p class='text-[var(--gray)] text-sm my-8 text-center'>Entrez vos identifiants pour accéder à votre compte</p>", 
             false
         );
 

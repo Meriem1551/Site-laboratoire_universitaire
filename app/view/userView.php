@@ -8,12 +8,12 @@ class UserView {
 
     public function userForm($user = null, $actionUrl = '', $submitText = '') {
     echo '<section class="min-h-screen lg:w-full py-24 px-12">';
-    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+    echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 max-w-4xl">';
 
     echo "<div class='mb-6 flex flex-col items-center'>
         <img id='profilePreview' src='" . ($user['profile_picture'] ?? 'public/assets/placeholder.jpg') . "' 
              class='w-24 h-24 rounded-full mb-4 border border-gray-300'>
-        <label class='text-gray-600 text-sm'>Changer la photo de profil</label>
+        <label class='text-[var(--gray)] text-sm'>Changer la photo de profil</label>
     </div>";
 
     $form = new Form(
@@ -59,31 +59,31 @@ class UserView {
         ];
     echo '<section class="min-h-screen py-24 w-full px-12">';
         echo '<div class="mb-10">';
-            echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des utilisateurs</h1>';
-            echo '<p class="text-gray-600 text-lg">Consultez et gérez tous les utilisateurs du système</p>';
+            echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Gestion des utilisateurs</h1>';
+            echo '<p class="text-[var(--gray)] text-lg">Consultez et gérez tous les utilisateurs du système</p>';
     
          echo '<div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">';
             foreach($stats as $stat){
                 $header = [
-                    "<div class='text-sm text-gray-500 mb-1'>{$stat['title']}</div>"
+                    "<div class='text-sm text-[var(--gray)] mb-1'>{$stat['title']}</div>"
                 ];
                 $body = [
-                    "<div class='text-2xl font-bold text-gray-900'>{$stat['value']}</div>"
+                    "<div class='text-2xl font-bold text-[var(--gray-dark)]'>{$stat['value']}</div>"
                 ];
-                $card = new Card($header, $body, [], "bg-white rounded-xl p-4 shadow-sm border border-gray-200 ");
+                $card = new Card($header, $body, [], "bg-[var(--white)] rounded-xl p-4 shadow-sm border border-gray-200 ");
                 $card->render();
             }
         echo '</div>';
     
-    echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+    echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
     
     echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
-    echo '<h2 class="text-xl font-bold text-gray-900">Liste des utilisateurs</h2>';
+    echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Liste des utilisateurs</h2>';
     
     
     echo "<div class='flex gap-6 ml-auto'>";
         if ($allowed['create']) {
-            echo '<a href="index.php?page=create_user" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
+            echo '<a href="index.php?page=create_user" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
             echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
             echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
             echo '</svg>';
@@ -112,15 +112,15 @@ class UserView {
         
         
         $pubCount = $user['nb_pubs'];
-        $pubColor = $pubCount > 10 ? 'text-green-600' : ($pubCount > 0 ? 'text-blue-600' : 'text-gray-600');
+        $pubColor = $pubCount > 10 ? 'text-[var(--gray)]' : ($pubCount > 0 ? 'text-blue-600' : 'text-[var(--gray)]');
         $pubDisplay = '<div class="flex items-center justify-center gap-2"><span class="' . $pubColor . ' font-semibold">' . $pubCount . '</span><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>';
         
         $userInfo = 
         "<div class='flex items-center gap-3'>
                 <img src='{$user['profile_picture']}' class='w-10 h-10 rounded-full'>  
             <div>
-                <div class='font-semibold text-gray-900'>{$user['first_name']} {$user['last_name']}</div>
-                <div class='text-gray-500 text-sm'>" . ($user['email'] ?? '') . "</div>
+                <div class='font-semibold text-[var(--gray-dark)]'>{$user['first_name']} {$user['last_name']}</div>
+                <div class='text-[var(--gray)] text-sm'>" . ($user['email'] ?? '') . "</div>
             </div>
         </div>";
 
@@ -128,12 +128,12 @@ class UserView {
         $data[] = [
             'Utilisateur' => $userInfo,
             'Rôle' => $user['role'],
-            'Spécialité' => '<div class="text-gray-700 font-medium">' . $user['speciality'] . '</div>',
+            'Spécialité' => '<div class="text-[var(--gray-dark)] font-medium">' . $user['speciality'] . '</div>',
             'Statut' => $statusBadge,
             'Publications' => $pubDisplay,
             'Actions' => '<div class="flex items-center gap-2 justify-center">
                 ' . ($allowed['update'] ? '
-                <a href="index.php?page=update_user&id=' . $user['id'] . '" class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Modifier">
+                <a href="index.php?page=update_user&id=' . $user['id'] . '" class="p-2 text-[var(--gray-dark)] hover:bg-green-50 rounded-lg transition-colors" title="Modifier">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                     </svg>
@@ -174,13 +174,13 @@ public function create_update_form($user, $roles) {
     $action = $user === null ? "Ajouter" : "Modifier";
 
     echo '<section class="min-h-screen lg:w-full py-24 px-12">';
-    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+    echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 max-w-4xl">';
 
     if ($user) {
         echo "<div class='mb-6 flex flex-col items-center'>
             <img id='profilePreview' src='{$user['profile_picture']}' 
                  class='w-24 h-24 rounded-full mb-4 border border-gray-300'>
-            <label class='text-gray-600 text-sm'>Changer la photo de profil</label>
+            <label class='text-[var(--gray)] text-sm'>Changer la photo de profil</label>
         </div>";
     }
 
@@ -236,16 +236,16 @@ public function show_members($users, $project_members){
         
     
         echo '<div class="lg:col-span-2">';
-        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">';
+        echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden">';
         
         echo '<div class="px-6 py-4 border-b border-gray-200">';
-        echo '<h2 class="text-xl font-bold text-gray-900">Membres de projet</h2>';
-        echo '<p class="text-gray-600 text-sm mt-1">' . count($project_members) . ' membres disponibles</p>';
+        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Membres de projet</h2>';
+        echo '<p class="text-[var(--gray)] text-sm mt-1">' . count($project_members) . ' membres disponibles</p>';
         echo '</div>';
         $data = [];
         foreach($project_members as $member) { 
             $data[] = [
-                'Nom du membre' => '<div class="font-medium text-gray-900 flex justify-center gap-2">' .'<img src="' . htmlspecialchars($member['profile_picture']) . '" alt="Logo du partenaire" class="ml-2 rounded-lg w-8 h-8 inline-block">'. htmlspecialchars($member['first_name']) ." " . htmlspecialchars($member['last_name']) . '</div>',
+                'Nom du membre' => '<div class="font-medium text-[var(--gray-dark)] flex justify-center gap-2">' .'<img src="' . htmlspecialchars($member['profile_picture']) . '" alt="Logo du partenaire" class="ml-2 rounded-lg w-8 h-8 inline-block">'. htmlspecialchars($member['first_name']) ." " . htmlspecialchars($member['last_name']) . '</div>',
                 'Actions' => '<div class="flex items-center gap-2 justify-end">
                 <a href="index.php?page=delete_member&id_project=' . $id_project . '&id_member=' . $member['id'] . '" 
                              class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer">
@@ -260,7 +260,7 @@ public function show_members($users, $project_members){
         
         if(empty($data)) {
             $data[] = [
-                'Membre' => '<div class="text-center py-8 text-gray-500">Aucun membre disponible</div>',
+                'Membre' => '<div class="text-center py-8 text-[var(--gray)]">Aucun membre disponible</div>',
                 'Actions' => ''
             ];
         }
@@ -282,8 +282,8 @@ public function show_members($users, $project_members){
         echo '</div>'; 
 
         echo '<div class="col-span-2">';
-        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">';
-        echo '<h2 class="text-xl font-bold text-gray-900 mb-6">Ajouter un membre</h2>';
+        echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 p-6">';
+        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)] mb-6">Ajouter un membre</h2>';
         
         $form = new Form(
             'index.php?page=add_member&id_project=' . $id_project, 
@@ -323,16 +323,16 @@ public function show_members($users, $project_members){
         
     
         echo '<div class="lg:col-span-2">';
-        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">';
+        echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden">';
         
         echo '<div class="px-6 py-4 border-b border-gray-200">';
-        echo '<h2 class="text-xl font-bold text-gray-900">Membres de projet</h2>';
-        echo '<p class="text-gray-600 text-sm mt-1">' . count($team_members) . ' membres disponibles</p>';
+        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Membres de projet</h2>';
+        echo '<p class="text-[var(--gray)] text-sm mt-1">' . count($team_members) . ' membres disponibles</p>';
         echo '</div>';
         $data = [];
         foreach($team_members as $member) { 
             $data[] = [
-                'Nom du membre' => '<div class="font-medium text-gray-900 flex justify-center gap-2">' .'<img src="' . htmlspecialchars($member['profile_picture']) . '" alt="Logo du partenaire" class="ml-2 rounded-lg w-8 h-8 inline-block">'. htmlspecialchars($member['first_name']) ." " . htmlspecialchars($member['last_name']) . '</div>',
+                'Nom du membre' => '<div class="font-medium text-[var(--gray-dark)] flex justify-center gap-2">' .'<img src="' . htmlspecialchars($member['profile_picture']) . '" alt="Logo du partenaire" class="ml-2 rounded-lg w-8 h-8 inline-block">'. htmlspecialchars($member['first_name']) ." " . htmlspecialchars($member['last_name']) . '</div>',
                 'Actions' => '<div class="flex items-center gap-2 justify-end">
                 <a href="index.php?page=delete_team_member&id_team=' . $id_team . '&id_member=' . $member['id'] . '" 
                              class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Supprimer">
@@ -347,7 +347,7 @@ public function show_members($users, $project_members){
         
         if(empty($data)) {
             $data[] = [
-                'Membre' => '<div class="text-center py-8 text-gray-500">Aucun membre disponible</div>',
+                'Membre' => '<div class="text-center py-8 text-[var(--gray)]">Aucun membre disponible</div>',
                 'Actions' => ''
             ];
         }
@@ -368,8 +368,8 @@ public function show_members($users, $project_members){
         echo '</div>'; 
 
         echo '<div class="col-span-2">';
-        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">';
-        echo '<h2 class="text-xl font-bold text-gray-900 mb-6">Ajouter un membre</h2>';
+        echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 p-6">';
+        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)] mb-6">Ajouter un membre</h2>';
         
         $form = new Form(
             'index.php?page=add_team_member&id_team=' . $id_team, 

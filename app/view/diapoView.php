@@ -6,15 +6,15 @@ class diapoView{
    public function show_diapo($diapo,$allowed){
         echo '<section class="min-h-screen py-24 w-full px-12">';
             echo '<div class="mb-10">';
-                echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des actualites</h1>';
-                echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+                echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Gestion des actualites</h1>';
+                echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
         
                     echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
-                        echo '<h2 class="text-xl font-bold text-gray-900">Liste des actualites</h2>';
+                        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Liste des actualites</h2>';
                         
                         echo "<div class='flex gap-6 ml-auto'>";
                             if ($allowed['create']) {
-                                echo '<a href="index.php?page=create_diapo" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
+                                echo '<a href="index.php?page=create_diapo" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
                                 echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
                                 echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
                                 echo '</svg>';
@@ -61,7 +61,7 @@ class diapoView{
     $action = $slide === null ? "Ajouter" : "Modifier";
 
     echo '<section class="min-h-screen lg:w-full py-24 px-12">';
-    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+    echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 max-w-4xl">';
 
     if ($slide) {
         echo "<div class='mb-6 flex flex-col items-center'>

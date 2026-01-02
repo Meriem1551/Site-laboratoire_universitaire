@@ -329,10 +329,6 @@
 
     ////////////////////////
 
-    'gestion_settings' => [
-        'controller' => 'SettingsController',
-        'action' => 'show_settings',
-    ],
 
     'gestion_actualites' => [
         'controller' => 'ActualiteController',
@@ -444,6 +440,16 @@
         'reportPub' => [
             'controller' => 'ReportController',
             'action' => 'generate_report_pub'
-        ]
+        ],
+
+
+         'gestion_settings' => [
+        'controller' => 'SettingController',
+        'action' => 'show_settings',
+    ],
+    'update_setting' => [
+        'controller' => 'SettingController',
+        'action' => 'update_settings',
+    ]
  ];
 ?>

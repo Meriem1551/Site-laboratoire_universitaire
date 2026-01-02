@@ -5,11 +5,11 @@ require_once "components/form.php";
 
 class ActualiteView{
     public function displayActualites($actualites){
-        $title= (new Title("Nos dernières actualités", "text-3xl font-bold text-gray-800 mb-", "h1"))->render();
+        $title= (new Title("Nos dernières actualités", "text-3xl font-bold text-[var(--gray-dark)] mb-", "h1"))->render();
         echo '<section class="py-24 px-4 md:px-8">';
         echo '<div class="mb-10">';
         echo $title;
-        echo '<p class="text-gray-700">Découvrez les dernières publications, projets et evenements de nos équipes de recherche et leurs partenaires.</p>';
+        echo '<p class="text-[var(--gray)]">Découvrez les dernières publications, projets et evenements de nos équipes de recherche et leurs partenaires.</p>';
         echo '</div>';
         
         echo '<div class="grid lg:grid-cols-3 md:grid-cols-2 gap-6">';
@@ -19,13 +19,13 @@ class ActualiteView{
             
             $dateBadge = "
             <div class='absolute top-4 left-4'>
-                <span class='inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-white text-gray-800 shadow-sm backdrop-blur-sm'>
+                <span class='inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-[var(--white)] text-[var(--gray-dark)] shadow-sm backdrop-blur-sm'>
                     {$date}
                 </span>
             </div>";
             
             $cardTitle = (new Title(
-                $act['title'], 'text-xl font-bold text-gray-900 mb-3 leading-tight', 'h3'
+                $act['title'], 'text-xl font-bold text-[var(--gray-dark)] mb-3 leading-tight', 'h3'
             ))->render();
             
             $header = [
@@ -40,7 +40,7 @@ class ActualiteView{
             $body = [
                 "<div class='p-6'>
                     {$cardTitle}
-                    <p class='text-gray-600 leading-relaxed mb-4'>{$act['description']}</p>
+                    <p class='text-[var(--gray)] leading-relaxed mb-4'>{$act['description']}</p>
                 </div>"
             ];
             
@@ -48,7 +48,7 @@ class ActualiteView{
                 $header,
                 $body,
                 [],
-                "bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300"
+                "bg-[var(--white)] rounded-xl shadow-md border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300"
             );
 
             $card->render();
@@ -63,15 +63,15 @@ class ActualiteView{
     public function show_news($news,$allowed){
         echo '<section class="min-h-screen py-24 w-full px-12">';
             echo '<div class="mb-10">';
-                echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des actualites</h1>';
-                echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+                echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Gestion des actualites</h1>';
+                echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
         
                     echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
-                        echo '<h2 class="text-xl font-bold text-gray-900">Liste des actualites</h2>';
+                        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Liste des actualites</h2>';
                         
                         echo "<div class='flex gap-6 ml-auto'>";
                             if ($allowed['create']) {
-                                echo '<a href="index.php?page=create_new" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
+                                echo '<a href="index.php?page=create_new" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
                                 echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
                                 echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
                                 echo '</svg>';
@@ -86,7 +86,7 @@ class ActualiteView{
                     $newInfo = "
                         <div class='flex items-center gap-2'>
                             <img src='{$new['image']}' class='w-16 h-16 rounded-lg'>
-                            <p>{$new['title']}</p>
+                            <p class='text-[var(--gray)]'>{$new['title']}</p>
                         </div>
                     ";
                     $data[] = [
@@ -124,13 +124,13 @@ class ActualiteView{
     $action = $new === null ? "Ajouter" : "Modifier";
 
     echo '<section class="min-h-screen lg:w-full py-24 px-12">';
-    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+    echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 max-w-4xl">';
 
     if ($new) {
         echo "<div class='mb-6 flex flex-col items-center'>
             <img id='profilePreview' src='{$new['image']}' 
                  class='w-24 h-24 rounded-full mb-4 border border-gray-300'>
-            <label class='text-gray-600 text-sm'>Changer la photo</label>
+            <label class='text-[var(--gray-dark)] text-sm'>Changer la photo</label>
         </div>";
     }
 

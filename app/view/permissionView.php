@@ -7,23 +7,23 @@ class PermissionView{
         $activeCount = array_sum(array_map(fn($p) => $p['permission_id'] ? 1 : 0, $permissions));
         
         echo '<div class="mb-8 text-center">';
-        echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des permissions utilisateur</h1>';
-        echo '<p class="text-gray-600 text-lg mb-4">Sélectionnez les permissions à attribuer</p>';
+        echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Gestion des permissions utilisateur</h1>';
+        echo '<p class="text-[var(--gray)] text-lg mb-4">Sélectionnez les permissions à attribuer</p>';
         
-        echo '<div class="inline-flex items-center gap-6 bg-white rounded-xl p-4 shadow-sm border border-gray-200">';
+        echo '<div class="inline-flex items-center gap-6 bg-[var(--white)] rounded-xl p-4 shadow-sm border border-gray-200">';
         echo '<div class="text-center">';
         echo '<div class="text-2xl font-bold text-blue-600">' . count($permissions) . '</div>';
-        echo '<div class="text-sm text-gray-600">Permissions disponibles</div>';
+        echo '<div class="text-sm text-[var(--gray)]">Permissions disponibles</div>';
         echo '</div>';
         echo '<div class="h-8 w-px bg-gray-300"></div>';
         echo '<div class="text-center">';
         echo '<div class="text-2xl font-bold text-green-600">' . $activeCount . '</div>';
-        echo '<div class="text-sm text-gray-600">Activées actuellement</div>';
+        echo '<div class="text-sm text-[var(--gray)]">Activées actuellement</div>';
         echo '</div>';
         echo '</div>';
         echo '</div>';
         
-        echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 md:p-8">';
+        echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 p-6 md:p-8">';
         
         $form = new Form(
             'index.php?page=give_permission', 

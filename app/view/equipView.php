@@ -10,12 +10,12 @@ require_once "components/barChart.php";
 
 class EquipmentView {
     private function list_equipments($equipments) {
-        echo '<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">';
+        echo '<div class="bg-[var(--white)] rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">';
         echo '<div class="p-6 border-b border-gray-200">';
         echo '<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">';
         echo '<div>';
-        echo '<h3 class="text-xl font-bold text-gray-900">Équipements Disponibles</h3>';
-        echo '<p class="text-gray-600 text-sm mt-1">Liste de tous les équipements disponibles pour réservation</p>';
+        echo '<h3 class="text-xl font-bold text-[var(--gray-dark)]">Équipements Disponibles</h3>';
+        echo '<p class="text-[var(--gray)] text-sm mt-1">Liste de tous les équipements disponibles pour réservation</p>';
         echo '</div>';
         
         echo '<div class="flex flex-wrap gap-3">';
@@ -51,7 +51,7 @@ class EquipmentView {
                     $button = (new Button(
                         "<a href='index.php?page=equipment&id={$equipment['id']}' class='flex'><svg class='w-4 h-4 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'/></svg>Réserver</a>",
                         "",
-                        'bg-[var(--primary)] hover:bg-[var(--primary-light)] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200'
+                        'bg-[var(--primary)] hover:bg-[var(--primary-light)] text-[var(--white)] px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200'
                     ))->render();
                     } else {
                         $button = '<span class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-400 rounded-lg text-sm font-medium cursor-not-allowed">
@@ -62,9 +62,9 @@ class EquipmentView {
                 }
                 
                 $data[] = [
-                    'Nom' => "<div class='font-medium text-gray-900'>{$equipment['name']}</div>",
+                    'Nom' => "<div class='font-medium text-[var(--gray-dark)]'>{$equipment['name']}</div>",
                     'Catégorie' => "<div class='text-gray-700'>{$equipment['category']}</div>",
-                    'Description' => "<div class='text-gray-600 text-sm'>{$description}</div>",
+                    'Description' => "<div class='text-[var(--gray-dark)] text-sm'>{$description}</div>",
                     'État' => "<div class='flex justify-center'>{$badge}</div>",
                     'Quantite' => "<div class='flex justify-center'>{$equipment['quantity']}</div>",
                     'Action' => "<div class='flex justify-center'>{$button}</div>"
@@ -77,8 +77,8 @@ class EquipmentView {
         } else {
             echo '<div class="text-center py-12">';
             echo '<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>';
-            echo '<h4 class="text-lg font-medium text-gray-600 mb-2">Aucun équipement disponible</h4>';
-            echo '<p class="text-gray-500 text-sm">Tous les équipements sont actuellement indisponibles</p>';
+            echo '<h4 class="text-lg font-medium text-[var(--gray-dark)] mb-2">Aucun équipement disponible</h4>';
+            echo '<p class="text-[var(--gray)] text-sm">Tous les équipements sont actuellement indisponibles</p>';
             echo '</div>';
         }
         
@@ -86,13 +86,13 @@ class EquipmentView {
     }
 
     private function list_reservations($reservations) {
-        echo '<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">';
+        echo '<div class="bg-[var(--white)] rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">';
         echo '<div class="p-6 border-b border-gray-200">';
         echo '<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">';
         echo '<div>';
-        $title = (new Title('Historique des Réservations', "text-xl font-bold text-gray-900", 'h3'))->render();
+        $title = (new Title('Historique des Réservations', "text-xl font-bold text-[var(--gray-dark)]", 'h3'))->render();
         echo $title;
-        echo '<p class="text-gray-600 text-sm mt-1">Suivi des réservations passées et en cours</p>';
+        echo '<p class="text-[var(--gray-dark)] text-sm mt-1">Suivi des réservations passées et en cours</p>';
         echo '</div>';
         
         $stats = [
@@ -152,11 +152,11 @@ class EquipmentView {
                     $reservation['purpose'];
                 
                 $data[] = [
-                    'Équipement' => "<div class='font-medium text-gray-900'>{$reservation['name']}</div>",
+                    'Équipement' => "<div class='font-medium text-[var(--gray-dark)]'>{$reservation['name']}</div>",
                     'Utilisateur' => "<div class='text-gray-700'>{$userName}</div>",
-                    'Motif' => "<div class='text-gray-600 text-sm'>{$purpose}</div>",
+                    'Motif' => "<div class='text-[var(--gray-dark)] text-sm'>{$purpose}</div>",
                     'Période' => "<div class='text-center'>
-                        <div class='font-medium text-gray-900'>{$startDate} - {$endDate}</div>
+                        <div class='font-medium text-[var(--gray-dark)]'>{$startDate} - {$endDate}</div>
                         <div class='text-xs text-gray-500'>{$timeRange}</div>
                     </div>",
                     'Statut' => "<div class='flex justify-center'>{$badge}</div>"
@@ -169,8 +169,8 @@ class EquipmentView {
         } else {
             echo '<div class="text-center py-12">';
             echo '<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>';
-            echo '<h4 class="text-lg font-medium text-gray-600 mb-2">Aucune réservation</h4>';
-            echo '<p class="text-gray-500 text-sm">Aucune réservation n\'a été effectuée pour le moment</p>';
+            echo '<h4 class="text-lg font-medium text-[var(--gray-dark)] mb-2">Aucune réservation</h4>';
+            echo '<p class="text-[var(--gray)] text-sm">Aucune réservation n\'a été effectuée pour le moment</p>';
             echo '</div>';
         }
         
@@ -187,9 +187,9 @@ class EquipmentView {
     $lineChartHTML = ob_get_clean();
 
 
-    $title = (new Title('Statistiques', 'text-3xl font-bold text-gray-900 mb-2', 'h3'))->render();
+    $title = (new Title('Statistiques', 'text-3xl font-bold text-[var(--gray-dark)] mb-2', 'h3'))->render();
 
-    $subCardClass = "bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 p-6";
+    $subCardClass = "bg-[var(--white)] rounded-2xl border border-gray-200 p-6";
     
 
 
@@ -202,7 +202,7 @@ class EquipmentView {
     $header = [
         '<div class="mb-10">',
             $title,
-            "<p class='text-gray-600'>Visualiser les statistiques des equipments</p>",
+            "<p class='text-[var(--gray-dark)]'>Visualiser les statistiques des equipments</p>",
         '</div>'
     ];
 ob_start();
@@ -227,7 +227,7 @@ $card2HTML = ob_get_clean();
         $header, 
         $body, 
         [], 
-        "bg-white p-8 rounded-3xl shadow-xl"
+        "bg-[var(--white)] p-8 rounded-3xl shadow-xl"
     );
     $card->render();
 }
@@ -237,9 +237,9 @@ $card2HTML = ob_get_clean();
         echo '<div class="container px-4">';
         
         echo '<div class="mb-8">';
-        $title = (new Title('Gestion des Équipements', "text-3xl font-bold text-gray-900 mb-2", 'h1'))->render();
+        $title = (new Title('Gestion des Équipements', "text-3xl font-bold text-[var(--gray-dark)] mb-2", 'h1'))->render();
         echo $title;
-        echo '<p class="text-gray-600">Gérez les équipements du laboratoire et suivez les réservations en temps réel</p>';
+        echo '<p class="text-[var(--gray)]">Gérez les équipements du laboratoire et suivez les réservations en temps réel</p>';
         echo '</div>';
         
 
@@ -263,13 +263,13 @@ $card2HTML = ob_get_clean();
                             "<h3 class='text-lg font-semibold mb-2'>{$stat['title']}</h3>",
                             '<div class="text-3xl font-bold">' . $stat['value'] . '</div>',
                         '</div>',
-                        '<div class="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center">',
+                        '<div class="w-12 h-12 rounded-lg bg-[var(--white)]/20 flex items-center justify-center">',
                             $stat['icon'],
                         '</div>',
                     '</div>',
                 ];
                 $footer = [];
-                $card = new Card($header, $body, $footer, $stat['class'].'text-white p-4 rounded-xl');
+                $card = new Card($header, $body, $footer, $stat['class'].'text-[var(--white)] p-4 rounded-xl');
                 $card->render();
             }
             
@@ -291,7 +291,7 @@ $card2HTML = ob_get_clean();
         "<div class='space-y-4 mb-2'>",
             "<div class='flex flex-col md:flex-row md:items-center justify-between gap-6'>",
                 "<div class='space-y-3 flex-1'>",
-                    "<h3 class='text-xl font-bold text-gray-900'>" . htmlspecialchars($name) . "</h3>",
+                    "<h3 class='text-xl font-bold text-[var(--gray-dark)]'>" . htmlspecialchars($name) . "</h3>",
                     "<div class='flex flex-wrap gap-4'>",
                         "<div class='flex items-center gap-2 text-green-600 font-medium'>",
                             "<svg class='w-5 h-5' fill='currentColor' viewBox='0 0 20 20'><path fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/></svg>",
@@ -318,7 +318,7 @@ private function getUser($user){
             "<svg class='w-6 h-6 text-blue-600' fill='currentColor' viewBox='0 0 20 20'>",
                 "<path fill-rule='evenodd' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z' clip-rule='evenodd'/>",
             "</svg>",
-            "<h4 class='text-lg font-semibold text-gray-900'>Informations du demandeur</h4>",
+            "<h4 class='text-lg font-semibold text-[var(--gray-dark)]'>Informations du demandeur</h4>",
         "</div>"
         ];
     
@@ -326,19 +326,19 @@ private function getUser($user){
             "<div class='grid md:grid-cols-2 gap-6'>",
                 "<div class='space-y-1'>",
                     "<div class='text-sm text-gray-500'>Nom complet</div>",
-                    "<div class='font-medium text-gray-900'>" . htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) . "</div>",
+                    "<div class='font-medium text-[var(--gray-dark)]'>" . htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) . "</div>",
                 "</div>",
                 "<div class='space-y-1'>",
                     "<div class='text-sm text-gray-500'>Email</div>",
-                    "<div class='font-medium text-gray-900'>" . htmlspecialchars($user['email']) . "</div>",
+                    "<div class='font-medium text-[var(--gray-dark)]'>" . htmlspecialchars($user['email']) . "</div>",
                 "</div>",
                 "<div class='space-y-1'>",
                     "<div class='text-sm text-gray-500'>Rôle</div>",
-                    "<div class='font-medium text-gray-900'>" . htmlspecialchars($user['role']) . "</div>",
+                    "<div class='font-medium text-[var(--gray-dark)]'>" . htmlspecialchars($user['role']) . "</div>",
                 "</div>",
                 "<div class='space-y-1'>",
                     "<div class='text-sm text-gray-500'>Specialite</div>",
-                    "<div class='font-medium text-gray-900'>" . htmlspecialchars($user['speciality'] ?? 'Non spécifié') . "</div>",
+                    "<div class='font-medium text-[var(--gray-dark)]'>" . htmlspecialchars($user['speciality'] ?? 'Non spécifié') . "</div>",
                 "</div>",
             "</div>"
         ];
@@ -355,12 +355,12 @@ private function getUser($user){
     private function getForm($user_id, $equip_id) {
     $formHeaderContent = [
         "<div class='text-center mb-6'>",
-            "<h3 class='text-2xl font-bold text-gray-900 mb-2'>Détails de la réservation</h3>",
-            "<p class='text-gray-600'>Remplissez les informations requises pour votre réservation</p>",
+            "<h3 class='text-2xl font-bold text-[var(--gray-dark)] mb-2'>Détails de la réservation</h3>",
+            "<p class='text-[var(--gray)]'>Remplissez les informations requises pour votre réservation</p>",
         "</div>"
     ];
 
-    $formText = '<p class="text-gray-600 text-center mb-6">Veuillez remplir tous les champs obligatoires pour effectuer votre réservation.</p>';
+    $formText = '<p class="text-[var(--gray)] text-center mb-6">Veuillez remplir tous les champs obligatoires pour effectuer votre réservation.</p>';
 
     $form = new Form(
         'index.php?page=reservation',
@@ -382,7 +382,7 @@ private function getUser($user){
 
     $formBody = ["<div>" . $formHTML . "</div>"];
     ob_start();
-    $formCard = new Card($formHeaderContent, $formBody, [], "bg-white p-6 rounded-xl border border-gray-200 mb-8");
+    $formCard = new Card($formHeaderContent, $formBody, [], "bg-[var(--white)] p-6 rounded-xl border border-gray-200 mb-8");
     $formCard->render();
     $formCardHTML = ob_get_clean();
 
@@ -397,12 +397,12 @@ public function show_res_form($equip) {
     echo '<section class="min-h-screen lg:w-5xl bg-gradient-to-br from-gray-50 to-blue-50 py-24 px-4">';
     echo '<div class="container mx-auto max-w-4xl">';
     
-    $headerTitle = (new Title("Réservation d'équipement", "text-3xl font-bold text-gray-900", "h1"))->render();
+    $headerTitle = (new Title("Réservation d'équipement", "text-3xl font-bold text-[var(--gray-dark)]", "h1"))->render();
     $headerContent = [
         "<div class='flex flex-col md:flex-row md:items-center justify-between gap-6'>",
             "<div class='space-y-3'>",
                 $headerTitle,
-                "<p class='text-gray-600'>Formulaire de demande de réservation</p>",
+                "<p class='text-[var(--gray)]'>Formulaire de demande de réservation</p>",
             "</div>",
             "<div class='flex items-center gap-4'>",
                 "<div class='w-16 h-16 rounded-xl bg-blue-100 flex items-center justify-center'>",
@@ -433,7 +433,7 @@ $formCardHTML= $this->getForm($user['id'],$equip['id']);
     
     $mainFooter = [
         "<div class='text-center'>",
-            "<p class='text-sm text-gray-500'>",
+            "<p class='text-sm text-[var(--gray)]'>",
                 "Votre demande sera traitée dans les plus brefs délais.",
             "</p>",
         "</div>"
@@ -442,7 +442,7 @@ $formCardHTML= $this->getForm($user['id'],$equip['id']);
         $headerContent,
         $mainBody,
         $mainFooter,
-        'bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 p-8'
+        'bg-[var(--white)] rounded-2xl shadow-xl overflow-hidden border border-gray-200 p-8'
     );
     
     $mainCard->render();
@@ -461,27 +461,27 @@ private function list_equip($equips, $allowed){
         ['title' => 'Equipments reserves', 'value' => count($equipReserve), 'color' => 'yellow-400'],
     ];
                 echo '<div class="mb-10">';
-                 echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des equipments</h1>';
+                 echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Gestion des equipments</h1>';
                         echo '<div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">';
                             foreach($stats as $stat){
                                 $header = [
                                     "<div class='text-sm text-gray-500 mb-1'>{$stat['title']}</div>"
                                 ];
                                 $body = [
-                                    "<div class='text-2xl font-bold text-gray-900'>{$stat['value']}</div>"
+                                    "<div class='text-2xl font-bold text-[var(--gray-dark)]'>{$stat['value']}</div>"
                                 ];
-                                $card = new Card($header, $body, [], "border-t-4 bg-white border-" . $stat['color'] . " rounded-xl p-4 shadow-sm");        $card->render();
+                                $card = new Card($header, $body, [], "border-t-4 bg-[var(--white)] border-" . $stat['color'] . " rounded-xl p-4 shadow-sm");        $card->render();
                             }
                         echo '</div>';
 
-                echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+                echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
         
                     echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
-                        echo '<h2 class="text-xl font-bold text-gray-900">Liste des equipments</h2>';
+                        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Liste des equipments</h2>';
                         
                         echo "<div class='flex gap-6 ml-auto'>";
                             if ($allowed['create']) {
-                                echo '<a href="index.php?page=create_equip" class="px-4 py-2 bg-[var(--primary)] text-white font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
+                                echo '<a href="index.php?page=create_equip" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
                                 echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
                                 echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
                                 echo '</svg>';
@@ -537,20 +537,20 @@ private function list_equip($equips, $allowed){
                 $table = new Table($columns, $data, "w-full");
                 $table->render();
                 echo '<div class="mt-6 flex gap-4 justify-between md:justify-end">
-        <a href="index.php?page=report_equips" target="_blank" class="px-4 py-2 bg-[var(--primary)] text-white rounded hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">
+        <a href="index.php?page=report_equips" target="_blank" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] rounded hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">
         Générer un rapport
     </div></a>';
          echo '</div>';
 }
 private function list_historique($reservations){
             echo '<div class="mb-10">';
-                echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Gestion des reservations</h1>';
-                echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+                echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Gestion des reservations</h1>';
+                echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
         
                     echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
-                        echo '<h2 class="text-xl font-bold text-gray-900">Liste des reservations</h2>';
+                        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Liste des reservations</h2>';
                         
-                            echo '<a href="index.php?page=gestion_conflicts" class="px-4 py-2 bg-[var(--accent)] text-white font-medium rounded-lg transition-colors flex items-center gap-2">';
+                            echo '<a href="index.php?page=gestion_conflicts" class="px-4 py-2 bg-[var(--accent)] text-[var(--white)] font-medium rounded-lg transition-colors flex items-center gap-2">';
                                 echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
                                 echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.995-.833-2.732 0L4.234 16.5c-.77.833.192 2.5 1.732 2.5z"/>';
                                 echo '</svg>';
@@ -577,8 +577,8 @@ private function list_historique($reservations){
                 ))->render();
                 $button = '';
                 if ($r['status_res'] === 'en-attente' && !$r['has_conflict']) {
-                    $button = '<a href="index.php?page=change_reservation_status&id=' . $r['r_id'] . '&status=confirme&equip_id=' . $r['equipment_id'] .'" class="p-2 bg-green-500 text-white rounded-lg">Confirmer</a>
-                            <a href="index.php?page=change_reservation_status&id=' . $r['r_id'] . '&status=refuse" class="p-2 bg-red-500 text-white rounded-lg">Refuser</a>';
+                    $button = '<a href="index.php?page=change_reservation_status&id=' . $r['r_id'] . '&status=confirme&equip_id=' . $r['equipment_id'] .'" class="p-2 bg-[var(--success)] text-[var(--white)] rounded-lg">Confirmer</a>
+                            <a href="index.php?page=change_reservation_status&id=' . $r['r_id'] . '&status=refuse" class="p-2 bg-[var(--error)] text-[var(--white)] rounded-lg">Refuser</a>';
                 }    
                     $data[] = [
                         "Equipment" => $r['name'],
@@ -613,7 +613,7 @@ public function create_update_form($equip) {
     $action = $equip === null ? "Ajouter" : "Modifier";
 
     echo '<section class="min-h-screen lg:w-full py-24 px-12">';
-    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+    echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 max-w-4xl">';
 
     $form = new Form($link, 'POST', $action, '', '', true);
     $form->addInput('name', 'Labele', $equip['name'] ?? '', 'le lebele');
@@ -633,9 +633,9 @@ public function create_update_form($equip) {
 public function show_conflicts($conflicts){
         echo "<section class='px-12 py-24'>";
     echo '<div class="mb-10">';
-                echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-10">Gestion des conflits</h1>';
+                echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-10">Gestion des conflits</h1>';
                 if (!$conflicts) {
-                    echo '<div class="border border-gray-200 rounded-lg bg-white p-6">';
+                    echo '<div class="border border-gray-200 rounded-lg bg-[var(--white)] p-6">';
                     echo '<div class="flex items-start gap-4">';
                     echo '<div class="flex-shrink-0 mt-1">';
                     echo '<svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
@@ -643,8 +643,8 @@ public function show_conflicts($conflicts){
                     echo '</svg>';
                     echo '</div>';
                     echo '<div>';
-                    echo '<h4 class="font-medium text-gray-900 mb-1">Aucun conflit détecté</h4>';
-                    echo '<p class="text-gray-600 text-sm mb-3">Vous pouvez gérer les réservations dans la page principale sans souci de chevauchement.</p>';
+                    echo '<h4 class="font-medium text-[var(--gray-dark)] mb-1">Aucun conflit détecté</h4>';
+                    echo '<p class="text-[var(--gray)] text-sm mb-3">Vous pouvez gérer les réservations dans la page principale sans souci de chevauchement.</p>';
                     echo '</div>';
                     echo '</div>';
                     echo '</div>';
@@ -669,9 +669,9 @@ public function show_conflicts($conflicts){
                     "rounded-full px-3 py-1 text-xs font-medium"  
                 ))->render();
                 $button = '';
-                    $button = '<a href="index.php?page=change_reservation_status&id=' . $r['r_id'] . '&status=confirme&equip_id=' . $r['equipment_id'] .'" class="p-2 bg-green-500 text-white rounded-lg">Confirmer</a>
-                            <a href="index.php?page=change_reservation_status&id=' . $r['r_id'] . '&status=refuse" class="p-2 bg-red-500 text-white rounded-lg">Refuser</a>
-                            <a href="index.php?page=change_period&id=' . $r['r_id'] . '" class="p-2 bg-blue-500 text-white rounded-lg">Changer la periode</a>
+                    $button = '<a href="index.php?page=change_reservation_status&id=' . $r['r_id'] . '&status=confirme&equip_id=' . $r['equipment_id'] .'" class="p-2 bg-[var(--success)] text-[var(--white)] rounded-lg">Confirmer</a>
+                            <a href="index.php?page=change_reservation_status&id=' . $r['r_id'] . '&status=refuse" class="p-2 bg-[var(--error)] text-[var(--white)] rounded-lg">Refuser</a>
+                            <a href="index.php?page=change_period&id=' . $r['r_id'] . '" class="p-2 bg-blue-500 text-[var(--white)] rounded-lg">Changer la periode</a>
                             ';
                     $data[] = [
                         "Utilisateur" => $r['first_name'] .' ' . $r['last_name'],
@@ -693,7 +693,7 @@ public function show_conflicts($conflicts){
         }
          echo '</div>';
          echo "<a href='index.php?page=gestion_equipements'
-                class='inline-flex items-center text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200'>
+                class='inline-flex items-center text-[var(--gray-dark)] hover:text-[var(--gray-dark)] font-medium transition-colors duration-200'>
                     <svg class='w-5 h-5 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                     <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'/>
                     </svg>
@@ -703,7 +703,7 @@ public function show_conflicts($conflicts){
 }
 public function show_form_conflicts($reservation){
     echo '<section class="min-h-screen lg:w-full py-24 px-12">';
-    echo '<div class="container mx-auto bg-white shadow-lg rounded-lg p-6 max-w-4xl">';
+    echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 max-w-4xl">';
     $form = new Form('index.php?page=change_period', 'POST', 'Modifier', '', '', true);
 
     $form->addInput('start', 'Date debut', $reservation['start_datetime'] ?? '','', 'datetime-local');
@@ -718,11 +718,11 @@ public function show_form_conflicts($reservation){
 public function show_equip_reserve($equip_reserve_user){
         echo '<section class="min-h-screen lg:w-full py-24 px-12">';
     echo '<div class="mb-10">';
-                echo '<h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Equipments Reserves</h1>';
-                echo '<div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+                echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Equipments Reserves</h1>';
+                echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
         
                     echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
-                        echo '<h2 class="text-xl font-bold text-gray-900">Liste des equipments reserves</h2>';
+                        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Liste des equipments reserves</h2>';
                     echo '</div>';
                 echo '</div>';
                 $data = [];

@@ -11,14 +11,14 @@ class Header{
             return $base;
         }       
         function subNavClass() {
-            $base = "px-4 py-2 hover:bg-[var(--primary-light)] hover:text-white";
+            $base = "px-4 py-2 hover:bg-[var(--primary-light)] hover:text-[var(--white)]";
             return $base;
         }
         
         function userNavClass($currentPage, $pageName="") {
-            $base = "px-4 py-2 hover:bg-[var(--primary-light)] hover:text-white flex items-center gap-2";
+            $base = "px-4 py-2 hover:bg-[var(--primary-light)] hover:text-[var(--white)] flex items-center gap-2";
             if ($currentPage === $pageName) {
-                $base = "px-4 py-2 bg-[var(--primary-light)] text-white flex items-center gap-2";
+                $base = "px-4 py-2 bg-[var(--primary-light)] text-[var(--white)] flex items-center gap-2";
             }
             return $base;
         }
@@ -26,8 +26,10 @@ class Header{
         
         <nav class="p-4 flex justify-between items-center bg-[var(--primary-dark)] shadow-md fixed w-full z-10">
             <div class="w-full flex justify-center items-center font-medium">
-                <a href="index.php?page=accueil" class="text-2xl font-bold text-white mr-auto font-[var(--font-primary)]">Logo</a>
-                
+                 <?php
+                    $settings = $GLOBALS['appSettings'] ?? [];
+                ?>
+                <img src="<?= $settings['labo_logo'] ?? '' ?>" class="w-12 h-12 mr-auto rounded-lg">     
                 <ul class="flex items-center gap-6 lg:gap-12 mr-auto">
                     <li><a href="index.php?page=accueil" class='<?= navClass($currentPage, "accueil") ?>'>Accueil</a></li>
                     <li><a href="index.php?page=projets" class='<?= navClass($currentPage, "projets") ?>'>Projets</a></li>
@@ -63,8 +65,8 @@ class Header{
                         <div class="flex items-center gap-2 cursor-pointer">
                             <img src="<?= $_SESSION['user'][0]['profile_picture'] ?>" 
                                  class="rounded-full w-9 h-9">
-                            <p class='text-white'><?= $_SESSION['user'][0]['role']?></p>
-                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <p class='text-[var(--white)]'><?= $_SESSION['user'][0]['role']?></p>
+                            <svg class="w-4 h-4 text-[var(--white)]" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
                             </svg>
                         </div>
@@ -95,7 +97,7 @@ class Header{
                     <li>
                         <a href="index.php?page=login">
                             <?php
-                            $button = (new Button("Connexion", "button", "text-white bg-[var(--primary)] px-4 py-2 rounded hover:bg-[var(--primary-light)]"))->render();
+                            $button = (new Button("Connexion", "button", "text-[var(--white)] bg-[var(--primary)] px-4 py-2 rounded hover:bg-[var(--primary-light)]"))->render();
                             echo $button;
                             ?>
                         </a>

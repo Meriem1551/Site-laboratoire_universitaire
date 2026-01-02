@@ -3,17 +3,6 @@
 :root {
     --font-primary: 'Poppins';
     --font-secondary: 'Roboto';
-    --primary: #1565C0; /*for buttons or links*/
-    --primary-light: #42A5F5; /*for hover buttons or links*/
-    --blue-blur: rgba(173, 215, 249, 0.311);
-    --primary-dark: #0D1B2A; /*for header and footer*/
-    --accent: #FF8F00;/*call to action*/
-    --success: #43A047; /*for success messages or status*/
-    --error: #E53935; /*for errors*/
-    --gray-light: #f8f8f9; /*for bg and cards*/
-    --gray: #9E9E9E; /*for secondary text/ border*/
-    --gray-dark: #212121; /*for primary text*/
-    --white: #FFFFFF; 
 }
 
 

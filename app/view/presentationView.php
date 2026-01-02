@@ -7,32 +7,32 @@ require_once "components/badge.php";
 class PresentationView {
     private function print_labo_pres($teams) { 
         $header = [
-            '<h3 class="text-2xl font-bold text-gray-900 mb-6">Le Laboratoire de Recherche Avancée</h3>'
+            '<h3 class="text-2xl font-bold text-[var(--gray-dark)] mb-6">Le Laboratoire de Recherche Avancée</h3>'
         ];
 
         $body = [
-            '<p class="text-gray-700 leading-relaxed mb-6">Le Laboratoire de Recherche en Sciences et Technologies est un centre d\'excellence dédié à l\'innovation scientifique et technologique. Nous rassemblons des chercheurs, enseignants-chercheurs et étudiants autour de projets multidisciplinaires visant à développer des solutions novatrices dans les domaines de l\'informatique avancée, la biotechnologie, l\'ingénierie des matériaux et l\'intelligence artificielle.</p>',
-            '<p class="text-gray-700 leading-relaxed">Le laboratoire est organisé en équipes de recherche, chacune dirigée par un responsable scientifique et structurée autour de thèmes de recherche spécifiques.</p>',
+            '<p class="text-[var(--gray)] leading-relaxed mb-6">Le Laboratoire de Recherche en Sciences et Technologies est un centre d\'excellence dédié à l\'innovation scientifique et technologique. Nous rassemblons des chercheurs, enseignants-chercheurs et étudiants autour de projets multidisciplinaires visant à développer des solutions novatrices dans les domaines de l\'informatique avancée, la biotechnologie, l\'ingénierie des matériaux et l\'intelligence artificielle.</p>',
+            '<p class="text-[var(--gray)] leading-relaxed">Le laboratoire est organisé en équipes de recherche, chacune dirigée par un responsable scientifique et structurée autour de thèmes de recherche spécifiques.</p>',
         ];
 
         foreach ($teams as $team) {
     $body[] = "
         <div class='mt-6'>
-            <h4 class='text-lg font-semibold text-gray-900'>
+            <h4 class='text-lg font-semibold text-[var(--gray-dark)]'>
                 {$team['name']}
             </h4>
             <p>{$team['description']}<p>
-            <p class='text-sm text-gray-600 mt-1'>
+            <p class='text-sm text-[var(--gray)] mt-1'>
                 Responsable : <span class='font-medium'>{$team['first_name']} {$team['last_name']}</span>
             </p>
-            <p class='text-sm text-gray-700 mt-2'>
+            <p class='text-sm text-[var(--gray)] mt-2'>
                 Thèmes de recherche :
                 <span class='italic'>{$team['research_themes']}</span>
             </p>
         </div>
     ";
 }
-        $card = new Card($header, $body, [], "bg-white p-8 rounded-2xl border border-gray-200");
+        $card = new Card($header, $body, [], "bg-[var(--white)] p-8 rounded-2xl border border-gray-200");
         $card->render();
     
     }
@@ -43,9 +43,9 @@ class PresentationView {
         
         echo '<div class="text-center mb-12">';
         echo '<span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-4">Équipes de Recherche</span>';
-        $title = (new Title("Nos Équipes Scientifiques", "text-3xl font-bold text-gray-900 mb-4", 'h2'))->render();
+        $title = (new Title("Nos Équipes Scientifiques", "text-3xl font-bold text-[var(--gray-dark)] mb-4", 'h2'))->render();
         echo $title;
-        echo '<p class="text-gray-600 max-w-3xl mx-auto">Découvrez nos équipes de recherche spécialisées, chacune dédiée à un domaine d\'expertise spécifique</p>';
+        echo '<p class="text-[var(--gray)] max-w-3xl mx-auto">Découvrez nos équipes de recherche spécialisées, chacune dédiée à un domaine d\'expertise spécifique</p>';
         echo '</div>';
         
         if(!empty($teams)) {
@@ -67,7 +67,7 @@ class PresentationView {
                                     <path d='M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z'/>
                                 </svg>
                             </div>
-                        <h3 class='text-xl font-bold text-gray-900 mb-2'>{$team['name']}</h3>
+                        <h3 class='text-xl font-bold text-[var(--gray-dark)] mb-2'>{$team['name']}</h3>
                         <span class='inline-flex items-center text-sm text-gray-600 gap-2'>
                             <img src='{$team['profile_picture']}'  class='w-8 h-8 rounded-full'>
                             {$teamLead}
@@ -78,14 +78,14 @@ class PresentationView {
                 $body = [
                     "<div class='p-6'>
                         <div class='mb-4'>
-                            <h4 class='text-sm font-medium text-gray-500 mb-1'>Domaine de recherche</h4>
+                            <h4 class='text-sm font-medium text-[var(--gray)] mb-1'>Domaine de recherche</h4>
                             <span class='inline-flex px-3 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full'>
                                 {$researchDomain}
                             </span>
                         </div>
-                        <p class='text-gray-600 text-sm leading-relaxed'>{$description}</p>
+                        <p class='text-[var(--gray)] text-sm leading-relaxed'>{$description}</p>
                         <div class='grid'>
-                        <h4 class='text-sm font-medium text-gray-500 mb-2'>Membres</h4>
+                        <h4 class='text-sm font-medium text-[var(--gray-dark)] mb-2'>Membres</h4>
                         <div class='grid gap-2'>
                     "
                 ];
@@ -93,7 +93,7 @@ class PresentationView {
                 foreach ($team['members'] as $member) {
                     if($member['id'] !== $team['team_leader_id']){
                         $body[] ="
-                        <p class='text-gray-600 text-sm leading-relaxed flex gap-2 items-center'><img src='{$member['profile_picture']}' class='rounded-full w-10 h-10'> {$member['first_name']} {$member['last_name']}</p>
+                        <p class='text-[var(--gray-dark)] text-sm leading-relaxed flex gap-2 items-center'><img src='{$member['profile_picture']}' class='rounded-full w-10 h-10'> {$member['first_name']} {$member['last_name']}</p>
                     ";
                     }
                 }
@@ -113,7 +113,7 @@ class PresentationView {
                     $header,
                     $body,
                     $footer,
-                    'bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300'
+                    'bg-[var(--white)] rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300'
                 );
                 
                 echo '<div class="transform transition-all duration-300 hover:-translate-y-2">';
@@ -130,10 +130,10 @@ class PresentationView {
 
     private function print_organigramme($orgaData){
          echo '<div class="mb-16">';
-            $subtitle = (new Title("Structure Organisationnelle", "text-3xl font-bold text-gray-900 mb-6", 'h3'))->render();
+            $subtitle = (new Title("Structure Organisationnelle", "text-3xl font-bold text-[var(--gray-dark)] mb-6", 'h3'))->render();
             echo $subtitle;
-            echo '<p class="text-gray-600 mb-8 max-w-3xl">Notre laboratoire est structuré de manière à optimiser la collaboration entre les différentes équipes de recherche et à favoriser l\'innovation transversale.</p>';
-            echo '<div class="bg-white p-8 rounded-2xl border border-gray-200">';
+            echo '<p class="text-[var(--gray)] mb-8 max-w-3xl">Notre laboratoire est structuré de manière à optimiser la collaboration entre les différentes équipes de recherche et à favoriser l\'innovation transversale.</p>';
+            echo '<div class="bg-[var(--white)] p-8 rounded-2xl border border-gray-200">';
             $orga = new Organigramme();
             $orga->render($orgaData);
             echo '</div>';
@@ -160,7 +160,7 @@ class PresentationView {
             
             $color = $colorClasses[$stat['color']];
             
-            echo '<div class="bg-white p-6 rounded-xl border border-gray-200 text-center">';
+            echo '<div class="bg-[var(--white)] p-6 rounded-xl border border-gray-200 text-center">';
             echo '<div class="' . $color['bg'] . ' w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">';
             echo '<svg class="w-7 h-7 ' . $color['text'] . '" fill="currentColor" viewBox="0 0 20 20">';
             switch($stat['icon']) {
@@ -179,8 +179,8 @@ class PresentationView {
             }
             echo '</svg>';
             echo '</div>';
-            echo '<div class="text-3xl font-bold text-gray-900 mb-2">' . $stat['value'] . '</div>';
-            echo '<div class="text-gray-600">' . $stat['label'] . '</div>';
+            echo '<div class="text-3xl font-bold text-[var(--gray-dark)] mb-2">' . $stat['value'] . '</div>';
+            echo '<div class="text-[var(--gray)]">' . $stat['label'] . '</div>';
             echo '</div>';
         }
         
@@ -194,9 +194,9 @@ class PresentationView {
             
                 echo '<div class="text-center mb-16">';
                     echo '<span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-6">À propos de nous</span>';
-                    $title = (new Title("Présentation du Laboratoire", "text-4xl font-bold text-gray-900 mb-6", 'h1'))->render();
+                    $title = (new Title("Présentation du Laboratoire", "text-4xl font-bold text-[var(--gray-dark)] mb-6", 'h1'))->render();
                     echo $title;
-                    echo '<p class="text-gray-600 text-xl max-w-3xl mx-auto">Un centre d\'excellence dédié à l\'innovation scientifique et à la recherche de pointe</p>';
+                    echo '<p class="text-[var(--gray)] text-xl max-w-3xl mx-auto">Un centre d\'excellence dédié à l\'innovation scientifique et à la recherche de pointe</p>';
                 echo '</div>';
                 $this->print_labo_pres($teams);
                 $this->print_organigramme($orga);
