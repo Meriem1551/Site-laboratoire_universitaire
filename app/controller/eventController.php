@@ -99,7 +99,7 @@ class EventController extends BaseController{
         );
 
     } else {
-        $eventM->createEvent(
+        $event_id = $eventM->createEvent(
             $title,
             $description,
             $type,
@@ -109,7 +109,11 @@ class EventController extends BaseController{
             $open,
             $extern
         );
+
     }
+    $eventM = new EventModel();
+    $event = $eventM->getEventById($id);
+    setCalendarReminder($event);
     header("Location: index.php?page=gestion_evenements");
     exit;
 }

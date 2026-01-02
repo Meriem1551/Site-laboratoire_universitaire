@@ -9,7 +9,7 @@ class BaseModel{
     private $password = '';//changer
  
     public function __construct() {
-        $this->sql = require __DIR__ . '/../../utils/sql.php';
+        $this->sql = require __DIR__ . '/../../sql/sql.php';
     }
     public function connection() {
         $dsn = "mysql:dbname={$this->db_name};host={$this->host};";
