@@ -3,6 +3,7 @@ require_once "components/form.php";
 require_once "components/table.php";
 require_once "components/title.php";
 require_once "components/card.php";
+require_once "components/filterManager.php";
 
 class UserView {
 
@@ -62,7 +63,7 @@ class UserView {
             echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Gestion des utilisateurs</h1>';
             echo '<p class="text-[var(--gray)] text-lg">Consultez et gérez tous les utilisateurs du système</p>';
     
-         echo '<div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">';
+         echo '<div class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">';
             foreach($stats as $stat){
                 $header = [
                     "<div class='text-sm text-[var(--gray)] mb-1'>{$stat['title']}</div>"
@@ -74,7 +75,78 @@ class UserView {
                 $card->render();
             }
         echo '</div>';
-    
+        $allStatuses = [];
+        $allRoles = [];
+        $allSpecialities = [];
+        $allPubRanges = [
+             '0' => '0',
+            '1-5' => '1–5',
+            '6-10' => '6–10',
+            '10+' => '10+'
+        ];
+        $filterManager = FilterManager::getInstance();
+
+foreach ($users as $user) {
+    if (!in_array($user['status_user'], $allStatuses)) {
+        $allStatuses[] = $user['status_user'];
+    }
+
+    if (!in_array($user['role'], $allRoles)) {
+        $allRoles[] = $user['role'];
+    }
+
+    if (!empty($user['speciality']) && !in_array($user['speciality'], $allSpecialities)) {
+        $allSpecialities[] = $user['speciality'];
+    }
+}
+
+ $filterManager->reset();
+
+$filterManager->addFilter(
+    'status',
+    'Statut',
+    array_combine($allStatuses, $allStatuses),
+    'Tous les statuts',
+    '<svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+            </svg>'
+);
+
+$filterManager->addFilter(
+    'role',
+    'Rôle',
+    array_combine($allRoles, $allRoles),
+    'Tous les rôles',
+    '<svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+    </svg>'
+);
+
+$filterManager->addFilter(
+    'speciality',
+    'Spécialité',
+    array_combine($allSpecialities, $allSpecialities),
+    'Toutes les spécialités',
+    '<svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path>
+            </svg>'
+);
+
+$filterManager->addFilter(
+    'publications',
+    'Publications',
+    $allPubRanges,
+    'Toutes',
+    '<svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+            </svg>'
+);
+
+$filterManager->renderFilterSection(
+    "Filtrer les utilisateurs",
+    "Sélectionnez vos critères de filtrage"
+);
+   
     echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
     
     echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
@@ -124,6 +196,12 @@ class UserView {
             </div>
         </div>";
 
+        $pubCount = (int)$user['nb_pubs'];
+
+if ($pubCount === 0) $pubRange = '0';
+elseif ($pubCount <= 5) $pubRange = '1-5';
+elseif ($pubCount <= 10) $pubRange = '6-10';
+else $pubRange = '10+';
         
         $data[] = [
             'Utilisateur' => $userInfo,
@@ -153,17 +231,71 @@ class UserView {
                     </svg>
                 </a>' : '') . '
                 
-            </div>'
+            </div>',
+           'rowClass' => 'filterable-item',
+            'rowData' => htmlspecialchars(json_encode([
+                'status' => $user['status_user'],
+                'role' => $user['role'],
+                'speciality' => $user['speciality'],
+                'publications' => $pubRange
+            ]), ENT_QUOTES, 'UTF-8')
         ];
     }
     
     $columns = ["Utilisateur", "Rôle", "Spécialité", "Statut", "Publications", "Actions"];
     $table = new Table($columns, $data, 'w-full');
     $table->render();
-    
+    echo $filterManager->getFilterJS('usersContainer','.filterable-item','noResults');
     
     echo '</div>';
     echo '</section>';
+     echo '
+    <style>
+    .filter-group {
+        min-width: 200px;
+    }
+    
+    .filter-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M6 8l4 4 4-4\'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .filter-select:focus {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        border-color: #3b82f6;
+    }
+    
+    .filter-clear-btn {
+        height: fit-content;
+        transition: all 0.2s;
+    }
+    
+    .filter-clear-btn:hover {
+        background-color: #e5e7eb;
+    }
+    
+    .filterable-item {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .pagination-item {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    </style>';
 }
 
 

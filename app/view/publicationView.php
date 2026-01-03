@@ -59,11 +59,6 @@ class PublicationView {
             }
         }
         
-        sort($allTypes);
-        sort($allDomains);
-        rsort($allYears);
-        sort($allAuthors);
-        
         $filterManager = FilterManager::getInstance();
         $filterManager->reset();
         
