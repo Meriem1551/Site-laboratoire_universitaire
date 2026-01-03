@@ -946,7 +946,7 @@ $card = new Card($header, $body, [], "border-t-4 bg-[var(--white)] border-" . $s
     $table = new Table($columns, $data, 'w-full');
     $table->render();
     echo '<div class="mt-6 flex gap-4 justify-between md:justify-end">
-        <a href="index.php?page=report" class="px-4 py-2 bg-[var(--primary)] text-var(--white) rounded hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">
+        <a href="index.php?page=report" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] rounded hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">
         Générer un rapport
     </div></a>
     ';

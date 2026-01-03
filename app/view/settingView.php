@@ -112,9 +112,17 @@ class SettingView {
             echo 'Enregistrer toutes les modifications';
             echo '</button>';
         }
+        echo '<div class="flex gap-4 my-4">
+            <button type="submit" name="backup_db" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] rounded hover:bg-[var(--primary-light)]">
+                Sauvegarder la base
+            </button>
+            <button type="submit" name="reset_db" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] rounded hover:bg-[var(--error)]">
+                Réinitialiser la base
+            </button>
+        </div>';
         echo '</div>';
         echo '</div>';
-        
+
         echo '</form>';
         echo '</div>';
         echo '</section>';

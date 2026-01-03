@@ -91,6 +91,23 @@ class BaseModel{
     public function deconnexion($connectDB) {
         $this->con = null;
     }
+
+
+    public function backupDatabase() {
+        $backupDir = 'backups/';
+        if (!is_dir($backupDir)) mkdir($backupDir, 0777, true);
+        $backupFile = $backupDir . 'lab_backup_' . date('Y-m-d_H-i-s') . '.sql';
+        $command = "mysqldump --user={$this->username} --password={$this->password} --host={$this->host} {$this->db_name} > {$backupFile}";
+        system($command, $output);
+        return file_exists($backupFile) ? $backupFile : false;
+    }
+
+    public function resetDatabase(string $backupFile) {
+        if (!file_exists($backupFile)) return false;
+        $command = "mysql --user={$this->username} --password={$this->password} --host={$this->host} {$this->db_name} < {$backupFile}";
+        system($command, $output);
+        return true;
+    }
 }
 ?>
 

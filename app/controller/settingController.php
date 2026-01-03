@@ -16,30 +16,44 @@ class SettingController extends BaseController{
         $allowed = $this->getAllowedActions('settings');
         $view->show_settings($settings, $allowed);
     }
+    private function backupDatabase(){
+        $model = new SettingModel();
+        $model->backup();
+    }
+    private function resetDatabase(){
+        $model = new SettingModel();
+        $model->reset();
+    }
    public function update_settings() {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        return;
-    }
-    $model = new SettingModel();
-    foreach ($_POST as $key => $value) {
-        if ($value === '') continue;
-        $model->update_setting($value, $key);
-    }
-    foreach ($_FILES as $key => $file) {
-        if ($file['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = 'public/assets/';
-            $filename  = uniqid() . '_' . basename($file['name']);
-            $targetPath = $uploadDir . $filename;
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        $model = new SettingModel();
+        if (!empty($_POST['backup_db'])) {
+            $this->backupDatabase();  
+        }
 
-            if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-                $model->update_setting($targetPath, $key);
+        if (!empty($_POST['reset_db'])) {
+            $this->resetDatabase();
+        }
+        foreach ($_POST as $key => $value) {
+            if ($value === '') continue;
+            $model->update_setting($value, $key);
+        }
+        foreach ($_FILES as $key => $file) {
+            if ($file['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = 'public/assets/';
+                $filename  = uniqid() . '_' . basename($file['name']);
+                $targetPath = $uploadDir . $filename;
+
+                if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+                    $model->update_setting($targetPath, $key);
+                }
             }
         }
+        header("Location: index.php?page=gestion_settings");
+        exit;
     }
-    header("Location: index.php?page=gestion_settings");
-    exit;
-}
-
 
 }
 ?>

@@ -27,7 +27,7 @@ class ProfileView{
             <h3 class='text-xl font-bold text-[var(--gray-dark)]'>Informations du profil</h3>
             <p class='text-[var(--gray)] text-sm mt-1'>Détails de votre compte</p>
         </div>
-        <a href='index.php?page=edit_user&id=" . $user['id'] . "' class='px-4 py-2 text-sm font-medium text-[var(--white)] bg-blue-50 hover:bg-[var(--primary-light)] hover:text-[var(--white)] rounded-lg transition-colors'>
+        <a href='index.php?page=edit_user&id=" . $user['id'] . "' class='px-4 py-2 text-sm font-medium text-[var(--white)] bg-[var(--primary)] hover:bg-[var(--primary-light)] hover:text-[var(--white)] rounded-lg transition-colors'>
             Modifier le profil
         </a>
     </div>"

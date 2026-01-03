@@ -12,5 +12,11 @@ class SettingModel extends BaseModel{
         $this->update($con, 'settings', ['value' => $value], 'key_name', $col);
         $this->deconnexion($con);
     }
+    public function backup(){
+        $this->backupDatabase();
+    }
+    public function reset(){
+        $this->resetDatabase();
+    }
 }
 ?>
