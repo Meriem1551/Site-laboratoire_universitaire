@@ -19,19 +19,24 @@ class Table {
     }
 
     private function render_body(){
-        echo "<tbody>";
-            foreach($this->data as $row){
-                    echo "<tr class='text-[var(--gray)] cursor-pointer text-center'>";
-                    foreach($row as $key => $cell){
-                        echo "<td class='border-b border-b-1 border-b-gray-200 px-4 py-4'>{$cell}</td>";
-                    }
-                    echo "</tr>";
-            }
-            echo "</tbody>";
-    }   
+    echo "<tbody>";
+    foreach($this->data as $row){
+        $rowClass = $row['rowClass'] ?? '';
+        $filterInfo = $row['rowData'] ?? '';
+        echo "<tr class='text-[var(--gray)] cursor-pointer text-center {$rowClass}' data-filter-info='{$filterInfo}'>";
+        foreach($row as $key => $cell){
+            if(in_array($key, ['rowClass', 'rowData'])) continue;
+            echo "<td class='border-b border-b-1 border-b-gray-200 px-4 py-4'>{$cell}</td>";
+        }
+        echo "</tr>";
+    }
+    echo "</tbody>";
+}
+  
 
     public function render() {
-        echo "<table class='w-full border-b border-b-1 border-b-gray-100 rounded-lg shadow-md bg-[var(--white)]'>";
+        echo "<table class='w-full border-b border-b-1 border-b-gray-100 rounded-lg shadow-md bg-[var(--white)] table-fixed w-full'>";
+       
         $this->render_header();
         $this->render_body();            
         echo "</table>";

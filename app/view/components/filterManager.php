@@ -94,13 +94,11 @@ class FilterManager {
                     for (const [filterId, filterValue] of Object.entries(this.activeFilters)) {
                         if (filterValue && itemData[filterId] !== undefined) {
                             if (Array.isArray(itemData[filterId])) {
-                                // For array values (like themes)
                                 if (!itemData[filterId].includes(filterValue)) {
                                     shouldShow = false;
                                     break;
                                 }
                             } else {
-                                // For single values
                                 if (itemData[filterId] !== filterValue) {
                                     shouldShow = false;
                                     break;
@@ -110,7 +108,7 @@ class FilterManager {
                     }
                     
                     if (shouldShow) {
-                        item.style.display = "block";
+                        item.style.display = "table-row";
                         item.style.opacity = "1";
                         visibleCount++;
                     } else {

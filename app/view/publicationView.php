@@ -6,111 +6,266 @@ require_once "components/badge.php";
 require_once "components/userCard.php";
 require_once "components/table.php";
 require_once "components/form.php";
+require_once "components/filterManager.php";
 
 class PublicationView {
     public function show_publications($publications) {
-        echo '<section class="py-24 min-h-screen">';
-        echo '<div class="container mx-auto px-4 max-w-7xl">';
-        $title = (new Title("Publications Scientifiques", "text-4xl font-bold text-[var(--gray-dark)] mb-4", "h1"))->render();
-        echo '<div class="mb-12">';
-        echo $title;
-        echo '<p class="text-[var(--gray)] max-w-3xl">Explorez notre catalogue de publications académiques et de recherches scientifiques.</p>';
-        echo '</div>';
-        if(!empty($publications)) {
-            $groupedPubs = [];
-            foreach ($publications as $pub) {
-                $pubId = $pub['id'];
+    echo '<section class="py-24 px-4 min-h-screen">';
+    echo '<div class="container mx-auto px-4 max-w-7xl">';
+    
+    $title = (new Title("Publications Scientifiques", "text-4xl font-bold text-[var(--gray-dark)] mb-4", "h1"))->render();
+    echo '<div class="mb-12">';
+    echo $title;
+    echo '<p class="text-[var(--gray)] max-w-3xl">Explorez notre catalogue de publications académiques et de recherches scientifiques.</p>';
+    echo '</div>';
+    
+    if(!empty($publications)) {
+        $groupedPubs = [];
+        $allTypes = [];
+        $allDomains = [];
+        $allYears = [];
+        $allAuthors = [];
+        
+        foreach ($publications as $pub) {
+            $pubId = $pub['id'];
 
-                if (!isset($groupedPubs[$pubId])) {
-                    $groupedPubs[$pubId] = $pub;
-                    $groupedPubs[$pubId]['authors'] = [];
-                }
-
-                if (!empty($pub['user_id'])) {
-                    $groupedPubs[$pubId]['authors'][] = "{$pub['first_name']} {$pub['last_name']}";
-                }
+            if (!isset($groupedPubs[$pubId])) {
+                $groupedPubs[$pubId] = $pub;
+                $groupedPubs[$pubId]['authors'] = [];
+                $groupedPubs[$pubId]['author_names'] = [];
             }
 
-            $data = [];
-            foreach($groupedPubs as $publication) {
-                $typeColors = [
-                    'Article' => 'bg-blue-100 text-blue-800',
-                    'Conférence' => 'bg-purple-100 text-purple-800',
-                    'Thèse' => 'bg-green-100 text-green-800',
-                    'Rapport' => 'bg-orange-100 text-orange-800',
-                ];
+            if (!empty($pub['user_id'])) {
+                $authorName = "{$pub['first_name']} {$pub['last_name']}";
+                $groupedPubs[$pubId]['authors'][] = $authorName;
+                $groupedPubs[$pubId]['author_names'][] = $authorName;
                 
-                $typeClass = $typeColors[$publication['type']] ?? 'bg-gray-100 text-[var(--gray-dark)]';
-                $typeBadge = "<span class='inline-flex px-3 py-1 text-xs font-medium rounded-full {$typeClass}'>{$publication['type']}</span>";
-                
-                $authors = !empty($publication['authors']) ? 
-                    implode(', ', $publication['authors']) : 
-                    "<span class='text-[var(--gray)] text-sm'>Auteurs non spécifiés</span>";
-
-                $year = date('Y', strtotime($publication['publication_date']));
-                
-                $downloadButton = (new Button(
-                    '<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Télécharger',
-                    $publication['file_path'],
-                    'inline-flex items-center text-[var(--white)] bg-[var(--primary)] hover:bg-[var(--primary-light)] px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
-                    true
-                ))->render();
-
-                $downloadButton = "<a download href='{$publication['file_path']}' target='_blank'>" . (new Button(
-                    '<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Télécharger',
-                    $publication['file_path'],
-                    'inline-flex items-center text-[var(--white)] bg-[var(--primary)] hover:bg-[var(--primary-light)] px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
-                    true
-                ))->render();
-                
-                $detailsButton = '<a href="index.php?page=publication&id=' . $publication['id'] . '" class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 border border-blue-200">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                    </svg>
-                </a>';
-                
-                $data[] = [
-                    'Titre' => "
-                        {$publication['title']}
-                        {$typeBadge}
-                    ",
-                    'Domaine' => "<div class='font-medium text-[var(--gray-dark)]'>{$publication['domain']}</div>",
-                    'Auteurs' => $authors,
-                    'Date' => "<div class='text-center'>
-                        <div class='font-medium text-[var(--gray-dark)]'>{$year}</div>
-                        <div class='text-xs text-[var(--gray)]'>" . date('d M', strtotime($publication['publication_date'])) . "</div>
-                    </div>",
-                    'DOI' => $publication['doi'] ? 
-                        "<span class='font-mono text-sm text-[var(--primary)] bg-blue-50 px-2 py-1 rounded'>" . substr($publication['doi'], 0, 20) . "...</span>" : 
-                        "<span class='text-[var(--gray)] text-sm'>Non disponible</span>",
-                    'Actions' => "<div class='flex gap-2'>
-                        {$detailsButton}
-                        {$downloadButton}
-                    </div>"
-                ];
+                if (!in_array($authorName, $allAuthors)) {
+                    $allAuthors[] = $authorName;
+                }
             }
-
-            $columns = ["Titre", "Domaine", "Auteurs", "Date", "DOI", "Actions"];
-            $table = new Table($columns, $data, 'w-full bg-[var(--white)] rounded-xl shadow-sm border border-gray-200 overflow-hidden');
-            $table->render();
             
-            echo '<div class="mt-8 flex items-center justify-between">';
-            echo '<div class="text-sm text-[var(--gray)]">';
-            echo 'Affichage de <span class="font-semibold">1-' . count($groupedPubs) . '</span> sur <span class="font-semibold">' . count($groupedPubs) . '</span> publications';
-            echo '</div>';
-            echo '</div>';
-        } else {
-            echo '<div class="text-center py-16 bg-[var(--white)] rounded-xl border-2 border-dashed border-gray-300">';
-            echo '<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>';
-            echo '<h3 class="text-xl font-bold text-[var(--gray-dark)] mb-2">Aucune publication disponible</h3>';
-            echo '<p class="text-[var(--gray)] max-w-md mx-auto">Les publications seront ajoutées au fur et à mesure de leur acceptation.</p>';
-            echo '</div>';
+            if (!empty($pub['type']) && !in_array($pub['type'], $allTypes)) {
+                $allTypes[] = $pub['type'];
+            }
+            
+            if (!empty($pub['domain']) && !in_array($pub['domain'], $allDomains)) {
+                $allDomains[] = $pub['domain'];
+            }
+            
+            $year = date('Y', strtotime($pub['publication_date']));
+            if ($year && !in_array($year, $allYears)) {
+                $allYears[] = $year;
+            }
         }
         
+        sort($allTypes);
+        sort($allDomains);
+        rsort($allYears);
+        sort($allAuthors);
+        
+        $filterManager = FilterManager::getInstance();
+        $filterManager->reset();
+        
+        $filterManager->addFilter(
+            'type',
+            'Type',
+            array_combine($allTypes, $allTypes),
+            'Tous les types',
+            '<svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+            </svg>'
+        );
+        
+        $filterManager->addFilter(
+            'domain',
+            'Domaine',
+            array_combine($allDomains, $allDomains),
+            'Tous les domaines',
+            '<svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path>
+            </svg>'
+        );
+        
+        $filterManager->addFilter(
+            'year',
+            'Année',
+            array_combine($allYears, $allYears),
+            'Toutes les années',
+            '<svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+            </svg>'
+        );
+        
+        $filterManager->addFilter(
+            'author',
+            'Auteur',
+            array_combine($allAuthors, $allAuthors),
+            'Tous les auteurs',
+            '<svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+            </svg>'
+        );
+        
+        $filterManager->renderFilterSection("Filtrer les publications", "Sélectionnez vos critères de filtrage");
+        
+        echo '<div id="publicationsContainer">';
+        
+        $data = [];
+        foreach($groupedPubs as $publication) {
+            $typeColors = [
+                'Article' => 'bg-blue-100 text-blue-800',
+                'Conférence' => 'bg-purple-100 text-purple-800',
+                'Thèse' => 'bg-green-100 text-green-800',
+                'Rapport' => 'bg-orange-100 text-orange-800',
+            ];
+            
+            $typeClass = $typeColors[$publication['type']] ?? 'bg-gray-100 text-[var(--gray-dark)]';
+            $typeBadge = "<span class='inline-flex px-3 py-1 text-xs font-medium rounded-full {$typeClass}'>{$publication['type']}</span>";
+            
+            $authors = !empty($publication['authors']) ? 
+                implode(', ', $publication['authors']) : 
+                "<span class='text-[var(--gray)] text-sm'>Auteurs non spécifiés</span>";
+
+            $year = date('Y', strtotime($publication['publication_date']));
+            
+            $downloadButton = (new Button(
+                '<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Télécharger',
+                $publication['file_path'],
+                'inline-flex items-center text-[var(--white)] bg-[var(--primary)] hover:bg-[var(--primary-light)] px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
+                true
+            ))->render();
+
+            $downloadButton = "<a download href='{$publication['file_path']}' target='_blank'>" . (new Button(
+                '<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Télécharger',
+                $publication['file_path'],
+                'inline-flex items-center text-[var(--white)] bg-[var(--primary)] hover:bg-[var(--primary-light)] px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200',
+                true
+            ))->render();
+            
+            $detailsButton = '<a href="index.php?page=publication&id=' . $publication['id'] . '" class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 border border-blue-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+            </a>';
+            
+            $authorList = $publication['author_names'] ?? [];
+            $publicationYear = date('Y', strtotime($publication['publication_date']));
+            
+            $data[] = [
+                'Titre' => "
+                    <div class='filterable-item' data-filter-info='" . htmlspecialchars(json_encode([
+                        'type' => $publication['type'],
+                        'domain' => $publication['domain'],
+                        'year' => $publicationYear,
+                        'author' => $authorList
+                    ]), ENT_QUOTES, 'UTF-8') . "'>
+                        {$publication['title']}
+                        {$typeBadge}
+                    </div>
+                ",
+                'Domaine' => "<div class='font-medium text-[var(--gray-dark)]'>{$publication['domain']}</div>",
+                'Auteurs' => $authors,
+                'Date' => "<div class='text-center'>
+                    <div class='font-medium text-[var(--gray-dark)]'>{$year}</div>
+                    <div class='text-xs text-[var(--gray)]'>" . date('d M', strtotime($publication['publication_date'])) . "</div>
+                </div>",
+                'DOI' => $publication['doi'] ? 
+                    "<span class='font-mono text-sm text-[var(--primary)] bg-blue-50 px-2 py-1 rounded'>" . substr($publication['doi'], 0, 20) . "...</span>" : 
+                    "<span class='text-[var(--gray)] text-sm'>Non disponible</span>",
+                'Actions' => "<div class='flex gap-2'>
+                    {$detailsButton}
+                    {$downloadButton}
+                </div>",
+                'rowClass' => 'filterable-item',
+                'rowData' => htmlspecialchars(json_encode([
+                    'type' => $publication['type'],
+                    'domain' => $publication['domain'],
+                    'year' => $publicationYear,
+                    'author' => $authorList
+                ]), ENT_QUOTES, 'UTF-8')
+                
+            ];
+        }
+
+        $columns = ["Titre", "Domaine", "Auteurs", "Date", "DOI", "Actions"];
+        $table = new Table($columns, $data);
+        $table->render();
+        
+        echo '</div>'; 
+        
+        echo '<div id="noResults" class="hidden text-center py-12">';
+        echo '<h3 class="text-xl font-semibold text-gray-600 mb-2">Aucune publication trouvée</h3>';
+        echo '<p class="text-gray-500">Aucune publication ne correspond à vos critères de filtrage</p>';
         echo '</div>';
-        echo '</section>';
+        
+        echo '<div class="mt-8 flex items-center justify-between">';
+        echo '<div class="text-sm text-[var(--gray)]">';
+        echo 'Affichage de <span class="font-semibold">1-' . count($groupedPubs) . '</span> sur <span class="font-semibold">' . count($groupedPubs) . '</span> publications';
+        echo '</div>';
+        echo '</div>';
+    } else {
+        echo '<div class="text-center py-16 bg-[var(--white)] rounded-xl border-2 border-dashed border-gray-300">';
+        echo '<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>';
+        echo '<h3 class="text-xl font-bold text-[var(--gray-dark)] mb-2">Aucune publication disponible</h3>';
+        echo '<p class="text-[var(--gray)] max-w-md mx-auto">Les publications seront ajoutées au fur et à mesure de leur acceptation.</p>';
+        echo '</div>';
     }
+    
+    echo '</div>';
+    echo '</section>';
+    
+    echo $filterManager->getFilterJS('publicationsContainer', '.filterable-item', 'noResults');
+
+     echo '
+    <style>
+    .filter-group {
+        min-width: 200px;
+    }
+    
+    .filter-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M6 8l4 4 4-4\'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .filter-select:focus {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        border-color: #3b82f6;
+    }
+    
+    .filter-clear-btn {
+        height: fit-content;
+        transition: all 0.2s;
+    }
+    
+    .filter-clear-btn:hover {
+        background-color: #e5e7eb;
+    }
+    
+    .filterable-item {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .pagination-item {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    </style>';
+}
 
     public function show_publication($publication, $authors) {
         echo '<section class="py-24  min-h-screen">';
