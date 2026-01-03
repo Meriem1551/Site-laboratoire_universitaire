@@ -41,7 +41,8 @@ $controller = new $controllerName();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="public/css/global.css">
+        <link rel="stylesheet" href="/Site_laboratoire/public/css/style.css">
+    <link rel="stylesheet" href="/Site_laboratoire/public/css/global.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Laboratoire Website</title>
     <style>
@@ -89,6 +90,9 @@ $controller = new $controllerName();
           echo "</footer>";
       ?>
 <script src="/Site_laboratoire/public/js/app.js"></script>
+<script src="/Site_laboratoire/public/js/teamCarousel.js"></script>
+<script src="/Site_laboratoire/public/js/pagination.js"></script>
+
 </body>
 </html>
 

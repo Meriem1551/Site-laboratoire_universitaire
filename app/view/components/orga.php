@@ -6,8 +6,6 @@ echo '<div style="overflow:auto; width:100%; max-height:80vh;">';
         echo '<div id="orgChart" style="background-color:transparent;"></div>';
     echo '</div>';
 echo '</div>';
-
-
 echo <<<HTML
 <script src="https://cdn.balkan.app/orgchart.js"></script>
 <script>

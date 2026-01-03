@@ -8,20 +8,84 @@ require_once "components/lineChart.php";
 require_once "components/barChart.php";
 require_once "components/pieChart.php";
 require_once "components/userCard.php";
+require_once "components/filterManager.php";
 
 class ProjectView {
-    public function show_projects($projects) {
-        echo '<section class="py-16 my-10">';
-        echo '<div class="container mx-auto px-4 max-w-7xl">';
+   public function show_projects($projects) {
+    echo '<section class="py-16 my-10">';
+    echo '<div class="container mx-auto px-4 max-w-7xl">';
+    
+    echo '<div class="mb-12">';
+    echo '<h1 class="text-3xl font-bold text-[var(--gray-dark)] mb-4">Projets de Recherche</h1>';
+    echo '<p class="text-[var(--gray)] max-w-3xl">Explorez nos initiatives de recherche innovantes menées par nos équipes scientifiques et leurs partenaires.</p>';
+    echo '</div>';
+    
+    $allStatuses = [];
+    $allThemes = [];
+    
+    foreach($projects as $project) {
+        if (!empty($project['status']) && !in_array($project['status'], $allStatuses)) {
+            $allStatuses[] = $project['status'];
+        }
         
-        echo '<div class="mb-12">';
-        echo '<h1 class="text-3xl font-bold text-[var(--gray-dark)] mb-4">Projets de Recherche</h1>';
-        echo '<p class="text-[var(--gray)] max-w-3xl">Explorez nos initiatives de recherche innovantes menées par nos équipes scientifiques et leurs partenaires.</p>';
-        echo '</div>';
+        if (!empty($project['theme']) && !in_array($project['theme'], $allThemes)) {
+            $allThemes[] = $project['theme'];
+        }
+    }
+
+    
+    $filterManager = FilterManager::getInstance();
+    $filterManager->reset();
+    
+    $filterManager->addFilter(
+        'status',
+        'Statut',
+        array_combine($allStatuses, $allStatuses),
+        'Tous les statuts',
+        '<svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+        </svg>'
+    );
+    
+    $filterManager->addFilter(
+        'theme',
+        'Thème',
+        array_combine($allThemes, $allThemes),
+        'Tous les thèmes',
+        '<svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"></path>
+        </svg>'
+    );
+    
+    $filterManager->renderFilterSection("Filtrer les projets", "Sélectionnez vos critères de filtrage");
+    
+    $statusFilter = isset($_GET['status']) ? $_GET['status'] : '';
+    $themeFilter = isset($_GET['theme']) ? $_GET['theme'] : '';
+    
+    $filteredProjects = array_filter($projects, function($project) use ($statusFilter, $themeFilter) {
+        $matches = true;
         
-        echo '<div class="grid lg:grid-cols-3 md:grid-cols-2 gap-8">';
+        if ($statusFilter && $project['status'] !== $statusFilter) {
+            $matches = false;
+        }
         
-        foreach($projects as $project) {
+        if ($themeFilter && $project['theme'] !== $themeFilter) {
+            $matches = false;
+        }
+        
+        return $matches;
+    });
+    
+    if(!empty($filteredProjects)) {
+        echo '<div id="projectsContainer">';
+        echo '<div class="grid lg:grid-cols-3 md:grid-cols-2 gap-8" id="projectsGrid">';
+        
+        foreach($filteredProjects as $index => $project) {            
+            $filterData = [
+                'status' => $project['status'],
+                'theme' => $project['theme']
+            ];
+            
             $statusBadge = (new Badge(
                 $project['status'],
                 $this->getStatusColor($project['status']),
@@ -62,6 +126,7 @@ class ProjectView {
                 "</div>"
             ];
             
+            
             $footer = [
                 "<div class='px-6 py-4 border-t border-gray-100 rounded-b-lg'>",
                 "<div class='flex justify-between items-center text-sm'>",
@@ -73,7 +138,8 @@ class ProjectView {
                 "</div>"
             ];
 
-            echo "<a href='index.php?page=projet&id={$project['id']}' class='group block transition-all duration-300 hover:-translate-y-2'>";
+            echo '<div class="filterable-item pagination-item transform transition-all duration-300 hover:-translate-y-2" data-page="all" data-filter-info=\'' . htmlspecialchars(json_encode($filterData), ENT_QUOTES, 'UTF-8') . '\'>';
+            echo "<a href='index.php?page=projet&id={$project['id']}' class='group block'>";
             $card = new Card(
                 $header,
                 $body,
@@ -82,12 +148,115 @@ class ProjectView {
             );
             $card->render();
             echo "</a>";
+            echo '</div>';
         }
 
         echo '</div>';
         echo '</div>';
-        echo '</section>';
+        
+        $totalProjects = count($filteredProjects);
+        $itemsPerPage = 6;
+        $totalPages = ceil($totalProjects / $itemsPerPage);
+        
+        if ($totalPages > 1) {
+            echo '<div class="mt-12 flex justify-center items-center gap-4">';
+            echo '<div id="paginationInfo" class="text-sm text-gray-600">';
+            echo 'Page <span id="currentPage" class="font-semibold">1</span> sur <span id="totalPages" class="font-semibold">' . $totalPages . '</span>';
+            echo ' (<span id="visibleItems" class="font-semibold">' . min($itemsPerPage, $totalProjects) . '</span> sur <span id="totalItems" class="font-semibold">' . $totalProjects . '</span> projets)';
+            echo '</div>';
+            
+            echo '<div class="flex items-center gap-2">';
+            echo '<button id="prevPage" class="px-4 py-2 bg-[var(--white)] border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>';
+            echo '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+            echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>';
+            echo '</svg>';
+            echo '<span>Précédent</span>';
+            echo '</button>';
+            
+            echo '<div id="pageNumbers" class="flex gap-1">';
+            for ($i = 1; $i <= $totalPages; $i++) {
+                if ($i == 1) {
+                    echo '<button class="page-btn px-3 py-2 bg-[var(--primary)] text-[var(--white)] font-medium rounded-lg hover:bg-blue-700 transition-colors" data-page="' . $i . '">' . $i . '</button>';
+                } else {
+                    echo '<button class="page-btn px-3 py-2 bg-[var(--white)] border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors" data-page="' . $i . '">' . $i . '</button>';
+                }
+            }
+            echo '</div>';
+            
+            echo '<button id="nextPage" class="px-4 py-2 bg-[var(--white)] border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center gap-2 transition-colors' . ($totalPages > 1 ? '' : ' disabled:opacity-50 disabled:cursor-not-allowed') . '">';
+            echo '<span>Suivant</span>';
+            echo '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+            echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>';
+            echo '</svg>';
+            echo '</button>';
+            echo '</div>';
+            echo '</div>';
+        }
+        
+        echo '<div id="noResults" class="hidden text-center py-12">';
+        echo '<h3 class="text-xl font-semibold text-gray-600 mb-2">Aucun projet trouvé</h3>';
+        echo '<p class="text-gray-500">Aucun projet ne correspond à vos critères de filtrage</p>';
+        echo '</div>';
+        
+    } else {
+        echo '<div class="text-center py-12">';
+        echo '<p class="text-gray-500">Aucun projet disponible pour le moment.</p>';
+        echo '</div>';
     }
+    
+    echo '</div>';
+    echo '</section>';
+    
+    echo $filterManager->getFilterJS('projectsContainer', '.filterable-item', 'noResults');
+    
+    echo '
+    <style>
+    .filter-group {
+        min-width: 200px;
+    }
+    
+    .filter-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M6 8l4 4 4-4\'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .filter-select:focus {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        border-color: #3b82f6;
+    }
+    
+    .filter-clear-btn {
+        height: fit-content;
+        transition: all 0.2s;
+    }
+    
+    .filter-clear-btn:hover {
+        background-color: #e5e7eb;
+    }
+    
+    .filterable-item {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .pagination-item {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    </style>';
+}
 
     private function getStatusColor($status) {
         $colors = [

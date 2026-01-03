@@ -35,8 +35,9 @@ require_once "components/orga.php";
     
     echo '<div class="grid lg:grid-cols-3 md:grid-cols-2 gap-8 max-w-7xl mx-auto w-full">';
     
-    foreach($actualites as $act) {
-        $date = date('d M Y', strtotime($act['created_at'] ?? 'now'));
+    foreach($actualites as $index => $act) {
+        if($index < 3){
+            $date = date('d M Y', strtotime($act['created_at'] ?? 'now'));
         
         $dateBadge = "<div class='absolute top-4 left-4 z-10'>
             <span class='inline-flex items-center px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm text-gray-700'>
@@ -77,6 +78,8 @@ require_once "components/orga.php";
         );
 
         $card->render();
+        }
+        
     }
 
     echo '</div>';
@@ -139,8 +142,9 @@ require_once "components/orga.php";
     if(!empty($events)) {
         echo '<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">';
         
-        foreach($events as $event) {
-            $isOpen = (bool)$event['registerOpen'];
+        foreach($events as $index => $event) {
+            if($index < 3){
+                 $isOpen = (bool)$event['registerOpen'];
             $eventDate = date('d M Y', strtotime($event['event_date']));
             
             $typeBadge = (new Badge(
@@ -212,6 +216,7 @@ require_once "components/orga.php";
             );
 
             $card->render();
+            }
         }
         
         echo '</div>';

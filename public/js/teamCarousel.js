@@ -1,22 +1,6 @@
 
-
-document.addEventListener("DOMContentLoaded", () => {
-  const track = document.querySelector('.diaporama-track');
-  const slides = document.querySelectorAll('.diaporama-slide');
- 
-  let index = 0;
-  const total = slides.length;
-
-  function showSlide(i) {
-    track.style.transform = `translateX(-${i * 100}%)`;
-  }
-
-  setInterval(() => {
-    index = (index + 1) % total;
-    showSlide(index);
-  }, 3000);
-
-const carousel = document.getElementById("teamsCarousel");
+        document.addEventListener("DOMContentLoaded", function() {
+            const carousel = document.getElementById("teamsCarousel");
             const container = document.getElementById("teamsContainer");
             const prevBtn = document.getElementById("prevTeam");
             const nextBtn = document.getElementById("nextTeam");
@@ -73,7 +57,4 @@ const carousel = document.getElementById("teamsCarousel");
                     return visibleCount;
                 };
             }
-});
-
-
-
+        });

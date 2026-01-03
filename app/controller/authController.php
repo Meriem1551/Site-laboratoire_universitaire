@@ -25,6 +25,10 @@ class AuthController{
             $this->display_login();
             return;
         }
+        if($user['status'] != 'active'){
+            echo "<p style='color:red;'>Vou ne pouvez pas connecter a votre compte</p>";
+            header('location:index.php?page=acceuil');
+        }
         if (password_verify($pw, $user[0]['password'])) {
         $_SESSION['user'] = $user;
         if ($user[0]['role'] === "admin") {
