@@ -183,7 +183,7 @@ class ProjectView {
             }
             echo '</div>';
             
-            echo '<button id="nextPage" class="px-4 py-2 bg-[var(--white)] border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center gap-2 transition-colors' . ($totalPages > 1 ? '' : ' disabled:opacity-50 disabled:cursor-not-allowed') . '">';
+            echo '<button id="nextPage" class="px-4 py-2 bg-[var(--primary)] border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 flex items-center gap-2 transition-colors' . ($totalPages > 1 ? '' : ' disabled:opacity-50 disabled:cursor-not-allowed') . '">';
             echo '<span>Suivant</span>';
             echo '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
             echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>';
@@ -1022,7 +1022,7 @@ for ($i = 1; $i <= $count; $i++) {
     $pieChart->render($data, $labels, $colors, 'Répartition des projets par thématique');
     $pieChartHTML = ob_get_clean();
 
-    echo '<section class="mt-32 grid grid-cols-1  gap-10">';
+    echo '<section class="mt-16 grid grid-cols-1  gap-10">';
         echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Statistiques des projets</h1>';
             $lineChart->display($lineChartHTML, 'Nombre de projets par année', '<svg class="w-5 h-5 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
