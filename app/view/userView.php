@@ -4,6 +4,7 @@ require_once "components/table.php";
 require_once "components/title.php";
 require_once "components/card.php";
 require_once "components/filterManager.php";
+require_once "components/userCard.php";
 
 class UserView {
 
@@ -528,6 +529,114 @@ public function show_members($users, $project_members){
         
         echo '</div>'; 
         echo '</div>';
+        echo '</section>';
+    }
+
+    private function render_publications($publications){
+           $pubBody = [];
+if (!empty($publications)) {
+    $pubContent = '<div class="grid md:grid-cols-2 gap-6">';
+    $borderColors = [
+        'border-t-8 border-blue-500',
+        'border-t-8 border-purple-500',
+        'border-t-8 border-emerald-500',
+        'border-t-8 border-amber-500'
+    ];
+    
+    foreach ($publications as $index => $pub) {
+
+        $borderColor = $borderColors[$index % count($borderColors)];
+        $pubContent .= '
+        <div class="bg-[var(--white)] '. $borderColor .' rounded-xl shadow-lg p-6">
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-sm font-medium text-[var(--primary)]">
+                    ' . $pub['type'] .  '
+                </span>
+                <span class="text-sm text-[var(--gray)]">
+                    ' . $pub['publication_date'] . '
+                </span>
+            </div>
+            
+            <h4 class="font-bold text-[var(--gray-dark)] mb-2">
+                ' . $pub['title'] . '
+            </h4>
+            
+            <p class="text-[var(--gray)] text-sm mb-4">
+                ' . substr(strip_tags($pub['abstract']), 0, 100) . '...
+            </p>
+            
+            <div class="flex items-center gap-2">
+                <p class="font-medium text-[var(--gray-dark)]">Domain: </p>
+                <span class="text-sm text-[var(--gray)]">
+                    ' . $pub['domain'] . '
+                </span>
+                
+            </div>
+            <div class="flex items-center gap-2">
+                <p class="font-medium text-[var(--gray-dark)]">DOI: </p>
+                <span class="text-sm text-[var(--gray)]">
+                    ' . $pub['doi'] . '
+                </span>
+                
+            </div>
+            <div class="flex justify-end gap-2">
+            <a class="text-[var(--primary)]" href="index.php?page=publication&id=' . $pub['id'] . '">Voir détails</a>
+            </div>
+        </div>';
+    }
+    
+    $pubContent .= '</div>';
+    
+    $pubCard = new Card(
+        ["<div class='flex items-center justify-between mb-8 pb-6 border-b border-gray-200'>
+                    <span class='px-4 py-2 bg-blue-100 text-[var(--primary-light)] text-sm font-medium rounded-full'>
+                        " . count($publications) . " publications
+                    </span>
+                </div>"],
+        [$pubContent],
+        [],
+        'bg-[var(--white)] rounded-xl shadow-lg border border-gray-200 p-6'
+    );
+    
+    echo $pubCard->render();
+} else {
+    echo '<div class="text-center p-8 text-[var(--gray)]">
+        <p>Aucune publication disponible</p>
+    </div>';
+    }
+}
+    public function show_member($member){
+             echo '<section class="py-24 px-24 min-h-screen">';
+            echo '<div class="container mx-auto px-4 max-w-7xl">';
+
+                     $userCard = new UserCard(
+                        $member['first_name'], 
+                        $member['last_name'], 
+                        $member['role'], 
+                        $member['status_user'], 
+                        $member['profile_picture'], 
+                        $member['email'], 
+                        $member['speciality'],
+                        $member['post'], 
+                        $member['grade'],
+                        $member['bio']
+                    );
+                    $userCard->render();
+
+                    echo '<div class="space-y-10">';
+                        $this->render_publications($member['publications']);
+                        $previous = $_SERVER['HTTP_REFERER'];
+                        echo '<div class="pt-8">';
+                            echo "<a href='$previous' class='inline-flex items-center px-6 py-3 text-[var(--gray-dark)] font-medium rounded-lg hover:bg-gray-50'>
+                                <svg class='w-5 h-5 mr-2' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                                    <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10 19l-7-7m0 0l7-7m-7 7h18'/>
+                                </svg>
+                                Retour a la page
+                            </a>";
+                        echo '</div>';
+                    echo '</div>';
+
+            echo '</div>';
         echo '</section>';
     }
 }

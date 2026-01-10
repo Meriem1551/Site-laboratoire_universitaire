@@ -2,16 +2,19 @@
 require_once "components/form.php";
 
 class AuthView {
-    private function create_login() {
+
+    private function create_login($error = null) {
         echo '<section class="min-h-screen w-full bg-blue-50 py-24 px-12">';
         echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 w-1/2">';
-        
+
+        $text = empty($error) ? "<p class='text-[var(--gray)] text-sm my-8 text-center'>Entrez vos identifiants pour accéder à votre compte</p>" : "<p class='text-[var(--error)] text-sm my-8 text-center'>{$error}</p>";
+
         $form = new Form(
             "", 
             "POST", 
             "Se connecter", 
             "Se connecter", 
-            "<p class='text-[var(--gray)] text-sm my-8 text-center'>Entrez vos identifiants pour accéder à votre compte</p>", 
+            $text,
             false
         );
 
@@ -24,8 +27,8 @@ class AuthView {
         echo "</section>";
     }
 
-    public function display_login() {
-        $this->create_login();
+    public function display_login($error = null) {
+        $this->create_login($error);
     }
 }
 ?>

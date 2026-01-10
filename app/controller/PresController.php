@@ -134,6 +134,16 @@ class PresController{
         return $teamM->get_team_by_id($id);
     }
    
+private function getUsers(){
+    $userModel = new UserModel();
+    // $pubM = new PublicationModel();
+    $users = $userModel->getAll();
+    // if (!$users) return []; 
+    // foreach($users as &$user){
+    //     $user['publications'] = $pubM->getPubByUser($user['id']) ?? [];
+    // }
+    return $users;
+}
 
 
     public function show_page(){
@@ -145,8 +155,9 @@ class PresController{
             'pubs' => $this->getNbPub(),
             'parts' => $this->getNbPart()
         ];
+        $members = $this->getUsers();
         $presentationView = new PresentationView();
-        $presentationView->show_page($data, $teams, $stats);
+        $presentationView->show_page($data, $teams, $stats, $members);
     }
 
 }

@@ -265,5 +265,23 @@ public function get_team_members($id_team){
         $userM->deleteMemberFromTeam($id_team, $id_member);
         header("Location: index.php?page=gestion_equipes");
     }
+   public function show_member(){
+    $id = $_GET['id'];
+    $userM = new UserModel();
+    $pubM  = new PublicationModel();
+    $user = $userM->getUserById($id);
+    if (!$user) {
+        return null;
+    }
+    $user['publications'] = array_filter(
+    $pubM->getPubsByUser($id) ?? [],
+    function($pub) {
+        return isset($pub['status']) && $pub['status'] === 'valide';
+    }
+    );
+    $view = new UserView();
+    $view->show_member($user);
+}
+
  }
 ?>

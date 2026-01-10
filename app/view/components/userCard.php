@@ -101,11 +101,11 @@ class UserCard {
                 </div>
                 
                 <div class='flex items-center justify-between bg-[var(--gray-light)] rounded-lg p-3'>
+                    <span class='text-xs text-[var(--gray-dark)]'>Statut</span>
                     <div class='flex items-center'>
                         <div class='w-2 h-2 rounded-full {$statusConfig['dot']} mr-2'></div>
                         <span class='text-sm font-medium {$statusConfig['text']} capitalize'>{$this->status}</span>
                     </div>
-                    <span class='text-xs text-[var(--gray-dark)]'>Statut</span>
                 </div>
                 
                 <div class='bg-[var(--gray-light)] rounded-lg p-3'>

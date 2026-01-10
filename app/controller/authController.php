@@ -20,27 +20,25 @@ class AuthController{
         $authModel = new AuthModel();
 
         $user = $authModel->login($username);
-         if (!$user) {
-            echo "<p style='color:red;'>Utilisateur non trouvé</p>";
-            $this->display_login();
+
+        if (!$user) {
+        $this->display_login("Utilisateur non trouvé");
+        return;
+        }
+
+        if ($user['status'] !== 'active') {
+            $this->display_login("Vous ne pouvez pas vous connecter : compte suspendu ou inactif");
             return;
         }
-        if($user['status'] != 'active'){
-            echo "<p style='color:red;'>Vou ne pouvez pas connecter a votre compte</p>";
-            header('location:index.php?page=acceuil');
+
+        if (!password_verify($pw, $user['password'])) {
+            $this->display_login("Mot de passe incorrect");
+            return;
         }
-        if (password_verify($pw, $user[0]['password'])) {
+
         $_SESSION['user'] = $user;
-        if ($user[0]['role'] === "admin") {
-            header('Location: index.php?page=dashboard&role=admin');
-        } else {
-            header('Location: index.php?page=accueil');
-        }
+        header($user['role'] === "admin" ? 'Location: index.php?page=dashboard&role=admin' : 'Location: index.php?page=accueil');
         exit;
-        } else {
-            echo "<p style='color:red;'>Mot de passe incorrect</p>";
-            $this->display_login();
-        }
     }
     public function logout(){
         session_start();

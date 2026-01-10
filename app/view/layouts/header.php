@@ -1,27 +1,27 @@
 <?php
 class Header{
-    private function create_header() { 
-        $currentPage = $_GET['page'] ?? 'accueil';
 
-        function navClass($currentPage, $pageName="") {
+        private function navClass($currentPage, $pageName="") {
             $base = "text-[var(--white)] hover:text-[var(--primary-light)]";
             if ($currentPage === $pageName) {
                 $base .= " border-b-2 border-[var(--primary-light)] text-[var(--primary-light)]";
             }
             return $base;
         }       
-        function subNavClass() {
+        private function subNavClass() {
             $base = "px-4 py-2 hover:bg-[var(--primary-light)] hover:text-[var(--white)]";
             return $base;
         }
         
-        function userNavClass($currentPage, $pageName="") {
-            $base = "px-4 py-2 hover:bg-[var(--primary-light)] hover:text-[var(--white)] flex items-center gap-2";
+        private function userNavClass($currentPage, $pageName="") {
+            $base = "px-2 py-2 hover:bg-[var(--primary-light)] hover:text-[var(--white)] flex items-center gap-2";
             if ($currentPage === $pageName) {
                 $base = "px-4 py-2 bg-[var(--primary-light)] text-[var(--white)] flex items-center gap-2";
             }
             return $base;
         }
+    private function create_header() { 
+            $currentPage = $_GET['page'] ?? 'accueil';
         ?>
         
         <nav class="p-4 flex justify-between items-center bg-[var(--primary-dark)] shadow-md fixed w-full z-10">
@@ -31,32 +31,32 @@ class Header{
                 ?>
                 <img src="<?= $settings['labo_logo'] ?? '' ?>" class="w-12 h-12 mr-auto rounded-lg">     
                 <ul class="flex items-center gap-6 lg:gap-12 mr-auto">
-                    <li><a href="index.php?page=accueil" class='<?= navClass($currentPage, "accueil") ?>'>Accueil</a></li>
-                    <li><a href="index.php?page=projets" class='<?= navClass($currentPage, "projets") ?>'>Projets</a></li>
-                    <li><a href="index.php?page=publications" class='<?= navClass($currentPage, "publications") ?>'>Publications</a></li>
-                    <li><a href="index.php?page=equipements" class='<?= navClass($currentPage, "equipements") ?>'>Equipements</a></li>
-                    <li><a href="index.php?page=membres" class='<?= navClass($currentPage, "membres") ?>'>Membres</a></li>
+                    <li><a href="index.php?page=accueil" class='<?=$this->navClass($currentPage, "accueil") ?>'>Accueil</a></li>
+                    <li><a href="index.php?page=projets" class='<?= $this->navClass($currentPage, "projets") ?>'>Projets</a></li>
+                    <li><a href="index.php?page=publications" class='<?= $this->navClass($currentPage, "publications") ?>'>Publications</a></li>
+                    <li><a href="index.php?page=equipements" class='<?= $this->navClass($currentPage, "equipements") ?>'>Equipements</a></li>
+                    <li><a href="index.php?page=membres" class='<?= $this->navClass($currentPage, "membres") ?>'>Membres</a></li>
                     
                     <li class="relative group">
-                        <a class="<?= navClass($currentPage, "")?>">Decouvrir</a>
+                        <a class="<?= $this->navClass($currentPage, "")?>">Decouvrir</a>
                         <ul class="absolute left-0 w-40 bg-[var(--gray-light)] text-[var(--gray-dark)] rounded shadow-lg p-2 hidden group-hover:block">
-                            <li class="<?= userNavClass($currentPage, "actualites")?>"><a href="index.php?page=actualites">Actualites</a></li>
-                            <li class="<?= userNavClass($currentPage, "evenments")?>"><a href="index.php?page=evenments">Evenments</a></li>
-                            <li class="<?= userNavClass($currentPage, "offres")?>"><a href="index.php?page=offres">Offres et opportunities</a></li>
+                            <li class="<?= $this->userNavClass($currentPage, "actualites")?>"><a href="index.php?page=actualites">Actualites</a></li>
+                            <li class="<?= $this->userNavClass($currentPage, "evenments")?>"><a href="index.php?page=evenments">Evenments</a></li>
+                            <li class="<?= $this->userNavClass($currentPage, "offres")?>"><a href="index.php?page=offres">Offres et opportunities</a></li>
                         </ul>
                     </li>
                     
-                    <li><a href="index.php?page=contact" class='<?= navClass($currentPage, "contact") ?>'>Contact</a></li>
+                    <li><a href="index.php?page=contact" class='<?= $this->navClass($currentPage, "contact") ?>'>Contact</a></li>
                 </ul>
                 
                 <ul class="flex items-center gap-6 lg:gap-12">
                     <li class="relative group ml-0">
-                        <a class="<?= navClass($currentPage, "")?>">Nos Réseaux</a>
+                        <a class="<?= $this->navClass($currentPage, "")?>">Nos Réseaux</a>
                         <ul class="absolute left-0 w-40 bg-[var(--gray-light)] text-[var(--gray-dark)] rounded shadow-lg p-2 hidden group-hover:block">
-                            <li class="<?= subNavClass()?>"><a href="#">Facebook</a></li>
-                            <li class="<?= subNavClass()?>"><a href="#">Twitter</a></li>
-                            <li class="<?= subNavClass()?>"><a href="#">Linkedin</a></li>
-                            <li class="<?= subNavClass()?>"><a href="#">Site officiel</a></li>
+                            <li class="<?= $this->subNavClass()?>"><a href="#">Facebook</a></li>
+                            <li class="<?= $this->subNavClass()?>"><a href="#">Twitter</a></li>
+                            <li class="<?= $this->subNavClass()?>"><a href="#">Linkedin</a></li>
+                            <li class="<?= $this->subNavClass()?>"><a href="#">Site officiel</a></li>
                         </ul>
                     </li>
                     
@@ -73,7 +73,7 @@ class Header{
                         
                         <ul class="absolute right-0 mt-1 w-48 bg-[var(--gray-light)] text-[var(--gray-dark)] rounded shadow-lg p-2 hidden group-hover:block">
                             <li>
-                                <a href="index.php?page=dashboard&role=<?=$_SESSION['user'][0]['role']?>" class="<?= userNavClass($currentPage, "dashboard") ?>">
+                                <a href="index.php?page=dashboard&role=<?=$_SESSION['user'][0]['role']?>" class="<?= $this->userNavClass($currentPage, "dashboard") ?>">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/>
                                         <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"/>
@@ -83,7 +83,7 @@ class Header{
                             </li>
                             
                             <li>
-                                <a href="index.php?page=profile" class="<?= userNavClass($currentPage, "profile") ?>">
+                                <a href="index.php?page=profile" class="<?= $this->userNavClass($currentPage, "profile") ?>">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
                                     </svg>

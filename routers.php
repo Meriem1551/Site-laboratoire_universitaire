@@ -72,6 +72,10 @@
         'controller' => 'TeamController',
         'action' => 'show_team'
     ],
+    'member' => [
+        'controller' => 'UserController',
+        'action' => 'show_member'
+    ],
 
     'profile' => [
         'controller' => 'ProfileController',

@@ -4,6 +4,7 @@ require_once "components/title.php";
 require_once "components/card.php";
 require_once "components/badge.php";
 require_once "components/filterManager.php";
+require_once "components/userCard.php";
 
 class PresentationView {
     private function print_labo_pres($teams) { 
@@ -37,6 +38,130 @@ class PresentationView {
         $card->render();
     
     }
+
+
+   private function print_members($members){
+    echo '<section class="px-8">';
+        echo '<div class="mx-auto px-4">';
+            echo '<div class="text-center mb-12">';
+                echo '<span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-4">Membres</span>';
+                $title = (new Title("Nos membres", "text-3xl font-bold text-[var(--gray-dark)] mb-4", 'h2'))->render();
+                echo $title;
+                echo '<p class="text-[var(--gray)] max-w-3xl mx-auto">Découvrez nos membres</p>';
+            echo '</div>';
+            
+            echo '<div class="relative">';
+            echo '<div class="overflow-hidden">';
+            echo '<div id="members-carousel" class="flex transition-transform duration-500 ease-in-out">';
+            
+            $totalMembers = count($members);
+            $membersPerSlide = 3;
+            $totalSlides = ceil($totalMembers / $membersPerSlide);
+            
+            for($slide = 0; $slide < $totalSlides; $slide++) {
+                echo '<div class="w-full flex-shrink-0 grid lg:grid-cols-3 gap-6 px-2">';
+                
+                $startIndex = $slide * $membersPerSlide;
+                for($i = $startIndex; $i < min($startIndex + $membersPerSlide, $totalMembers); $i++) {
+                    $member = $members[$i];
+                    
+                    $memberId = $member['id'] ?? $i + 1;
+                    $memberUrl = "index.php?page=member&id=" . urlencode($memberId);
+                    
+                    echo '<a href="' . htmlspecialchars($memberUrl) . '" class="block transform transition-all duration-300 hover:-translate-y-1 hover:shadow-md rounded-lg overflow-hidden group no-underline">';
+                    $userCard = new UserCard(
+                        $member['first_name'], 
+                        $member['last_name'], 
+                        $member['role'], 
+                        $member['status_user'], 
+                        $member['profile_picture'], 
+                        $member['email'], 
+                        $member['speciality'],
+                        $member['post'], 
+                        $member['grade'],
+                        ''
+                    );
+                    $userCard->render();
+                    echo '</a>';
+                }
+                
+                echo '</div>';
+            }
+            
+            echo '</div>';
+            echo '</div>';
+            
+            if($totalSlides > 1) {
+                echo '<button id="prev-btn" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-50 transition-colors z-10">';
+                echo '<svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>';
+                echo '</svg>';
+                echo '</button>';
+                
+                echo '<button id="next-btn" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-50 transition-colors z-10">';
+                echo '<svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>';
+                echo '</svg>';
+                echo '</button>';
+                
+                
+            }
+            
+            echo '</div>';
+            
+        echo '</div>';
+    echo '</section>';
+    
+    if($totalSlides > 1) {
+        echo '<script>';
+        echo '
+        document.addEventListener("DOMContentLoaded", function() {
+            const carousel = document.getElementById("members-carousel");
+            const prevBtn = document.getElementById("prev-btn");
+            const nextBtn = document.getElementById("next-btn");
+            
+            let currentSlide = 0;
+            const totalSlides = ' . $totalSlides . ';
+            
+            function updateCarousel() {
+                const slideWidth = 100;
+                carousel.style.transform = `translateX(-${currentSlide * slideWidth}%)`;
+                
+                
+            }
+            
+            if(prevBtn && nextBtn) {
+                prevBtn.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                    updateCarousel();
+                });
+                
+                nextBtn.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    currentSlide = (currentSlide + 1) % totalSlides;
+                    updateCarousel();
+                });
+            }
+            
+           
+            
+            document.addEventListener("keydown", function(e) {
+                if(e.key === "ArrowLeft") {
+                    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                    updateCarousel();
+                } else if(e.key === "ArrowRight") {
+                    currentSlide = (currentSlide + 1) % totalSlides;
+                    updateCarousel();
+                }
+            });
+        });
+        ';
+        echo '</script>';
+    }
+}
 
   private function list_teams($teams) {
     echo '<section class="px-8">';
@@ -395,7 +520,7 @@ class PresentationView {
 
     }
 
-    public function show_page($orga, $teams,$stat) {
+    public function show_page($orga, $teams,$stat, $members) {
         echo '<section class="py-24 px-12">';
             echo '<div class="container mx-auto px-4 max-w-7xl flex flex-col gap-8">';
             
@@ -408,6 +533,7 @@ class PresentationView {
                 $this->print_labo_pres($teams);
                 $this->print_organigramme($orga);
                 $this->print_stat($stat['membres'], $stat['projets'], $stat['pubs'], $stat['parts']);
+                $this->print_members($members);
                 $this->list_teams($teams);
             echo '</div>';
         echo '</section>';
