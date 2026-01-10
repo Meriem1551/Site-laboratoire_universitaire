@@ -26,18 +26,19 @@ class AuthController{
         return;
         }
 
-        if ($user['status'] !== 'active') {
+        if ($user[0]['status_user'] !== 'active') {
             $this->display_login("Vous ne pouvez pas vous connecter : compte suspendu ou inactif");
             return;
         }
 
-        if (!password_verify($pw, $user['password'])) {
+        if (!password_verify($pw, $user[0]['password'])) {
             $this->display_login("Mot de passe incorrect");
             return;
         }
+        print_r($user);
 
         $_SESSION['user'] = $user;
-        header($user['role'] === "admin" ? 'Location: index.php?page=dashboard&role=admin' : 'Location: index.php?page=accueil');
+        header($user[0]['role'] === "admin" ? 'Location: index.php?page=dashboard&role=admin' : 'Location: index.php?page=accueil');
         exit;
     }
     public function logout(){
@@ -47,9 +48,9 @@ class AuthController{
         header('Location: index.php?page=login');
         exit;
     }
-    public function display_login(){
+    public function display_login($error= null){
         $authView = new AuthView();
-        $authView->display_login();
+        $authView->display_login($error);
     }
     public function display_register(){
         $authView = new AuthView();

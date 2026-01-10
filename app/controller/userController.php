@@ -2,6 +2,8 @@
     require_once "app/model/userModel.php";
     require_once "app/model/roleModel.php";
     require_once "app/model/publicationModel.php";
+    require_once "app/model/eventModel.php";
+
     require_once "app/view/userView.php";
     require_once "baseController.php";
  class UserController extends BaseController{
@@ -80,7 +82,7 @@ private function getRoles(){
     return $roleM->getRoles();
 }
 
-    public function user_form(){
+    public function user_form($errors = null){
         if (isset($_GET['id'])){
             //updating
             $id = $_GET['id'];
@@ -93,35 +95,49 @@ private function getRoles(){
         }
         $roles = $this->getRoles();
         $userV =  new UserView();
-        $userV->create_update_form($user, $roles);
+        $userV->create_update_form($user, $roles, $errors);
     }
 
 
-    public function handle_submit_create_update() {
+   public function handle_submit_create_update() {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
 
-    $first_name = $_POST['first_name'];
-    $last_name  = $_POST['last_name'];
-    $email      = $_POST['email'];
-    $username   = $_POST['username'];
-    $role       = $_POST['role'];
-    $status     = isset($_POST['status']) ? 'active' : 'suspendu';
+    $errors = [];
 
-    $pw           = $_POST['pw'] ?? '';
-    $confirmePw   = $_POST['confirme'] ?? '';
-    $passwordHash = null;
-
-    if (!empty($pw)) {
-        if ($pw !== $confirmePw) {
-            die("Les mots de passe ne correspondent pas");
-        }
-        $passwordHash = password_hash($pw, PASSWORD_DEFAULT);
-    }
-
+    $first_name = $_POST['first_name'] ?? '';
+    $last_name  = $_POST['last_name'] ?? '';
+    $email      = $_POST['email'] ?? '';
+    $username   = $_POST['username'] ?? '';
+    $role       = $_POST['role'] ?? '';
+    $status     = $_POST['status_user'] ? 'active' : 'suspendu';
+    $pw         = $_POST['pw'] ?? '';
+    $confirmePw = $_POST['confirme'] ?? '';
     $speciality = $_POST['speciality'] ?? '';
     $post       = $_POST['post'] ?? '';
     $grade      = $_POST['grade'] ?? '';
     $bio        = $_POST['bio'] ?? '';
+    $user_id    = $_POST['user_id'] ?? null;
+
+    if (empty($first_name)) $errors[] = "Le prénom est requis.";
+    if (empty($last_name))  $errors[] = "Le nom est requis.";
+    if (empty($email))      $errors[] = "L'email est requis.";
+    if (empty($username))   $errors[] = "Le nom d'utilisateur est requis.";
+     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "L'adresse email n'est pas valide.";
+    }
+
+    if (!empty($pw) && $pw !== $confirmePw) {
+        $errors[] = "Les mots de passe ne correspondent pas.";
+    }
+    if (!$user_id && empty($pw)) { 
+        $errors[] = "Le mot de passe est requis pour créer un utilisateur.";
+    }
+
+    if (!empty($errors)) {
+        $_GET['id'] = $user_id ?? null;
+        $this->user_form($errors); 
+        return; 
+    }
 
     $profile_picture = $_POST['current_profile_picture'] ?? '';
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
@@ -145,9 +161,9 @@ private function getRoles(){
 
     $userModel = new UserModel();
 
-    if (isset($_POST['user_id'])) {
-        $user_id = $_POST['user_id'];
+    $passwordHash = !empty($pw) ? password_hash($pw, PASSWORD_DEFAULT) : null;
 
+    if ($user_id) {
         if ($passwordHash === null) {
             $currentUser = $userModel->getUserById($user_id);
             $passwordHash = $currentUser['password'];
@@ -171,10 +187,7 @@ private function getRoles(){
         );
 
     } else {
-        if ($passwordHash === null) {
-            die("Le mot de passe est requis pour créer un utilisateur.");
-        }
-
+        // Creating
         $userModel->createUser(
             $first_name,
             $last_name,
@@ -190,6 +203,7 @@ private function getRoles(){
             $status,
             $role
         );
+
         $eventM = new EventModel();
         $events = $eventM->getAllEvents();
         $newUser = ['email' => $email];
@@ -201,6 +215,7 @@ private function getRoles(){
     header("Location: index.php?page=gestion_users");
     exit;
 }
+
 
 
     public function delete_user(){

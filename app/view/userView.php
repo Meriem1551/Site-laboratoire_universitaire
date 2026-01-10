@@ -301,10 +301,18 @@ else $pubRange = '10+';
 
 
 
-public function create_update_form($user, $roles) {
+public function create_update_form($user, $roles, $errors) {
 
     $link = $user === null ? "index.php?page=createUser" : "index.php?page=updateUser";
     $action = $user === null ? "Ajouter" : "Modifier";
+
+    $text = "";
+    if(!empty($errors)){
+        foreach($errors as $error){
+            $text .= "<p class='text-[var(--error)] text-md text-center pb-2'>{$error}</p>";
+        }
+    }
+   
 
     echo '<section class="min-h-screen lg:w-full py-24 px-12">';
     echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 max-w-4xl">';
@@ -322,7 +330,7 @@ public function create_update_form($user, $roles) {
         $rolesOptions[$role['name']] = ucfirst($role['name']);
     }
 
-    $form = new Form($link, 'POST', $action, '', '', true);
+    $form = new Form($link, 'POST', $action, '', $text, true);
 
     $form->addInput('first_name', 'Nom', $user['first_name'] ?? '', 'Nom');
     $form->addInput('last_name', 'Prénom', $user['last_name'] ?? '', 'Prénom');
