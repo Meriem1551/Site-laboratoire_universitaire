@@ -117,7 +117,7 @@ class SettingView {
                 Sauvegarder la base
             </button>
             <button type="submit" name="reset_db" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] rounded hover:bg-[var(--error)]">
-                Réinitialiser la base
+                Restaurer la base
             </button>
         </div>';
         echo '</div>';

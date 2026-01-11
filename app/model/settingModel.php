@@ -15,8 +15,9 @@ class SettingModel extends BaseModel{
     public function backup(){
         $this->backupDatabase();
     }
-    public function reset(){
-        $this->resetDatabase();
+    public function reset(string $backupFile)
+    {
+        return $this->resetDatabase($backupFile);
     }
 }
 ?>

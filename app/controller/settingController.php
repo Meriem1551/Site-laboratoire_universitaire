@@ -29,21 +29,48 @@ class SettingController extends BaseController{
             return;
         }
         $model = new SettingModel();
-        if (!empty($_POST['backup_db'])) {
-            $this->backupDatabase();  
+        if (isset($_POST['backup_db'])) {
+        $backupFile = $model->backup();
+
+            if ($backupFile) {
+                echo "<script>alert('Sauvegarde créée avec succès');</script>";
+            } else {
+                echo "<script>alert('Échec de la sauvegarde');</script>";
+            }
         }
 
-        if (!empty($_POST['reset_db'])) {
-            $this->resetDatabase();
+
+        if (isset($_POST['reset_db'])) {
+            $backups = glob(__DIR__ . '/../../backups/*.sql');
+            rsort($backups);
+
+            if (!empty($backups)) {
+                $success = $model->reset($backups[0]);
+
+                if ($success) {
+                    echo "<script>alert('Base de données restaurée'); window.location='index.php?page=gestion_settings';</script>";
+                } else {
+                    echo "<script>alert('Erreur lors de la restauration'); window.location='index.php?page=gestion_settings';</script>";
+                }
+            } else {
+                echo "<script>alert('Aucune sauvegarde trouvée'); window.location='index.php?page=gestion_settings';</script>";
+            }
+            exit;
         }
+
         foreach ($_POST as $key => $value) {
-            if ($value === '') continue;
-            $model->update_setting($value, $key);
+        if ($value === '' || in_array($key, ['backup_db', 'reset_db'])) {
+            continue;
+        }
+        $model->update_setting($value, $key);
         }
         foreach ($_FILES as $key => $file) {
             if ($file['error'] === UPLOAD_ERR_OK) {
+
                 $uploadDir = 'public/assets/';
-                $filename  = uniqid() . '_' . basename($file['name']);
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+
+                $filename   = uniqid() . '_' . basename($file['name']);
                 $targetPath = $uploadDir . $filename;
 
                 if (move_uploaded_file($file['tmp_name'], $targetPath)) {

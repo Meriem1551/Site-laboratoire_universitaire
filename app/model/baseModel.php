@@ -93,21 +93,56 @@ class BaseModel{
     }
 
 
-    public function backupDatabase() {
-        $backupDir = 'backups/';
-        if (!is_dir($backupDir)) mkdir($backupDir, 0777, true);
-        $backupFile = $backupDir . 'lab_backup_' . date('Y-m-d_H-i-s') . '.sql';
-        $command = "mysqldump --user={$this->username} --password={$this->password} --host={$this->host} {$this->db_name} > {$backupFile}";
-        system($command, $output);
-        return file_exists($backupFile) ? $backupFile : false;
+    public function backupDatabase()
+{
+    $backupDir = __DIR__ . '/../../backups/';
+    if (!is_dir($backupDir)) {
+        mkdir($backupDir, 0777, true);
     }
 
-    public function resetDatabase(string $backupFile) {
-        if (!file_exists($backupFile)) return false;
-        $command = "mysql --user={$this->username} --password={$this->password} --host={$this->host} {$this->db_name} < {$backupFile}";
-        system($command, $output);
-        return true;
+    $backupFile = $backupDir . 'lab_backup_' . date('Y-m-d_H-i-s') . '.sql';
+
+    $mysqldump = '"C:\\xampp\\mysql\\bin\\mysqldump.exe"';
+
+    $command = sprintf(
+        '%s --user="%s" --password="%s" --host="%s" %s > "%s"',
+        $mysqldump,
+        $this->username,
+        $this->password,
+        $this->host,
+        $this->db_name,
+        $backupFile
+    );
+
+    exec($command, $output, $resultCode);
+
+    return ($resultCode === 0 && file_exists($backupFile)) ? $backupFile : false;
+}
+
+
+    public function resetDatabase(string $backupFile)
+{
+    if (!file_exists($backupFile)) {
+        return false;
     }
+
+    $mysql = '"C:\\xampp\\mysql\\bin\\mysql.exe"';
+
+    $command = sprintf(
+        '%s --user="%s" --password="%s" --host="%s" %s < "%s"',
+        $mysql,
+        $this->username,
+        $this->password,
+        $this->host,
+        $this->db_name,
+        $backupFile
+    );
+
+    exec($command, $output, $resultCode);
+
+    return $resultCode === 0;
+}
+
 }
 ?>
 
