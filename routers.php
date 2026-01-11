@@ -45,9 +45,14 @@
         'action' => 'show_actualite_page'
     ],
     'offres' => [
-        'controller' => 'NewsController',
-        'action' => 'offres'
+        'controller' => 'OpportController',
+        'action' => 'list_opport'
     ],
+
+
+//admin stuff
+
+
     'login' => [
         'controller' => 'AuthController',
         'action' => 'handle_login'
