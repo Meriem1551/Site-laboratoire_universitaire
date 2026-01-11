@@ -2,6 +2,8 @@
 require_once "components/title.php";
 require_once "components/badge.php";
 require_once "components/card.php";
+require_once "components/table.php";
+require_once "components/form.php";
 
 class OpportView {
     public function show_offers($data) {
@@ -180,55 +182,137 @@ class OpportView {
         echo '</div>';
         echo '</section>';
         
-        // JavaScript for copy to clipboard and save functionality
         echo '<script>
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                // Show success message (you can implement a toast notification here)
                 alert("Email copié dans le presse-papier !");
             }).catch(err => {
                 console.error("Erreur lors de la copie: ", err);
             });
         }
-        
-        function saveOpportunity(offerId) {
-            const button = event.target.closest("button");
-            const originalHTML = button.innerHTML;
-            
-            button.innerHTML = `
-                <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                </svg>
-                Sauvegarde...
-            `;
-            button.disabled = true;
-            
-            fetch("/save-opportunity.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ offer_id: offerId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    button.innerHTML = `
-                        <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 011.414 0l-4-4a1 1 0 111.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                        </svg>
-                        Sauvegardé
-                    `;
-                    button.classList.remove("hover:shadow-sm", "hover:bg-gray-100");
-                }
-            })
-            .catch(error => {
-                button.innerHTML = originalHTML;
-                button.disabled = false;
-                alert("Erreur lors de la sauvegarde");
-            });
-        }
         </script>';
     }
+    public function show_offers_admin($offers, $allowed){
+        echo '<section class="min-h-screen py-24 w-full px-12">';
+            echo '<div class="mb-10">';
+                echo '<h1 class="text-3xl lg:text-4xl font-bold text-[var(--gray-dark)] mb-2">Gestion des offres</h1>';
+                echo '<div class="bg-[var(--white)] rounded-2xl shadow-lg border border-gray-200 overflow-hidden mt-8 ">';
+        
+                    echo '<div class="px-6 py-4 border-b border-gray-200 flex flex-col rounded-lg sm:flex-row sm:items-center sm:justify-between gap-4">';
+                        echo '<h2 class="text-xl font-bold text-[var(--gray-dark)]">Liste des offres et opportunites</h2>';
+                        
+                        echo "<div class='flex gap-6 ml-auto'>";
+                            if ($allowed['create']) {
+                                echo '<a href="index.php?page=create_offre" class="px-4 py-2 bg-[var(--primary)] text-[var(--white)] font-medium rounded-lg hover:bg-[var(--primary-light)] transition-colors flex items-center gap-2">';
+                                echo '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+                                echo '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
+                                echo '</svg>';
+                                echo 'Nouvelle offre';
+                                echo '</a>';
+                            }
+                        echo "</div>";
+                    echo '</div>';
+                echo '</div>';
+                $data = [];
+                foreach($offers as $offer){
+                     $statusColors = [
+                    'ouvert' => ['bg' => '#bbf7d0', 'text' => '#166534', 'label' => 'ouvert'],
+                    'ferme' => ['bg' => '#fee2e2', 'text' => '#991b1b', 'label' => 'ferme'],
+                    ];
+                    
+                    $status = $offer['status'];
+                    $colorConfig = $statusColors[$status] ?? $statusColors['ferme'];
+                    
+                    $badge = (new Badge(
+                        $colorConfig['label'],
+                        $colorConfig['text'],
+                        $colorConfig['bg'],
+                        "rounded-full px-3 py-1 text-xs font-medium"
+                    ))->render();
+
+
+$requirementsHTML = '';
+if (!empty($offer['requirements'])) {
+    $requirements = array_map('trim', explode(',', $offer['requirements']));
+    
+    $requirementsHTML = '<div class="inline-flex flex-col items-start gap-1">
+        <div class="flex flex-wrap gap-1.5 max-w-xs">';
+    
+    foreach($requirements as $req) {
+        $requirementsHTML .= '<span class="inline-flex items-center px-2.5 py-1 bg-blue-50 text-[var(--primary)] rounded-full text-xs font-medium border border-blue-100">
+            ' . htmlspecialchars($req) . '
+        </span>';
+    }
+    
+    $requirementsHTML .= '</div>
+    </div>';
+} else {
+    $requirementsHTML = '<span class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 text-gray-500 rounded-lg text-sm border border-gray-200">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.132 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+        </svg>
+        Non spécifié
+    </span>';
+}
+                    $data[] = [
+                        "Titre" => $offer['title'],
+                        "Type" => $offer['type'],
+                        "Date" => $offer['deadline'],
+                        "Competences requises" => $requirementsHTML,
+                        "Contact" => "<p class='text-sm'>{$offer['contact_email']}</p>",
+                        "Status" => $badge,
+                         'Actions' => '<div class="flex items-center gap-2 justify-center">
+                ' . ($allowed['update'] ? '
+                <a href="index.php?page=update_offre&id=' . $offer['id'] . '" class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Modifier">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                </a>
+                ' : '') . '
+                    
+                ' . ($allowed['delete'] ? '
+                <a href="index.php?page=delete_offre&id=' . $offer['id'] . '" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"" title="Supprimer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                </a>' : '') . '
+                
+            </div>'
+                    ];
+                }
+                $columns = ["Titre","Type","Date","Competences requises","Contact","Status","Actions"];
+                $table = new Table($columns, $data, "w-full");
+                $table->render();
+
+         echo '</div>';
+        echo '</section>';
+    }
+
+
+     public function create_update_form($offer) {
+    $link = $offer === null ? "index.php?page=createOffre" : "index.php?page=updateOffre";
+    $action = $offer === null ? "Ajouter" : "Modifier";
+
+    echo '<section class="min-h-screen lg:w-full py-24 px-12">';
+    echo '<div class="container mx-auto bg-[var(--white)] shadow-lg rounded-lg p-6 max-w-4xl">';
+
+
+    $form = new Form($link, 'POST', $action, '', '', true);
+    $form->addInput('title', 'Titre', $offer['title'] ?? '', '');
+    $form->addTextarea('description', 'Description', $offer['description'] ?? '');
+    $form->addSelect('type', 'Type d\'offre', ['stage' => 'Stage', 'bourse' => 'Bourse', 'these' => 'These', 'collaboration' => 'Collaboration'], $offer['type']??'');
+    $form->addInput('deadline', 'Delai', $offer['deadline'] ?? '','', 'date');
+    $form->addTextarea('requirements', 'Competences requises', $offer['requirements'] ?? '','Les separer par une vergule (,)');
+    $form->addInput('contact_email', 'Contact (email)', $offer['contact_email'] ?? '','', 'email');
+    $form->addInput('status', 'Ouvert/ferme', $offer['status'] ?? '','', 'text');
+
+    if ($offer) {
+        $form->addHidden('offer_id', $offer['id']);
+    }
+    $form->render();
+
+    echo '</div>';
+    echo '</section>';
+}
 }
 ?>

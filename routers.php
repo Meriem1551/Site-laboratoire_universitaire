@@ -459,6 +459,33 @@
     'update_setting' => [
         'controller' => 'SettingController',
         'action' => 'update_settings',
-    ]
+    ],
+
+
+    ///////////////////////////////////////////
+        'gestion_offres' => [
+        'controller' => 'OpportController',
+        'action' => 'show_offres',
+    ],
+    'create_offre' => [
+        'controller' => 'OpportController',
+        'action' => 'offre_form'
+    ],
+    'update_offre' => [
+        'controller' => 'OpportController',
+        'action' => 'offre_form'
+    ],
+    'createOffre' => [
+        'controller' => 'OpportController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'updateOffre' => [
+        'controller' => 'OpportController',
+        'action' => 'handle_submit_create_update'
+    ],
+    'delete_offre' => [
+        'controller' => 'OpportController',
+        'action' => 'delete_offre'
+    ],
  ];
 ?>
