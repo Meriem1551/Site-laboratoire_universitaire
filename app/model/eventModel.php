@@ -40,8 +40,9 @@ class EventModel extends BaseModel{
     }
     public function createEvent( $title,$description,$type,$date,$image,$by,$open,$extern){
         $con = $this->connection();
-        $this->insert($con, 'events', ['title' =>$title, 'description'=> $description, 'type'=> $type, 'event_date' => $date, 'image_path' => $image, 'created_by'=>$by, 'registerOpen' => $open, 'isExtern' => $extern]);
+        $id = $this->insert($con, 'events', ['title' =>$title, 'description'=> $description, 'type'=> $type, 'event_date' => $date, 'image_path' => $image, 'created_by'=>$by, 'registerOpen' => $open, 'isExtern' => $extern]);
         $this->deconnexion($con);
+        return $id;
     }
     public function updateEvent($id,$title,$description,$type,$date,$image,$open,$extern){
         $con = $this->connection();
@@ -51,6 +52,11 @@ class EventModel extends BaseModel{
     public function deleteEvent($id){
         $con = $this->connection();
         $this->delete($con, 'events', 'id', $id);
+        $this->deconnexion($con);
+    }
+    public function addLink($link, $id){
+        $con = $this->connection();
+        $this->update($con, 'events', ['agenda_link'=>$link], 'id', $id);
         $this->deconnexion($con);
     }
 }

@@ -203,8 +203,17 @@ require_once "components/orga.php";
             ];
             
             $footer = [
-                "<div class='px-6 pb-6 pt-0'>
+                "<div class='flex p-6 items-center justify-between'>
                         {$buttonHTML}
+                       <a href='{$event['agenda_link']}' target='_blank' 
+                        class='inline-flex items-center gap-2 px-5 py-3 bg-white text-gray-700 font-medium rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:shadow-sm transition-all duration-200'>
+                        <svg class='w-5 h-5' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                            <path d='M19 3H18V1H16V3H8V1H6V3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V8H19V19Z' fill='#4285F4'/>
+                            <path d='M11 17H7V13H11V17Z' fill='#34A853'/>
+                            <path d='M17 14H13V10H17V14Z' fill='#FBBC04'/>
+                            <path d='M17 17H13V13H17V17Z' fill='#EA4335'/>
+                        </svg>
+                    </a>
                 </div>"
             ];
 

@@ -84,7 +84,7 @@ class EventController extends BaseController{
     }
 
     $eventM = new EventModel();
-
+    $service = new GoogleCalendarService();
     if (isset($_POST['event_id'])) {
         $event_id = $_POST['event_id'];
 
@@ -111,14 +111,23 @@ class EventController extends BaseController{
             $open,
             $extern
         );
-
+        $eventData = [
+        'title'      => $title,
+        'description'=> $description,
+        'event_date' => $date
+        ];
+        $googleEvent = $service->createGoogleEvent($eventData);
+        if ($googleEvent['success']) {
+        $eventLink = $googleEvent['html_link'];
+        $eventM->addLink($eventLink, $event_id);
+        $message = "Événement ajouté au calendrier !";
+        } else {
+            $message = "Erreur lors de l\'ajout au calendrier: {$googleEvent['error']}";
+        }
     }
-    // $eventM = new EventModel();
-    // $userM = new UserModel();
-    // $event = $eventM->getEventById($event_id);
-    // $users = $userM ->getAll();
-    // createGoogleCalendarEventWithUsers($event, $users);
-    header("Location: index.php?page=gestion_evenements");
+    echo "<script> alert('{$message}');
+        window.location.href = 'index.php?page=gestion_evenements';
+    </script>";
     exit;
 }
  public function delete_event(){

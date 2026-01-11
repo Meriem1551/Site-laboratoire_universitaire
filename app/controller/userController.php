@@ -203,13 +203,6 @@ private function getRoles(){
             $status,
             $role
         );
-
-        $eventM = new EventModel();
-        $events = $eventM->getAllEvents();
-        $newUser = ['email' => $email];
-        foreach ($events as $event) {
-            createGoogleCalendarEventWithUsers($event, [$newUser]);
-        }
     }
 
     header("Location: index.php?page=gestion_users");
